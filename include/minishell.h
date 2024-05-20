@@ -118,7 +118,7 @@ typedef struct s_shell
 	char		**environment;
 	t_pipe		*pipes;
 	t_command	**commands;
-	t_env *env_var;
+	t_env       *env_var;
 	t_parseur	*parseur;
 }				t_shell;
 
