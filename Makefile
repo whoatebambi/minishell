@@ -53,7 +53,7 @@ RM		=	rm -rf
 
 ################################### SOURCES ###################################
 
-MINISHELL_FILE	= main.c # utils.c
+MINISHELL_FILE	= main.c init_parameters.c executing.c # utils.c
 
 ######################## COMBINE DIRECTORIES AND FILES ########################
 

@@ -113,7 +113,7 @@ int	main(int argc, char **argv, char **envp)
         // parse(line);
         ft_printf("%s\n", line);
         free(line);
-        // execute(minishell);
+        execute(minishell);
     }
     // free_minishell(minishell);
 	return (0);

@@ -17,16 +17,6 @@
 # include "../libft/include/libft.h"
 # include "../libft/include/get_next_line_bonus.h"
 
-#include <unistd.h>
-#include <stdio.h>
-#include <readline/readline.h>
-#include <readline/history.h>
-#include <stdlib.h>
-#include <fcntl.h>
-#include <errno.h>
-#include <string.h>
-
-//rajout G
 # include <dirent.h>
 # include <errno.h>
 # include <fcntl.h>
@@ -39,6 +29,7 @@
 # include <sys/types.h>
 # include <sys/wait.h>
 # include <unistd.h>
+#include <string.h>
 
 // MACRO pour definir les TOKEN
 # define PIPE 1001
@@ -80,7 +71,7 @@ typedef struct s_parseur
 	int		double_quote;
 	int		db_quote_count;
 	int		single_quote;
-	int		sl_quote_count
+	int		sl_quote_count;
 }				t_parseur;
 
 // Permet degarder les changement d environement qui change
@@ -121,6 +112,19 @@ typedef struct s_shell
 	t_env       *env_var;
 	t_parseur	*parseur;
 }				t_shell;
+
+
+
+// main.c
+
+
+// executing.c
+void	execute(t_minishell *minishell);
+
+
+// init_parameters.c
+void	check_argc(int argc);
+int	init_fd(int argc, char **argv, int fd);
 
 
 #endif

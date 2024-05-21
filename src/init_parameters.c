@@ -51,7 +51,7 @@ t_list  *init_env_lst(char **envp)
     t_env   *env;
     int     i;
 
-    
+    // parse envp and create a linked list of env variables
 
     
     return (env_lst);
