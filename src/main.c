@@ -44,34 +44,32 @@ int	init_argc(int argc, char **argv,int fd)
 // This is a singleton. The concept is to create an object once
 // and then be able to access it any time while not using global variable
 // thanks to a stored pointer. (from Ophelie)
-t_minishell	*get_minishell(t_minishell *minishell)
+t_shell	*get_minishell(t_shell *minishell)
 {
-	static t_minishell	*pointer_to_minishell = NULL;
+	static t_shell	*pointer_to_minishell = NULL;
 
 	if (!pointer_to_minishell && minishell)
 		pointer_to_minishell = minishell;
 	return (pointer_to_minishell);
 }
 
-t_minishell	*init_minishell(char **envp, int argc)
+t_shell	*init_minishell(char **envp, int argc)
 {
-	t_minishell	*minishell;
+	t_shell	*minishell;
 
-	minishell = calloc(sizeof(t_minishell), 1);
+	minishell = calloc(sizeof(t_shell), 1);
     // manage calloc error here
 	get_minishell(minishell);
 	if (argc == 1)
 		minishell->mode = INTERACTIVE;
 	else
 		minishell->mode = NON_INTERACTIVE;
-	minishell->nb_cmds = 0;
-	minishell->instructions = NULL;
-	// minishell->env = init_env_lst(envp);
-	// minishell->env_paths = NULL;
-	// minishell->cmd_table = NULL;
-	minishell->child_pids = NULL;
-	minishell->exit_code = 0;
+	minishell->commands = NULL;
 	return (minishell);
+	// char			**environment;
+	// t_pipe		*pipes;
+	// t_env		*env_var;
+	// t_parseur	*parseur;
 }
 
 char    *get_line(t_mode mode, int fd)
@@ -86,7 +84,7 @@ char    *get_line(t_mode mode, int fd)
 		// 	add_history(line);
 	}
 	if (mode == NON_INTERACTIVE)
-        line = get_next_line_bonus(fd); // why is there no bits read handling?
+        line = get_next_line_bonus(fd); // how to add bits read?
 	if (!line || mode == NON_INTERACTIVE)
 	{
 		free(line);
@@ -99,7 +97,7 @@ char    *get_line(t_mode mode, int fd)
 int	main(int argc, char **argv, char **envp)
 {
     int         fd;
-    t_minishell *minishell;
+    t_shell *minishell;
     char        *line;
 
     (void)envp;

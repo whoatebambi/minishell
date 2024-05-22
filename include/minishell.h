@@ -44,17 +44,6 @@ typedef enum e_mode
 	NON_INTERACTIVE,
 }			t_mode;
 
-typedef struct s_minishell
-{
-	t_mode		mode;
-	int			nb_cmds;
-	char		**instructions;
-	// t_list		*env;
-	// char		**env_paths;
-	// t_cmd_table	*cmd_table;
-	pid_t		*child_pids;
-	int			exit_code;
-}				t_minishell;
 
 // Les structs que je pensais utiliser
 
@@ -90,7 +79,7 @@ typedef struct s_command
 	int			path;
 	char		**option;
 	char		**words;
-	char *redir;
+	char 		*redir;
 }				t_command;
 
 // permet de savoir les commande qui entoure une pipe 
@@ -106,6 +95,7 @@ typedef struct s_pipe
 // tentative structure qui aurait toutes les autres structs afin de passer en argument dans les fonctions.
 typedef struct s_shell
 {
+	t_mode		mode; // added inte/ non-inte mode
 	char		**environment;
 	t_pipe		*pipes;
 	t_command	**commands;
@@ -113,13 +103,26 @@ typedef struct s_shell
 	t_parseur	*parseur;
 }				t_shell;
 
+// Suggested minishell struct, but you can keep yours if its more logical ofc
+// typedef struct s_minishell
+// {
+// 	t_mode		mode;
+// 	int			nb_cmds;
+// 	char		**instructions;
+// 	t_list		*env;
+// 	char		**env_paths;
+// 	t_cmd_table	*cmd_table;
+// 	pid_t		*child_pids;
+// 	int			exit_code;
+// }			t_minishell;
 
 
 // main.c
 
 
 // executing.c
-void	execute(t_minishell *minishell);
+void	execute(t_shell *minishell);
+t_command    **temp_parse_commands(char *line);
 
 
 // init_parameters.c
