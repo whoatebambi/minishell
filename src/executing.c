@@ -6,7 +6,7 @@
 /*   By: fcouserg <fcouserg@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/21 20:27:20 by fcouserg          #+#    #+#             */
-/*   Updated: 2024/05/24 16:23:52 by fcouserg         ###   ########.fr       */
+/*   Updated: 2024/05/24 17:58:00 by fcouserg         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -52,10 +52,31 @@ void	pwd(void)
 	free(buffer);
 }
 
+void    echo(char *commands)
+{
+    int i = 0;
+    while (commands[i] == 'e')
+        i++;
+    while (commands[i] == 'c')
+        i++;
+    while (commands[i] == 'h')
+        i++;
+    while (commands[i] == 'o')
+        i++;
+    while (commands[i] != '\0')
+	{
+		write(1, &commands[i], 1);
+		i++;
+	}
+	write(1, "\n", 1);
+}
+
 void    execute_builtin(t_command *command)
 {
     if (ft_strncmp(command->commands, "pwd", 3) == 0) // && ft_strlen(command->commands) == 3)
 		pwd();
+    if (ft_strncmp(command->commands, "echo", 4) == 0)
+		echo(command->commands);
 }
 
 void	execute(t_shell *minishell, char *line)
@@ -64,7 +85,7 @@ void	execute(t_shell *minishell, char *line)
 
     i = 0;
     // while waiting for commands table parsing i am creating a dummy one here
-	minishell->commands = temp_parse_commands(line); // example: "pwd | ls -l | grep .c | wc -l"
+	minishell->commands = temp_parse_commands(line);
 
     while (minishell->commands[i] != NULL)
     {
@@ -72,5 +93,12 @@ void	execute(t_shell *minishell, char *line)
             execute_builtin(minishell->commands[i]);    
         i++;
     }
-
+    
+    i = 0;
+    while (minishell->commands[i] != NULL)
+    {
+        free(minishell->commands[i]);
+        i++;
+    }
+    free(minishell->commands);
 }

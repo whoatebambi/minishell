@@ -6,7 +6,7 @@
 /*   By: fcouserg <fcouserg@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/21 18:24:48 by gbeaudoi          #+#    #+#             */
-/*   Updated: 2024/05/24 16:18:52 by fcouserg         ###   ########.fr       */
+/*   Updated: 2024/05/24 17:53:03 by fcouserg         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -124,12 +124,16 @@ typedef struct s_shell
 void		execute(t_shell *minishell, char *line);
 void    	execute_builtin(t_command *command);
 void		pwd(void);
+void    	echo(char *commands);
 t_command    **temp_parse_commands(char *line);
 
 
 // init_parameters.c
 void	check_argc(int argc);
-int	init_fd(int argc, char **argv, int fd);
+int		init_fd(int argc, char **argv, int fd);
+
+// utils.c
+t_shell	*get_minishell(t_shell *minishell);
 
 
 #endif
