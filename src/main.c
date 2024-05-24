@@ -6,7 +6,7 @@
 /*   By: fcouserg <fcouserg@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/21 20:27:20 by fcouserg          #+#    #+#             */
-/*   Updated: 2024/02/23 20:09:35 by fcouserg         ###   ########.fr       */
+/*   Updated: 2024/05/24 15:50:58 by fcouserg         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -110,8 +110,9 @@ int	main(int argc, char **argv, char **envp)
             break;
         // parse(line);
         ft_printf("%s\n", line);
-        free(line);
-        execute(minishell);
+        // free(line);
+        execute(minishell, line);
+		free(line);
     }
     // free_minishell(minishell);
 	return (0);

@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   minishell.h                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: gbeaudoi <gbeaudoi@student.42.fr>          +#+  +:+       +#+        */
+/*   By: fcouserg <fcouserg@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/21 18:24:48 by gbeaudoi          #+#    #+#             */
-/*   Updated: 2024/05/20 15:11:33 by gbeaudoi         ###   ########.fr       */
+/*   Updated: 2024/05/24 16:18:52 by fcouserg         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -121,7 +121,9 @@ typedef struct s_shell
 
 
 // executing.c
-void	execute(t_shell *minishell);
+void		execute(t_shell *minishell, char *line);
+void    	execute_builtin(t_command *command);
+void		pwd(void);
 t_command    **temp_parse_commands(char *line);
 
 
