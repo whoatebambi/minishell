@@ -6,7 +6,7 @@
 /*   By: fcouserg <fcouserg@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/21 20:27:20 by fcouserg          #+#    #+#             */
-/*   Updated: 2024/05/24 17:20:32 by fcouserg         ###   ########.fr       */
+/*   Updated: 2024/05/24 20:27:06 by fcouserg         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -44,7 +44,7 @@ t_shell	*init_minishell(char **envp, int argc)
 		minishell->mode = INTERACTIVE;
 	else
 		minishell->mode = NON_INTERACTIVE;
-	minishell->commands = NULL;
+	minishell->cmd_table = NULL;
 	return (minishell);
 	// char			**environment;
 	// t_pipe		*pipes;

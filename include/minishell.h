@@ -6,7 +6,7 @@
 /*   By: fcouserg <fcouserg@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/21 18:24:48 by gbeaudoi          #+#    #+#             */
-/*   Updated: 2024/05/24 17:53:03 by fcouserg         ###   ########.fr       */
+/*   Updated: 2024/05/24 20:24:04 by fcouserg         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -72,22 +72,22 @@ typedef struct s_env_moving
 }				t_env_moving;
 
 // permet d avoir toutes les info d une commande
-typedef struct s_command
+typedef struct s_cmd_table
 {
-	char		*commands;
+	char		*cmd_name;
+	char		**cmd_args;
 	int			builtin;
 	int			path;
 	char		**option;
-	char		**words;
 	char 		*redir;
-}				t_command;
+}				t_cmd_table;
 
 // permet de savoir les commande qui entoure une pipe 
 typedef struct s_pipe
 {
 	int			index;
-	t_command	left;
-	t_command	right;
+	t_cmd_table	left;
+	t_cmd_table	right;
 	struct s_pipe *next;
 	struct s_pipe *previous;
 }				t_pipe;
@@ -95,26 +95,13 @@ typedef struct s_pipe
 // tentative structure qui aurait toutes les autres structs afin de passer en argument dans les fonctions.
 typedef struct s_shell
 {
-	t_mode		mode; // added inte/ non-inte mode
-	char		**environment;
+	t_mode		mode;
+	char		**env;
 	t_pipe		*pipes;
-	t_command	**commands;
+	t_cmd_table	**cmd_table;
 	t_env       *env_var;
 	t_parseur	*parseur;
 }				t_shell;
-
-// Suggested minishell struct, but you can keep yours if its more logical ofc
-// typedef struct s_minishell
-// {
-// 	t_mode		mode;
-// 	int			nb_cmds;
-// 	char		**instructions;
-// 	t_list		*env;
-// 	char		**env_paths;
-// 	t_cmd_table	*cmd_table;
-// 	pid_t		*child_pids;
-// 	int			exit_code;
-// }			t_minishell;
 
 
 // main.c
@@ -122,10 +109,10 @@ typedef struct s_shell
 
 // executing.c
 void		execute(t_shell *minishell, char *line);
-void    	execute_builtin(t_command *command);
+void    	execute_builtin(t_cmd_table *cmd_table);
 void		pwd(void);
-void    	echo(char *commands);
-t_command    **temp_parse_commands(char *line);
+void		echo(char **cmd_args);
+t_cmd_table	**temp_parse_commands(char *line);
 
 
 // init_parameters.c
