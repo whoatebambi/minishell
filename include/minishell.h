@@ -123,4 +123,8 @@ int		init_fd(int argc, char **argv, int fd);
 t_shell	*get_minishell(t_shell *minishell);
 
 
+// signals.c
+void    set_signals(t_mode mode);
+void	sig_handler(int signum);
+
 #endif

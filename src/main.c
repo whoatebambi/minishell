@@ -59,8 +59,8 @@ char    *get_line(t_mode mode, int fd)
 	if (mode == INTERACTIVE)
 	{
 		line = readline("shell >>> ");
-		// if (line && ft_strlen(line) > 0)
-		// 	add_history(line);
+		if (line && ft_strlen(line) > 0)
+			add_history(line);
 	}
 	if (mode == NON_INTERACTIVE)
 	{
@@ -71,12 +71,34 @@ char    *get_line(t_mode mode, int fd)
 		// if (close(fd) == 0)
 		// 	printf("close success\n");
 	}
-	// if (!line || mode == NON_INTERACTIVE)
-	// {
-	// 	free(line);
-	// 	return (NULL);
-	// }
+	if (!line || mode == NON_INTERACTIVE)
+	{
+		free(line);
+		return (NULL);
+	}
 	return (line);
+}
+
+
+void set_signals(t_mode mode)
+{
+    if (mode == INTERACTIVE)
+    {
+        signal(SIGINT, sig_handler); // ctrl + c
+        //signal(SIGTERM, SIG_IGN); // ctrl + d
+        signal(SIGQUIT, SIG_IGN); // ctrl + /\/
+    }
+}
+
+void	sig_handler(int signum)
+{
+    if (signum == SIGINT)
+    {
+        write(1, "\n", 1);
+        rl_replace_line("", 0);
+        rl_on_new_line();
+        rl_redisplay();
+    }
 }
 
 
@@ -89,6 +111,7 @@ int	main(int argc, char **argv, char **envp)
     (void)envp;
     fd = init_argc(argc, argv, fd); // checks the number of arguments and initialize fd if argc = 2
     minishell = init_minishell(envp, argc); // sets the minishell structure and creates singleton logic
+    set_signals(minishell->mode); // sets the signals (ctrl + c, ctrl + d, ctrl + \)
     while (1)
     {
         line = get_line(minishell->mode, fd); // gets the line from the user or from the file
