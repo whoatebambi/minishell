@@ -6,7 +6,7 @@
 /*   By: fcouserg <fcouserg@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/21 20:27:20 by fcouserg          #+#    #+#             */
-/*   Updated: 2024/05/24 20:43:55 by fcouserg         ###   ########.fr       */
+/*   Updated: 2024/05/28 16:22:43 by fcouserg         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,7 +26,6 @@ t_cmd_table    **temp_parse_commands(char *line)
     {
         cmd_table[i] = (t_cmd_table *)malloc(sizeof(t_cmd_table));
 		cmd_table[i]->cmd_args =  ft_split(temp_cmd_table[i], ' ');
-        cmd_table[i]->builtin = 1;
         i++;
     }
     cmd_table[i] = NULL;
@@ -71,7 +70,7 @@ void    execute_builtin(t_cmd_table *cmd_table)
 {
     if (ft_strncmp(cmd_table->cmd_args[0], "pwd", 3) == 0) // && ft_strlen(command->commands) == 3)
 		pwd();
-    if (ft_strncmp(cmd_table->cmd_args[0], "echo", 4) == 0)
+    else if (ft_strncmp(cmd_table->cmd_args[0], "echo", 4) == 0)
 		echo(cmd_table->cmd_args);
 }
 
@@ -83,23 +82,22 @@ void	execute(t_shell *minishell, char *line)
     i = 0;
     // while waiting for commands table parsing i am creating a dummy one here
 	minishell->cmd_table = temp_parse_commands(line);
-	/// print cmd_table
-	while (minishell->cmd_table[i])
-	{
-		j = 0;
-		while (minishell->cmd_table[i]->cmd_args[j])
-		{
-			printf("cmd_table[%d]->cmd_args[%d] = %s\n", i, j, minishell->cmd_table[i]->cmd_args[j]);
-			j++;
-		}
-		i++;
-	}
-	///
+	// /// print cmd_table
+	// while (minishell->cmd_table[i])
+	// {
+	// 	j = 0;
+	// 	while (minishell->cmd_table[i]->cmd_args[j])
+	// 	{
+	// 		printf("cmd_table[%d]->cmd_args[%d] = %s\n", i, j, minishell->cmd_table[i]->cmd_args[j]);
+	// 		j++;
+	// 	}
+	// 	i++;
+	// }
+	// ///
 	i = 0;
     while (minishell->cmd_table[i] != NULL)
     {
-        if (minishell->cmd_table[i]->builtin == 1)
-            execute_builtin(minishell->cmd_table[i]);    
+        execute_builtin(minishell->cmd_table[i]);    
         i++;
     }
     

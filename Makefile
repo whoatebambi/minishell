@@ -6,7 +6,7 @@
 #    By: fcouserg <fcouserg@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2024/01/08 14:30:03 by gbeaudoi          #+#    #+#              #
-#    Updated: 2024/05/24 16:49:18 by fcouserg         ###   ########.fr        #
+#    Updated: 2024/05/28 16:21:43 by fcouserg         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -53,7 +53,7 @@ RM		=	rm -rf
 
 ################################### SOURCES ###################################
 
-MINISHELL_FILE	= main.c init_parameters.c executing.c utils.c
+MINISHELL_FILE	= main.c initializing.c executing.c signals.c utils.c
 
 ######################## COMBINE DIRECTORIES AND FILES ########################
 

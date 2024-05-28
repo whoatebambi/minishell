@@ -6,51 +6,11 @@
 /*   By: fcouserg <fcouserg@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/21 20:27:20 by fcouserg          #+#    #+#             */
-/*   Updated: 2024/05/24 20:27:06 by fcouserg         ###   ########.fr       */
+/*   Updated: 2024/05/28 16:31:27 by fcouserg         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
-
-int	init_argc(int argc, char **argv,int fd)
-{
-	fd = 0;
-	if (argc > 2) // usage is either "./minishell" or "./minishell <file>"
-	{
-		errno = E2BIG; // the int errno is set to the macro "E2BIG"
-		perror("Error");
-		exit(E2BIG); // "E2BIG" macro from <errno.h> expands to "Argument list too long."
-	}
-		
-	if (argc == 2) // opens the file (we are in non-interactive mode)
-		fd = open(argv[1], O_RDONLY);
-	if (fd == -1)
-	{
-		// no need to set errno to a macro here, the system call open() automatically did it
-		perror("Error");
-		exit(EXIT_FAILURE);
-	}
-    return (fd);
-}
-
-t_shell	*init_minishell(char **envp, int argc)
-{
-	t_shell	*minishell;
-
-	minishell = calloc(sizeof(t_shell), 1);
-    // manage calloc error here
-	get_minishell(minishell);
-	if (argc == 1)
-		minishell->mode = INTERACTIVE;
-	else
-		minishell->mode = NON_INTERACTIVE;
-	minishell->cmd_table = NULL;
-	return (minishell);
-	// char			**environment;
-	// t_pipe		*pipes;
-	// t_env		*env_var;
-	// t_parseur	*parseur;
-}
 
 char    *get_line(t_mode mode, int fd)
 {
@@ -78,29 +38,6 @@ char    *get_line(t_mode mode, int fd)
 	}
 	return (line);
 }
-
-
-void set_signals(t_mode mode)
-{
-    if (mode == INTERACTIVE)
-    {
-        signal(SIGINT, sig_handler); // ctrl + c
-        //signal(SIGTERM, SIG_IGN); // ctrl + d
-        signal(SIGQUIT, SIG_IGN); // ctrl + /\/
-    }
-}
-
-void	sig_handler(int signum)
-{
-    if (signum == SIGINT)
-    {
-        write(1, "\n", 1);
-        rl_replace_line("", 0);
-        rl_on_new_line();
-        rl_redisplay();
-    }
-}
-
 
 int	main(int argc, char **argv, char **envp)
 {

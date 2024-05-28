@@ -6,7 +6,7 @@
 /*   By: fcouserg <fcouserg@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/21 18:24:48 by gbeaudoi          #+#    #+#             */
-/*   Updated: 2024/05/24 20:24:04 by fcouserg         ###   ########.fr       */
+/*   Updated: 2024/05/28 16:52:17 by fcouserg         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -76,7 +76,6 @@ typedef struct s_cmd_table
 {
 	char		*cmd_name;
 	char		**cmd_args;
-	int			builtin;
 	int			path;
 	char		**option;
 	char 		*redir;
@@ -99,32 +98,33 @@ typedef struct s_shell
 	char		**env;
 	t_pipe		*pipes;
 	t_cmd_table	**cmd_table;
-	t_env       *env_var;
+	t_list		*env_lst;
 	t_parseur	*parseur;
 }				t_shell;
 
 
 // main.c
-
+char    *get_line(t_mode mode, int fd);
 
 // executing.c
 void		execute(t_shell *minishell, char *line);
-void    	execute_builtin(t_cmd_table *cmd_table);
+void		execute_builtin(t_cmd_table *cmd_table);
 void		pwd(void);
 void		echo(char **cmd_args);
 t_cmd_table	**temp_parse_commands(char *line);
 
-
-// init_parameters.c
-void	check_argc(int argc);
-int		init_fd(int argc, char **argv, int fd);
+// initializing.c
+int			init_argc(int argc, char **argv, int fd);
+t_shell		*init_minishell(char **envp, int argc);
+int			init_fd(int argc, char **argv, int fd);
+t_list  	*init_env_lst(char **envp);
+t_env		*add_env_var(char *envp);
 
 // utils.c
-t_shell	*get_minishell(t_shell *minishell);
-
+t_shell		*get_minishell(t_shell *minishell);
 
 // signals.c
-void    set_signals(t_mode mode);
-void	sig_handler(int signum);
+void		set_signals(t_mode mode);
+void		sig_handler(int signum);
 
 #endif
