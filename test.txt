@@ -1,2 +1,2 @@
 pwd | echo "CAT" hello
-ls | cat -e
+eenv | cat -e

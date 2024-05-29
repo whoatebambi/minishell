@@ -16,19 +16,26 @@
 t_cmd_table    **temp_parse_commands(char *line)
 {
     t_cmd_table	**cmd_table;
-	char 		**temp_cmd_table;
+	char 		**tmp_cmd_table;
     int			i;
 
     cmd_table = (t_cmd_table **)malloc(sizeof(t_cmd_table *) * 50);
     i = 0;
-    temp_cmd_table = ft_split(line, '|');
-    while (temp_cmd_table[i] != NULL)
+    tmp_cmd_table = ft_split(line, '|');
+    while (tmp_cmd_table[i] != NULL)
     {
         cmd_table[i] = (t_cmd_table *)malloc(sizeof(t_cmd_table));
-		cmd_table[i]->cmd_args =  ft_split(temp_cmd_table[i], ' ');
+		cmd_table[i]->cmd_args =  ft_split(tmp_cmd_table[i], ' ');
         i++;
     }
     cmd_table[i] = NULL;
+    i = 0;
+    while (tmp_cmd_table[i] != NULL)
+    {
+        free(tmp_cmd_table[i]);
+        i++;
+    }
+    free(tmp_cmd_table);
 	return (cmd_table);
 }
 
@@ -78,7 +85,7 @@ void	env(void)
         write(1, "\n", 1);
         minishell->env_lst = minishell->env_lst->next;
     }
-	// free(minishell);
+	// TD free(minishell);
 }
 
 void    execute_builtin(t_cmd_table *cmd_table)
@@ -110,18 +117,10 @@ void	execute(t_shell *minishell, char *line)
 	// 	}
 	// 	i++;
 	// }
-	// ///
 	i = 0;
     while (minishell->cmd_table[i] != NULL)
     {
         execute_builtin(minishell->cmd_table[i]);    
         i++;
     }
-    i = 0;
-    while (minishell->cmd_table[i] != NULL)
-    {
-        free(minishell->cmd_table[i]);
-        i++;
-    }
-    free(minishell->cmd_table);
 }

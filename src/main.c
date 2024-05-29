@@ -25,14 +25,52 @@ char    *get_line(t_mode mode, int fd)
 	if (mode == NON_INTERACTIVE)
 	{
 		line = get_next_line_bonus(fd);
+        // printf("line: %s\n", line);
 		// TD close()
 	}
-	if (!line || mode == NON_INTERACTIVE)
+	if (!line)// || mode == NON_INTERACTIVE)
 	{
 		free(line);
 		return (NULL);
 	}
 	return (line);
+}
+
+void    free_minishell(t_shell *minishell)
+{
+    int i;
+    int j;
+    t_list *tmp;
+    t_env *tmp_env;
+
+    i = 0;
+    while (minishell->env_lst->next != NULL)
+    {
+        tmp = minishell->env_lst->next;
+        tmp_env = (t_env *)tmp->content;
+        free(tmp_env->key);
+        free(tmp_env->var);
+        free(tmp_env);
+        free(minishell->env_lst);
+        minishell->env_lst = tmp;
+    }
+    free(minishell->env_lst);
+
+    while (minishell->cmd_table[i] != NULL)
+    {
+        j = 0;
+        while (minishell->cmd_table[i]->cmd_args[j] != NULL)
+        {
+            free(minishell->cmd_table[i]->cmd_args[j]);
+            j++;
+        }
+        free(minishell->cmd_table[i]->cmd_args);
+        free(minishell->cmd_table[i]);
+        i++;
+    }
+    free(minishell->cmd_table);
+
+    free(minishell);
 }
 
 int	main(int argc, char **argv, char **envp)
@@ -55,6 +93,6 @@ int	main(int argc, char **argv, char **envp)
         execute(minishell, line);
 		free(line);
     }
-    // free_minishell(minishell);
+    free_minishell(minishell);
 	return (0);
 }
