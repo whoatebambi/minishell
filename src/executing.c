@@ -35,7 +35,7 @@ t_cmd_table    **temp_parse_commands(char *line)
 void	pwd(void)
 {
 	char *buffer;
-	// char buffer[PATH_MAX] // # define PATH_MAX  4096
+	// TD char buffer[PATH_MAX] // # define PATH_MAX  4096
 	
 	buffer = NULL;
 	buffer = getcwd(buffer, 4096); 
@@ -61,8 +61,7 @@ void    echo(char **cmd_args)
 		write(1, " ", 1);
 		i++;
 	}
-    // if (flag == '-n')
-	// 	return;
+    // TD (flag == '-n')
 	write(1, "\n", 1);
 }
 
@@ -100,7 +99,6 @@ void	execute(t_shell *minishell, char *line)
         execute_builtin(minishell->cmd_table[i]);    
         i++;
     }
-    
     i = 0;
     while (minishell->cmd_table[i] != NULL)
     {

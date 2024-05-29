@@ -25,11 +25,7 @@ char    *get_line(t_mode mode, int fd)
 	if (mode == NON_INTERACTIVE)
 	{
 		line = get_next_line_bonus(fd);
-		// printf("%s", line);
-		// if (close(fd) == -1)
-		// 	printf("close error\n");
-		// if (close(fd) == 0)
-		// 	printf("close success\n");
+		// TD close()
 	}
 	if (!line || mode == NON_INTERACTIVE)
 	{

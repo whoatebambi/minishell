@@ -37,24 +37,18 @@ t_shell	*init_minishell(char **envp, int argc)
 {
 	t_shell	*minishell;
 
-	minishell = calloc(sizeof(t_shell), 1);
-    // manage calloc error here
+	minishell = ft_calloc(sizeof(t_shell), 1);
+    // TD protect ft_calloc here
 	get_minishell(minishell);
 	if (argc == 1)
 		minishell->mode = INTERACTIVE;
 	else
 		minishell->mode = NON_INTERACTIVE;
 	minishell->cmd_table = NULL;
+    // TD can **envp be NULL? if yes what happens?
 	minishell->env_lst = init_env_lst(envp);
-	// int i = 0;
-	// while (envp[i])
-	// {
-	// 	printf("%s\n", envp[i]);
-	// 	i++;
-	// }
 	return (minishell);
 }
-
 
 int	init_fd(int argc, char **argv, int fd)
 {
@@ -72,11 +66,20 @@ int	init_fd(int argc, char **argv, int fd)
 t_env	*add_env_var(char *envp)
 {
 	t_env	*env_var;
+    int i;
 
-	env_var = (t_env *)malloc(sizeof(t_env) * 1);
-	env_var->key = "KEY";
-	env_var->var = "VARIABLE";
-
+    i = 0;
+    while (envp[i] != '=' && envp[i])
+        i++;    
+	env_var = malloc(sizeof(t_env) * 1);
+    // TD protect ft_calloc here
+	env_var->key = ft_substr(envp, 0, i);
+    // TD manage SHLVH levels here
+    if (envp[i])
+	    env_var->var = ft_strdup(envp + i + 1);
+    else
+        env_var->var = NULL;
+    // TD protect ft_strdup & ft_substr here
 	return (env_var);
 }
 
@@ -94,14 +97,13 @@ t_list  *init_env_lst(char **envp)
 		ft_lstadd_back(&env_lst, ft_lstnew((void *)env_var));
 		i++;
 	}
-	// print the env list
-	while (env_lst->next)
-	{
-		t_env *env_var;
-		env_var = env_lst->content ;
-		printf("%s\n", env_var->key);
-		env_lst = env_lst->next;
-		printf("TEST 3\n");
-	}
+	// // print the env list
+	// while (env_lst->next)
+	// {
+	// 	t_env *env_var;
+	// 	env_var = env_lst->content ;
+	// 	printf("%s=%s\n", env_var->key, env_var->var);
+	// 	env_lst = env_lst->next;
+	// }
     return (env_lst);
 }
