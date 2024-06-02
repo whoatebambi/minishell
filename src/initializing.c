@@ -68,12 +68,14 @@ t_env	*add_env_var(char *envp)
 	t_env	*env_var;
     int i;
 
+    if (!envp)
+        return (NULL);
     i = 0;
-    while (envp[i] != '=' && envp[i])
-        i++;    
     env_var = ft_calloc(sizeof(t_env), 1);
     if (!env_var)
         return (NULL);
+    while (envp[i] != '=' && envp[i])
+        i++;    
 	env_var->key = ft_substr(envp, 0, i);
     // TD manage SHLVH levels here
     if (envp[i])
@@ -87,15 +89,24 @@ t_env	*add_env_var(char *envp)
 t_list  *init_env_lst(char **envp)
 {
     t_list  *env_lst;
+    t_list  *new;
     t_env   *env_var;
     int     i;
 
 	i = 0;
 	env_lst = NULL;
+    env_var = NULL;
+    if (!envp)
+        return (NULL);
 	while (envp[i])
 	{
 		env_var = add_env_var(envp[i]);
-		ft_lstadd_back(&env_lst, ft_lstnew((void *)env_var));
+        if (!env_var)
+            return (NULL);
+        new = ft_lstnew((void *)env_var);
+        if (!new)
+            return (NULL);
+		ft_lstadd_back(&env_lst, new);
 		i++;
 	}
     return (env_lst);

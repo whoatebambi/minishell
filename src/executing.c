@@ -72,30 +72,33 @@ void    echo(char **cmd_args)
 	write(1, "\n", 1);
 }
 
-void	env(void)
+void	env(t_list *env_lst)
 {
-    t_shell *minishell;
+    t_env *env;
 
-    minishell = get_minishell(NULL);
-    while (minishell->env_lst)
+    if (env_lst == NULL)
+        return ;
+    while (env_lst)
     {
-        ft_putstr_fd(((t_env *)minishell->env_lst->content)->key, 1);
+        env = (t_env *)env_lst->content;
+        char *key = env->key;
+        ft_putstr_fd(key, 1);
+        char *var = env->var;
         write(1, "=", 1);
-        ft_putstr_fd(((t_env *)minishell->env_lst->content)->var, 1);
+        ft_putstr_fd(var, 1);
         write(1, "\n", 1);
-        minishell->env_lst = minishell->env_lst->next;
+        env_lst = env_lst->next;
     }
-	// TD free(minishell);
 }
 
-void    execute_builtin(t_cmd_table *cmd_table)
+void    execute_builtin(t_cmd_table *cmd_table, t_list *env_lst)
 {
     if (ft_strncmp(cmd_table->cmd_args[0], "pwd", 3) == 0) // && ft_strlen(command->commands) == 3)
 		pwd();
     else if (ft_strncmp(cmd_table->cmd_args[0], "echo", 4) == 0)
 		echo(cmd_table->cmd_args);
     else if (ft_strncmp(cmd_table->cmd_args[0], "env", 3) == 0) // && ft_strlen(command->commands) == 3)
-		env();
+		env(env_lst);
 }
 
 void	execute(t_shell *minishell, char *line)
@@ -120,7 +123,7 @@ void	execute(t_shell *minishell, char *line)
 	i = 0;
     while (minishell->cmd_table[i] != NULL)
     {
-        execute_builtin(minishell->cmd_table[i]);    
+        execute_builtin(minishell->cmd_table[i], minishell->env_lst);    
         i++;
     }
 }

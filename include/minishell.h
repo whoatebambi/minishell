@@ -108,9 +108,10 @@ char    *get_line(t_mode mode, int fd);
 
 // executing.c
 void		execute(t_shell *minishell, char *line);
-void		execute_builtin(t_cmd_table *cmd_table);
+void        execute_builtin(t_cmd_table *cmd_table, t_list *env_lst);
 void		pwd(void);
 void		echo(char **cmd_args);
+void	    env(t_list *env_lst);
 t_cmd_table	**temp_parse_commands(char *line);
 
 // initializing.c
@@ -126,5 +127,11 @@ t_shell		*get_minishell(t_shell *minishell);
 // signals.c
 void		set_signals(t_mode mode);
 void		sig_handler(int signum);
+
+// free_memory.c
+void    free_env(void *content);
+void    free_env_lst(t_list *env_lst);
+void    free_cmd_table(t_cmd_table **cmd_table);
+void    free_minishell(t_shell *minishell);
 
 #endif

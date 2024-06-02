@@ -53,7 +53,7 @@ RM		=	rm -rf
 
 ################################### SOURCES ###################################
 
-MINISHELL_FILE	= main.c initializing.c executing.c signals.c utils.c
+MINISHELL_FILE	= main.c initializing.c executing.c signals.c free_memory.c utils.c
 
 ######################## COMBINE DIRECTORIES AND FILES ########################
 
