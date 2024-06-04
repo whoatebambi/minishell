@@ -3,10 +3,10 @@
 #                                                         :::      ::::::::    #
 #    Makefile                                           :+:      :+:    :+:    #
 #                                                     +:+ +:+         +:+      #
-#    By: fcouserg <fcouserg@student.42.fr>          +#+  +:+       +#+         #
+#    By: gbeaudoi <gbeaudoi@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2024/01/08 14:30:03 by gbeaudoi          #+#    #+#              #
-#    Updated: 2024/05/28 16:21:43 by fcouserg         ###   ########.fr        #
+#    Updated: 2024/06/03 17:10:08 by gbeaudoi         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -53,27 +53,38 @@ RM		=	rm -rf
 
 ################################### SOURCES ###################################
 
-MINISHELL_FILE	= main.c initializing.c executing.c signals.c free_memory.c utils.c
+PARSING_DIR 	= 	parsing/
+PARSING_FILES	= 	expendeur.c parseur.c parsing_utils.c quote_handling.c
+
+OTHER_DIR 	= 	other/
+OTHER_FILES	= 	 main.c initializing.c executing.c signals.c free_memory.c utils.c
+
 
 ######################## COMBINE DIRECTORIES AND FILES ########################
 
 SRC_DIR		= src/
 
-SRC_MINISHELL 		= 	$(addprefix $(SRC_DIR), $(MINISHELL_FILE))
+SRC_NAMES	= $(addprefix $(OTHER_DIR), $(OTHER_FILES)) \
+			$(addprefix $(PARSING_DIR), $(PARSING_FILES)) \
 
-OBJ_DIR		=	obj/
+OBJ_DIR		= obj/
 
-OBJ_MINISHELL 		= 	$(addprefix $(OBJ_DIR), $(MINISHELL_FILE:.c=.o))
+OBJ_NAMES	= $(SRC_NAMES:.c=.o)
+
+OBJ_FOLDERS	= $(addprefix $(OBJ_DIR), $(OTHER_DIR)) \
+				$(addprefix $(OBJ_DIR), $(PARISNG_DIR))	\
+
+OBJ		= $(addprefix $(OBJ_DIR), $(OBJ_NAMES))
 
 #################################### MANDATORY ####################################
 
-$(OBJ_DIR)%.o: $(SRC_DIR)%.c | $(OBJ_DIR)
-	$(CC) $(CFLAGS) -c $< -o $@
+$(OBJ_DIR)%.o: $(SRC_DIR)%.c
+			@mkdir -p $(dir $@)
+			@printf "$(ITAL)$(GREEN)Compiling: $(RESET)$(ITAL)$<\n"
+			@$(CC) $(CFLAGS) $(INC) -c $< -o $@
 
-$(OBJ_DIR):
-	mkdir -p $(OBJ_DIR)
 
-$(MINISHELL): $(OBJ_MINISHELL)
+$(MINISHELL): $(OBJ)
 	@make -C $(LIBFT)
 	@cp $(LIBFT)/libft.a .
 	$(CC) $(CFLAGS) $^ -o $@ -L$(LIBFT) -lft -lreadline

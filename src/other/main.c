@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   main.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: fcouserg <fcouserg@student.42.fr>          +#+  +:+       +#+        */
+/*   By: gbeaudoi <gbeaudoi@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/21 20:27:20 by fcouserg          #+#    #+#             */
-/*   Updated: 2024/05/28 16:31:27 by fcouserg         ###   ########.fr       */
+/*   Updated: 2024/06/03 17:29:39 by gbeaudoi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -40,7 +40,6 @@ int	main(int argc, char **argv, char **envp)
 {
     int         fd;
     t_shell *minishell;
-    char        *line;
 
     (void)envp;
     fd = init_argc(argc, argv, fd); // checks the number of arguments and initialize fd if argc = 2
@@ -48,13 +47,12 @@ int	main(int argc, char **argv, char **envp)
     set_signals(minishell->mode); // sets the signals (ctrl + c, ctrl + d, ctrl + \)
     while (1)
     {
-        line = get_line(minishell->mode, fd); // gets the line from the user or from the file
-        if (line == NULL)
+        minishell->line = get_line(minishell->mode, fd); // gets the line from the user or from the file
+        if (minishell->line == NULL)
             break;
-        // parse(line);
+        ft_parseur(minishell);
         // free(line);
-        execute(minishell, line);
-		free(line);
+        execute(minishell, minishell->clean_line);
     }
     free_minishell(minishell);
 	return (0);
