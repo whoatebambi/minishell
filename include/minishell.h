@@ -6,7 +6,7 @@
 /*   By: fcouserg <fcouserg@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/21 18:24:48 by gbeaudoi          #+#    #+#             */
-/*   Updated: 2024/06/04 16:24:12 by fcouserg         ###   ########.fr       */
+/*   Updated: 2024/06/04 17:03:26 by fcouserg         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -60,9 +60,17 @@ typedef struct s_env_moving
 	char			*old_pwd;
 }					t_env_moving;
 
+typedef enum e_redir_type
+{
+	REDIR_IN,
+	REDIR_OUT,
+	DELIMITER,
+	APPEND,
+}				t_redir_type;
+
 typedef struct s_redir
 {
-	int 			token;
+	t_redir_type	type;
 	char			*redir;
 	struct s_node 	*next;
 	struct s_node 	*previous;
@@ -81,11 +89,12 @@ typedef struct s_node
 // permet d avoir toutes les info d une commande
 typedef struct s_cmd_table
 {
-	char *group_command;
-	t_node *nodes;
-	char **cmd_args;
-	t_redir *redir_in;
-	t_redir *redir_out;
+	char	*group_command;
+	t_node	*nodes;
+	char	**cmd_args;
+	t_redir *redirs;
+	int		fd_in;
+	int		fd_out;
 }					t_cmd_table;
 
 // permet de savoir les commande qui entoure une pipe
@@ -103,7 +112,7 @@ typedef struct s_shell
 {
 	t_mode			mode;
 	char			**env;
-	t_pipe			*pipes;
+	t_pipe			*pipes; // c'est utile ?
 	t_cmd_table		**cmd_table;
 	t_list			*env_lst;
 	pid_t			*child_pids;
