@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   minishell.h                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: gbeaudoi <gbeaudoi@student.42.fr>          +#+  +:+       +#+        */
+/*   By: fcouserg <fcouserg@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/21 18:24:48 by gbeaudoi          #+#    #+#             */
-/*   Updated: 2024/06/04 15:56:17 by gbeaudoi         ###   ########.fr       */
+/*   Updated: 2024/06/04 16:24:12 by fcouserg         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -83,9 +83,9 @@ typedef struct s_cmd_table
 {
 	char *group_command;
 	t_node *nodes;
-	char **args;
+	char **cmd_args;
 	t_redir *redir_in;
-	t_redir *redir_out
+	t_redir *redir_out;
 }					t_cmd_table;
 
 // permet de savoir les commande qui entoure une pipe
