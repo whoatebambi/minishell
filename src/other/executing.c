@@ -6,7 +6,7 @@
 /*   By: fcouserg <fcouserg@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/21 20:27:20 by fcouserg          #+#    #+#             */
-/*   Updated: 2024/06/05 14:34:59 by fcouserg         ###   ########.fr       */
+/*   Updated: 2024/06/05 20:08:40 by fcouserg         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -155,17 +155,55 @@ void    execute_builtin(t_cmd_table *cmd_table, t_list *env_lst)
 		export(env_lst, cmd_table, cmd_table->fd_out);
 }
 
+int    is_builtin(char *cmd_arg)
+{
+    if (ft_strncmp(cmd_arg, "pwd", 3) == 0)
+		return (1);
+    else if (ft_strncmp(cmd_arg, "echo", 4) == 0)
+		return (1);
+    else if (ft_strncmp(cmd_arg, "env", 3) == 0)
+		return (1);
+    else if (ft_strncmp(cmd_arg, "export", 6) == 0)
+		return (1);
+    else
+        return (0);
+}
+
+void    exec_redirs_out(t_cmd_table *cmd, t_redir *redir)
+{
+    cmd->fd_out = open("file.txt", O_RDWR | O_CREAT | O_TRUNC, 00755); //open(redir->redir
+    if (cmd->fd_out == -1)
+		return;
+}
+
+int     exec_redirs(t_cmd_table *cmd, t_redir *redir)
+{
+    if (1)// while (redir)
+    {
+        if (1)//(redir->type == REDIR_OUT)
+            exec_redirs_out(cmd, redir);
+        //redir = redir->next;
+    }
+    return (1);
+}
+
 void	execute(t_shell *minishell, char *line)
 {
     int i;
-	int	j;
+	int	nb_commands;
 
     i = 0;
+    nb_commands = 1;
     // while waiting for commands table parsing i am creating a dummy one here
 	minishell->cmd_table = temp_parse_commands(line);
-    while (minishell->cmd_table[i] != NULL)
+    while (i < nb_commands)
     {
-        execute_builtin(minishell->cmd_table[i], minishell->env_lst);    
+        // if pipe > 0
+            // create_pipe()
+        if (exec_redirs(minishell->cmd_table[i], minishell->cmd_table[i]->redirs))
+            printf("\nREDIRS\n");
+        if (is_builtin(minishell->cmd_table[i]->cmd_args[0]))
+            execute_builtin(minishell->cmd_table[i], minishell->env_lst);    
         i++;
     }
 }

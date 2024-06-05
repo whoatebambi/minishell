@@ -6,7 +6,7 @@
 /*   By: fcouserg <fcouserg@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/21 18:24:48 by gbeaudoi          #+#    #+#             */
-/*   Updated: 2024/06/05 14:15:09 by fcouserg         ###   ########.fr       */
+/*   Updated: 2024/06/05 20:07:52 by fcouserg         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -125,13 +125,15 @@ char				*get_line(t_mode mode, int fd);
 
 // executing.c
 void				execute(t_shell *minishell, char *line);
+int    				is_builtin(char *cmd_arg);
 void				execute_builtin(t_cmd_table *cmd_table, t_list *env_lst);
+int     			exec_redirs(t_cmd_table *cmd, t_redir *redir);
 void				pwd(int fd_out);
 void    			echo(char **cmd_args, int fd_out);
 void				env(t_list *env_lst, int fd_out);
 void    			export(t_list *env_lst, t_cmd_table *cmd_table, int fd_out);
 t_list  			*dup_env_lst(t_list *env_lst);
-void			print_export(t_list *env_lst, int fd_out);
+void				print_export(t_list *env_lst, int fd_out);
 t_cmd_table			**temp_parse_commands(char *line);
 
 // initializing.c
