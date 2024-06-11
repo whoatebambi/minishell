@@ -6,7 +6,7 @@
 /*   By: gbeaudoi <gbeaudoi@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/31 15:46:35 by gbeaudoi          #+#    #+#             */
-/*   Updated: 2024/06/03 19:14:18 by gbeaudoi         ###   ########.fr       */
+/*   Updated: 2024/06/10 18:13:32 by gbeaudoi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,38 +25,18 @@ void	ft_rev_neg_line(t_shell *minishell)
 	}
 }
 
-// void	ft_reverse_neg_in_word(t_shell *minishell, int i)
-// {
-// 	int	j;
-// 	int	k;
-// 	int	len;
+void	ft_rev_neg_words(char *line)
+{
+	int	i;
 
-// 	j = 0;
-// 	k = 0;
-// 	len = word_count(minishell->commands[i]->full_command, " ");
-// 	minishell->commands[i]->split_command_clean = (char **)malloc(sizeof(char *)
-// 			* len);
-// 	if (minishell->commands[i]->split_command_clean == NULL)
-// 	{
-// 		// reset mini
-// 	}
-// 	while (j < len)
-// 	{
-// 		minishell->commands[i]->split_command_clean[j] = ft_calloc(ft_strlen(minishell->commands[i]->split_command[j])
-// 				+ 1, sizeof(char));
-// 	}
-// 	if (minishell->commands == NULL)
-// 	{
-// 		// reset mini
-// 	}
-// 	while (minishell->line[i] != j && minishell->line[i])
-// 	{
-// 		minishell->clean_line[k] = minishell->line[i] * -1;
-// 		i++;
-// 		k++;
-// 	}
-// }
-
+	i = 0;
+	while (line[i])
+	{
+		if (line[i] < 0)
+			line[i] *= -1;
+		i++;
+	}
+}
 
 int	ft_strcmp(const char *s1, const char *s2)
 {
@@ -71,7 +51,6 @@ int	ft_strcmp(const char *s1, const char *s2)
 	}
 	return (0);
 }
-
 
 char	*ft_strndup(char *str, int n)
 {
@@ -106,4 +85,3 @@ char	*ft_strjoin_no_free(char *s1, char *s2)
 	ft_strlcat(join, s2, len_join);
 	return (join);
 }
-

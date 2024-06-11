@@ -6,12 +6,13 @@
 /*   By: fcouserg <fcouserg@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/21 20:27:20 by fcouserg          #+#    #+#             */
-/*   Updated: 2024/06/06 12:59:00 by fcouserg         ###   ########.fr       */
+/*   Updated: 2024/06/11 18:02:53 by fcouserg         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
+// TO REMOVE WHEN YOU FEEL GOOOD ABOUT IT
 // while waiting for commands table parsing i am creating a dummy one here
 t_cmd_table    **temp_parse_commands(char *line)
 {

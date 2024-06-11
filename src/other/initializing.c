@@ -6,7 +6,7 @@
 /*   By: fcouserg <fcouserg@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/21 20:27:20 by fcouserg          #+#    #+#             */
-/*   Updated: 2024/06/04 20:56:38 by fcouserg         ###   ########.fr       */
+/*   Updated: 2024/06/11 17:40:14 by fcouserg         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,7 +23,9 @@ int	init_argc(int argc, char **argv, int fd)
 	}
 		
 	if (argc == 2) // opens the file (we are in non-interactive mode)
+	{
 		fd = open(argv[1], O_RDONLY);
+	}
 	if (fd == -1)
 	{
 		// no need to set errno to a macro here, the system call open() automatically did it

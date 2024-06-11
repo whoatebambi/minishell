@@ -6,7 +6,7 @@
 /*   By: fcouserg <fcouserg@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/21 18:24:48 by gbeaudoi          #+#    #+#             */
-/*   Updated: 2024/06/05 20:07:52 by fcouserg         ###   ########.fr       */
+/*   Updated: 2024/06/11 18:49:16 by fcouserg         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,13 +29,6 @@
 # include <sys/types.h>
 # include <sys/wait.h>
 # include <unistd.h>
-
-// MACRO pour definir les TOKEN
-# define PIPE 1001
-# define LOWER 1002
-# define D_LOWER 1003
-# define GREATER 1004
-# define D_GREATER 1005
 
 typedef enum e_mode
 {
@@ -66,46 +59,47 @@ typedef enum e_redir_type
 	REDIR_OUT,
 	DELIMITER,
 	APPEND,
-}				t_redir_type;
+}					t_redir_type;
 
 typedef struct s_redir
 {
 	t_redir_type	type;
 	char			*redir;
-	struct s_node 	*next;
-	struct s_node 	*previous;
+	struct s_redir	*next;
+	struct s_redir	*previous;
 }					t_redir;
 
 // permet d avoir toutes les info d une commande
 typedef struct s_node
 {
 	char			*string;
-	int 			token;
-	char			*redir;
-	struct s_node 	*next;
-	struct s_node 	*previous;
+	int token; // 0 no, 1 token
+	int redir; // char	*redir;
+	struct s_node	*next;
+	struct s_node	*previous;
 }					t_node;
 
 // permet d avoir toutes les info d une commande
 typedef struct s_cmd_table
 {
-	char	*group_command;
-	t_node	*nodes;
-	char	**cmd_args;
-	t_redir *redirs;
-	int		fd_in;
-	int		fd_out;
+	char			*group_command;
+	t_node			*nodes;
+	char			**cmd_args;
+	t_redir			*redirs_in;
+	t_redir			*redirs_out;
+	int				fd_in;
+	int				fd_out;
 }					t_cmd_table;
 
-// permet de savoir les commande qui entoure une pipe
-typedef struct s_pipe
-{
-	int				index;
-	t_cmd_table		*left;
-	t_cmd_table		*right;
-	struct s_pipe	*next;
-	struct s_pipe	*previous;
-}					t_pipe;
+// // permet de savoir les commande qui entoure une pipe
+// typedef struct s_pipe
+// {
+// 	int				index;
+// 	t_cmd_table		*left;
+// 	t_cmd_table		*right;
+// 	struct s_pipe	*next;
+// 	struct s_pipe	*previous;
+// }					t_pipe;
 
 // tentative structure qui aurait toutes les autres structs afin de passer en argument dans les fonctions.
 typedef struct s_shell
@@ -118,6 +112,7 @@ typedef struct s_shell
 	int				exit_code;
 	char			*line;
 	char			*clean_line;
+	int				count_pipes;
 }					t_shell;
 
 // main.c
@@ -125,14 +120,14 @@ char				*get_line(t_mode mode, int fd);
 
 // executing.c
 void				execute(t_shell *minishell, char *line);
-int    				is_builtin(char *cmd_arg);
+int					is_builtin(char *cmd_arg);
 void				execute_builtin(t_cmd_table *cmd_table, t_list *env_lst);
-int     			exec_redirs(t_cmd_table *cmd, t_redir *redir);
+int					exec_redirs(t_cmd_table *cmd, t_redir *redir);
 void				pwd(int fd_out);
-void    			echo(char **cmd_args, int fd_out);
+void				echo(char **cmd_args, int fd_out);
 void				env(t_list *env_lst, int fd_out);
-void    			export(t_list *env_lst, t_cmd_table *cmd_table, int fd_out);
-t_list  			*dup_env_lst(t_list *env_lst);
+void				export(t_list *env_lst, t_cmd_table *cmd_table, int fd_out);
+t_list				*dup_env_lst(t_list *env_lst);
 void				print_export(t_list *env_lst, int fd_out);
 t_cmd_table			**temp_parse_commands(char *line);
 
@@ -155,6 +150,7 @@ void				free_env(void *content);
 void				free_env_lst(t_list *env_lst);
 void				free_cmd_table(t_cmd_table **cmd_table);
 void				free_minishell(t_shell *minishell);
+void				free_minishell_loop(t_shell *minishell);
 
 // Parseur expendeur llexeur
 void				ft_parseur(t_shell *minishell);
@@ -165,5 +161,26 @@ void				ft_neg_inside_quote(t_shell *minishell, int i);
 int					ft_parseur_quote(t_shell *minishell);
 char				*ft_strjoin_no_free(char *s1, char *s2);
 int					ft_strcmp(const char *s1, const char *s2);
+void				ft_init_node_list(t_node **nodes,
+						t_cmd_table *command_table);
+void				ft_rev_neg_words(char *line);
+void				ft_tokenize_list(t_node *nodes);
+void				ft_check_syntax(t_node *nodes);
+void				ft_redistribute_node(t_cmd_table **command_table,
+						t_node *nodes);
+void				ft_init_redir_list(t_redir **redir, t_node *nodes,
+						char *token1, char *token2);
+
+// free
+void				ft_free_cmd_table2(t_cmd_table **cmd_table,
+						int count_pipes);
+void				ft_free_cmd_table3(t_cmd_table **cmd_table,
+						int count_pipes);
+void				ft_free_child(pid_t *i);
+void				ft_free_int(int i);
+void				ft_free_double_char(char **tab);
+void				ft_free_line(char *string);
+void				ft_free_redir(t_redir *redir_def);
+void				ft_free_node(t_node *node_def);
 
 #endif
