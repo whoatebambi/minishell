@@ -6,7 +6,7 @@
 /*   By: fcouserg <fcouserg@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/21 20:27:20 by fcouserg          #+#    #+#             */
-/*   Updated: 2024/06/05 20:08:40 by fcouserg         ###   ########.fr       */
+/*   Updated: 2024/06/06 12:59:00 by fcouserg         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -178,13 +178,16 @@ void    exec_redirs_out(t_cmd_table *cmd, t_redir *redir)
 
 int     exec_redirs(t_cmd_table *cmd, t_redir *redir)
 {
-    if (1)// while (redir)
-    {
-        if (1)//(redir->type == REDIR_OUT)
+    // if (1)// while (redir)
+    // {
+        if (cmd->cmd_args[2][0] == '>')//(redir->type == REDIR_OUT)
+        {
             exec_redirs_out(cmd, redir);
+            return (1);
+        }
         //redir = redir->next;
-    }
-    return (1);
+    // }
+    return (0);
 }
 
 void	execute(t_shell *minishell, char *line)
@@ -200,8 +203,8 @@ void	execute(t_shell *minishell, char *line)
     {
         // if pipe > 0
             // create_pipe()
-        if (exec_redirs(minishell->cmd_table[i], minishell->cmd_table[i]->redirs))
-            printf("\nREDIRS\n");
+        // if (exec_redirs(minishell->cmd_table[i], minishell->cmd_table[i]->redirs))
+        //     printf("\nREDIRS\n");
         if (is_builtin(minishell->cmd_table[i]->cmd_args[0]))
             execute_builtin(minishell->cmd_table[i], minishell->env_lst);    
         i++;
