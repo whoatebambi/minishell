@@ -44,10 +44,10 @@ MINISHELL		=	minishell
 LIBFT = libft/
 
 CC		=	cc
-# CFLAGS		=	-Wall -Wextra -Werror -I $(INC)
+# CFLAGS =	-Wall -Wextra -Werror -I $(INC)
+CFLAGS	=	-I $(INC) 
 INC		=	include/
-CFLAGS		=	-I $(INC)
-LIBC		=	ar -rcs
+LIBC	=	ar -rcs
 RM		=	rm -rf
 
 
@@ -55,9 +55,9 @@ RM		=	rm -rf
 
 PARSING_DIR 	= 	parsing/
 PARSING_FILES	= 	expendeur.c parseur.c parsing_utils.c quote_handling.c list_utils.c redir_list.c redistribute_node.c \
-					 free_parsing.c free_utils.c
+					free_parsing.c free_utils.c
 
-OTHER_DIR 	= 	other/
+OTHER_DIR 	= 	 other/
 OTHER_FILES	= 	 main.c initializing.c executing.c signals.c free_memory.c utils.c
 
 
@@ -73,7 +73,7 @@ OBJ_DIR		= obj/
 OBJ_NAMES	= $(SRC_NAMES:.c=.o)
 
 OBJ_FOLDERS	= $(addprefix $(OBJ_DIR), $(OTHER_DIR)) \
-				$(addprefix $(OBJ_DIR), $(PARISNG_DIR))	\
+			 $(addprefix $(OBJ_DIR), $(PARSING_DIR))	\
 
 OBJ		= $(addprefix $(OBJ_DIR), $(OBJ_NAMES))
 
@@ -82,18 +82,18 @@ OBJ		= $(addprefix $(OBJ_DIR), $(OBJ_NAMES))
 $(OBJ_DIR)%.o: $(SRC_DIR)%.c
 			@mkdir -p $(dir $@)
 			@printf "$(ITAL)$(GREEN)Compiling: $(RESET)$(ITAL)$<\n"
-			@$(CC) $(CFLAGS) $(INC) -c $< -o $@
+			@$(CC) $(CFLAGS) -c $< -o $@
 
 
 $(MINISHELL): $(OBJ)
 	@make -C $(LIBFT)
 	@cp $(LIBFT)/libft.a .
 	$(CC) $(CFLAGS) $^ -o $@ -L$(LIBFT) -lft -lreadline
-# $(CC) $(CFLAGS) $^ -o $@ -L$(LIBFT) -lft
 
 all:		$(MINISHELL) 
 
 .DEFAULT_GOAL := all
+
 
 #################################### RULES ####################################
 
