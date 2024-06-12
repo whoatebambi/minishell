@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   minishell.h                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: fcouserg <fcouserg@student.42.fr>          +#+  +:+       +#+        */
+/*   By: gbeaudoi <gbeaudoi@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/21 18:24:48 by gbeaudoi          #+#    #+#             */
-/*   Updated: 2024/06/11 18:49:16 by fcouserg         ###   ########.fr       */
+/*   Updated: 2024/06/12 17:24:32 by gbeaudoi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -64,7 +64,7 @@ typedef enum e_redir_type
 typedef struct s_redir
 {
 	t_redir_type	type;
-	char			*redir;
+	char			*redir; // redir_name
 	struct s_redir	*next;
 	struct s_redir	*previous;
 }					t_redir;
@@ -91,16 +91,6 @@ typedef struct s_cmd_table
 	int				fd_out;
 }					t_cmd_table;
 
-// // permet de savoir les commande qui entoure une pipe
-// typedef struct s_pipe
-// {
-// 	int				index;
-// 	t_cmd_table		*left;
-// 	t_cmd_table		*right;
-// 	struct s_pipe	*next;
-// 	struct s_pipe	*previous;
-// }					t_pipe;
-
 // tentative structure qui aurait toutes les autres structs afin de passer en argument dans les fonctions.
 typedef struct s_shell
 {
@@ -122,7 +112,7 @@ char				*get_line(t_mode mode, int fd);
 void				execute(t_shell *minishell, char *line);
 int					is_builtin(char *cmd_arg);
 void				execute_builtin(t_cmd_table *cmd_table, t_list *env_lst);
-int					exec_redirs(t_cmd_table *cmd, t_redir *redir);
+void					exec_redirs(t_cmd_table *cmd, t_redir *redir);
 void				pwd(int fd_out);
 void				echo(char **cmd_args, int fd_out);
 void				env(t_list *env_lst, int fd_out);
@@ -172,9 +162,9 @@ void				ft_init_redir_list(t_redir **redir, t_node *nodes,
 						char *token1, char *token2);
 
 // free
-void				ft_free_cmd_table2(t_cmd_table **cmd_table,
+void				ft_free_cmd_table_loop(t_cmd_table **cmd_table,
 						int count_pipes);
-void				ft_free_cmd_table3(t_cmd_table **cmd_table,
+void				ft_free_cmd_table_final(t_cmd_table **cmd_table,
 						int count_pipes);
 void				ft_free_child(pid_t *i);
 void				ft_free_int(int i);

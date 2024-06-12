@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   free_utils.c                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: fcouserg <fcouserg@student.42.fr>          +#+  +:+       +#+        */
+/*   By: gbeaudoi <gbeaudoi@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/10 17:25:33 by gbeaudoi          #+#    #+#             */
-/*   Updated: 2024/06/11 18:30:56 by fcouserg         ###   ########.fr       */
+/*   Updated: 2024/06/12 16:14:03 by gbeaudoi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,8 +22,6 @@ void	ft_free_node(t_node *node_def)
 	{
 		temp_node = node_def->next;
 		ft_free_line(node_def->string);
-		// ft_free_int(node_def->token);
-		// ft_free_int(node_def->redir);
 		free(node_def);
 		node_def = temp_node;
 	}
@@ -41,7 +39,6 @@ void	ft_free_redir(t_redir *redir_def)
 	{
 		temp_node = redir_def->next;
 		ft_free_line(redir_def->redir);
-		// ft_free_int(redir_def->type);
 		free(redir_def);
 		redir_def = temp_node;
 	}

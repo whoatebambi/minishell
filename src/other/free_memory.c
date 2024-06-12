@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   free_memory.c                                      :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: fcouserg <fcouserg@student.42.fr>          +#+  +:+       +#+        */
+/*   By: gbeaudoi <gbeaudoi@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/21 20:27:20 by fcouserg          #+#    #+#             */
-/*   Updated: 2024/06/11 18:48:58 by fcouserg         ###   ########.fr       */
+/*   Updated: 2024/06/12 16:07:16 by gbeaudoi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -64,28 +64,17 @@ void    free_cmd_table(t_cmd_table **cmd_table)
     }
     free(cmd_table);
 }
-// old
-// void    free_minishell(t_shell *minishell)
-// {
-//     free_env_lst(minishell->env_lst);
-//     free_cmd_table(minishell->cmd_table);
-//     free(minishell);
-// }
+
 
 void	free_minishell(t_shell *minishell)
 {
 	if (minishell == NULL)
 		return;
-	// free_mode(minishell->mode);
 	free_env_lst(minishell->env_lst);
-	// free_cmd_table(minishell->cmd_table);
-	ft_free_cmd_table2(minishell->cmd_table, minishell->count_pipes);
+	ft_free_cmd_table_final(minishell->cmd_table, minishell->count_pipes);
 	ft_free_double_char(minishell->env);
-	// ft_free_child(minishell->child_pids);
-	// ft_free_int(minishell->exit_code);
 	// ft_free_line(minishell->line);
 	// ft_free_line(minishell->clean_line);
-	// ft_free_int(minishell->count_pipes);
 	free(minishell);
 	minishell = NULL;
 }
@@ -94,7 +83,7 @@ void	free_minishell_loop(t_shell *minishell)
 {
 	if (minishell == NULL)
 		return;
-	ft_free_cmd_table3(minishell->cmd_table, minishell->count_pipes);
+	ft_free_cmd_table_loop(minishell->cmd_table, minishell->count_pipes);
 	ft_free_double_char(minishell->env);
 	ft_free_line(minishell->line);
 	ft_free_line(minishell->clean_line);

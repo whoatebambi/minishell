@@ -3,44 +3,14 @@
 /*                                                        :::      ::::::::   */
 /*   executing.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: fcouserg <fcouserg@student.42.fr>          +#+  +:+       +#+        */
+/*   By: gbeaudoi <gbeaudoi@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/21 20:27:20 by fcouserg          #+#    #+#             */
-/*   Updated: 2024/06/11 18:02:53 by fcouserg         ###   ########.fr       */
+/*   Updated: 2024/06/12 17:17:34 by gbeaudoi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
-
-// TO REMOVE WHEN YOU FEEL GOOOD ABOUT IT
-// while waiting for commands table parsing i am creating a dummy one here
-t_cmd_table    **temp_parse_commands(char *line)
-{
-    t_cmd_table	**cmd_table;
-	char 		**tmp_cmd_table;
-    int			i;
-
-    cmd_table = (t_cmd_table **)malloc(sizeof(t_cmd_table *) * 50);
-    i = 0;
-    tmp_cmd_table = ft_split(line, '|');
-    while (tmp_cmd_table[i] != NULL)
-    {
-        cmd_table[i] = (t_cmd_table *)malloc(sizeof(t_cmd_table));
-		cmd_table[i]->cmd_args =  ft_split(tmp_cmd_table[i], ' ');
-        cmd_table[i]->fd_in = STDIN_FILENO;
-        cmd_table[i]->fd_out = STDOUT_FILENO;
-        i++;
-    }
-    cmd_table[i] = NULL;
-    i = 0;
-    while (tmp_cmd_table[i] != NULL)
-    {
-        free(tmp_cmd_table[i]);
-        i++;
-    }
-    free(tmp_cmd_table);
-	return (cmd_table);
-}
 
 void	pwd(int fd_out)
 {
@@ -172,23 +142,23 @@ int    is_builtin(char *cmd_arg)
 
 void    exec_redirs_out(t_cmd_table *cmd, t_redir *redir)
 {
-    cmd->fd_out = open("file.txt", O_RDWR | O_CREAT | O_TRUNC, 00755); //open(redir->redir
+    printf("char redir %s\n",redir->redir);
+    cmd->fd_out = open(redir->redir, O_RDWR | O_CREAT | O_TRUNC, 00755);
     if (cmd->fd_out == -1)
 		return;
 }
 
-int     exec_redirs(t_cmd_table *cmd, t_redir *redir)
+void     exec_redirs(t_cmd_table *cmd, t_redir *redir)
 {
-    // if (1)// while (redir)
-    // {
-        if (cmd->cmd_args[2][0] == '>')//(redir->type == REDIR_OUT)
+    while (redir)
+    {
+        if (cmd->redirs_out->type == REDIR_OUT)
         {
+            printf("FOUND A '>'\n");
             exec_redirs_out(cmd, redir);
-            return (1);
         }
-        //redir = redir->next;
-    // }
-    return (0);
+        redir = redir->next;
+    }
 }
 
 void	execute(t_shell *minishell, char *line)
@@ -197,15 +167,16 @@ void	execute(t_shell *minishell, char *line)
 	int	nb_commands;
 
     i = 0;
-    nb_commands = 1;
-    // while waiting for commands table parsing i am creating a dummy one here
-	minishell->cmd_table = temp_parse_commands(line);
+    nb_commands = minishell->count_pipes;
     while (i < nb_commands)
     {
         // if pipe > 0
             // create_pipe()
-        // if (exec_redirs(minishell->cmd_table[i], minishell->cmd_table[i]->redirs))
-        //     printf("\nREDIRS\n");
+        if (minishell->cmd_table[i]->redirs_out)
+        {
+            printf("\ngoing in REDIR OUT\n");
+            exec_redirs(minishell->cmd_table[i], minishell->cmd_table[i]->redirs_out);
+        }
         if (is_builtin(minishell->cmd_table[i]->cmd_args[0]))
             execute_builtin(minishell->cmd_table[i], minishell->env_lst);    
         i++;
