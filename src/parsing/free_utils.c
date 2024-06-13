@@ -6,7 +6,7 @@
 /*   By: gbeaudoi <gbeaudoi@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/10 17:25:33 by gbeaudoi          #+#    #+#             */
-/*   Updated: 2024/06/12 16:14:03 by gbeaudoi         ###   ########.fr       */
+/*   Updated: 2024/06/12 17:55:25 by gbeaudoi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -38,7 +38,7 @@ void	ft_free_redir(t_redir *redir_def)
 	while (redir_def)
 	{
 		temp_node = redir_def->next;
-		ft_free_line(redir_def->redir);
+		ft_free_line(redir_def->redir_name);
 		free(redir_def);
 		redir_def = temp_node;
 	}

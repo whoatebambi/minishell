@@ -6,7 +6,7 @@
 /*   By: gbeaudoi <gbeaudoi@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/21 18:24:48 by gbeaudoi          #+#    #+#             */
-/*   Updated: 2024/06/12 17:24:32 by gbeaudoi         ###   ########.fr       */
+/*   Updated: 2024/06/12 17:53:50 by gbeaudoi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -64,7 +64,7 @@ typedef enum e_redir_type
 typedef struct s_redir
 {
 	t_redir_type	type;
-	char			*redir; // redir_name
+	char			*redir_name; 
 	struct s_redir	*next;
 	struct s_redir	*previous;
 }					t_redir;

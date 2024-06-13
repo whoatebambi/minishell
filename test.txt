@@ -1,3 +1,0 @@
-pwd | echo "CAT" hello
-eenv | cat -e
-export

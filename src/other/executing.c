@@ -6,7 +6,7 @@
 /*   By: gbeaudoi <gbeaudoi@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/21 20:27:20 by fcouserg          #+#    #+#             */
-/*   Updated: 2024/06/12 17:17:34 by gbeaudoi         ###   ########.fr       */
+/*   Updated: 2024/06/12 18:09:23 by gbeaudoi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -142,8 +142,8 @@ int    is_builtin(char *cmd_arg)
 
 void    exec_redirs_out(t_cmd_table *cmd, t_redir *redir)
 {
-    printf("char redir %s\n",redir->redir);
-    cmd->fd_out = open(redir->redir, O_RDWR | O_CREAT | O_TRUNC, 00755);
+    printf("char redir %s\n",redir->redir_name);
+    cmd->fd_out = open(redir->redir_name, O_RDWR | O_CREAT | O_TRUNC, 00755);
     if (cmd->fd_out == -1)
 		return;
 }

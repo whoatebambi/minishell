@@ -6,7 +6,7 @@
 /*   By: gbeaudoi <gbeaudoi@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/08 13:40:22 by gbeaudoi          #+#    #+#             */
-/*   Updated: 2024/06/10 18:19:32 by gbeaudoi         ###   ########.fr       */
+/*   Updated: 2024/06/12 18:08:47 by gbeaudoi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -55,8 +55,8 @@ static t_redir	*ft_new_redir(t_node *copy)
 		node->type = REDIR_IN;
 	else
 		node->type = DELIMITER;
-	node->redir = ft_strdup(copy->next->string);
-	if (node->redir == NULL)
+	node->redir_name = ft_strdup(copy->next->string);
+	if (node->redir_name == NULL)
 	{
 		// reset mini
 	}

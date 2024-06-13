@@ -6,7 +6,7 @@
 /*   By: gbeaudoi <gbeaudoi@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/20 15:42:08 by gbeaudoi          #+#    #+#             */
-/*   Updated: 2024/06/12 16:36:45 by gbeaudoi         ###   ########.fr       */
+/*   Updated: 2024/06/13 15:26:50 by gbeaudoi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -129,14 +129,14 @@ void	ft_parseur(t_shell *minishell)
 		while (copie)
 		{
 			ft_printf("redir_in type %d\n", copie->type);
-			ft_printf("redir_in redir %s\n", copie->redir);
+			ft_printf("redir_in redir %s\n", copie->redir_name);
 			copie = copie->next;
 		}
 		copie = minishell->cmd_table[i]->redirs_out;
 		while (copie)
 		{
 			ft_printf("redir_out type %d\n", copie->type);
-			ft_printf("redir_out redir %s\n", copie->redir);
+			ft_printf("redir_out redir %s\n", copie->redir_name);
 			copie = copie->next;
 		}
 		i++;
