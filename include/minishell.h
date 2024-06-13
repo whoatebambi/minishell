@@ -6,7 +6,7 @@
 /*   By: gbeaudoi <gbeaudoi@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/21 18:24:48 by gbeaudoi          #+#    #+#             */
-/*   Updated: 2024/06/12 17:53:50 by gbeaudoi         ###   ########.fr       */
+/*   Updated: 2024/06/13 19:51:28 by gbeaudoi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -64,7 +64,7 @@ typedef enum e_redir_type
 typedef struct s_redir
 {
 	t_redir_type	type;
-	char			*redir_name; 
+	char			*redir_name;
 	struct s_redir	*next;
 	struct s_redir	*previous;
 }					t_redir;
@@ -88,7 +88,8 @@ typedef struct s_cmd_table
 	t_redir			*redirs_in;
 	t_redir			*redirs_out;
 	int				fd_in;
-	int				fd_out;
+	int				fd_out;	
+	int				fd_pipe[2];
 }					t_cmd_table;
 
 // tentative structure qui aurait toutes les autres structs afin de passer en argument dans les fonctions.
@@ -102,6 +103,7 @@ typedef struct s_shell
 	int				exit_code;
 	char			*line;
 	char			*clean_line;
+
 	int				count_pipes;
 }					t_shell;
 
@@ -112,7 +114,8 @@ char				*get_line(t_mode mode, int fd);
 void				execute(t_shell *minishell, char *line);
 int					is_builtin(char *cmd_arg);
 void				execute_builtin(t_cmd_table *cmd_table, t_list *env_lst);
-void					exec_redirs(t_cmd_table *cmd, t_redir *redir);
+void				exec_redirs(t_cmd_table *cmd, t_redir *redir_in,
+						t_redir *redir_out);
 void				pwd(int fd_out);
 void				echo(char **cmd_args, int fd_out);
 void				env(t_list *env_lst, int fd_out);

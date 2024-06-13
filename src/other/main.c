@@ -6,7 +6,7 @@
 /*   By: gbeaudoi <gbeaudoi@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/21 20:27:20 by fcouserg          #+#    #+#             */
-/*   Updated: 2024/06/12 18:11:31 by gbeaudoi         ###   ########.fr       */
+/*   Updated: 2024/06/13 19:29:29 by gbeaudoi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -51,7 +51,7 @@ int	main(int argc, char **argv, char **envp)
 			break ;
 		ft_parseur(minishell);
 
-		// execute(minishell, minishell->clean_line);		
+		execute(minishell, minishell->clean_line);		
 		free_minishell_loop(minishell);
 	}
 	close(fd);
