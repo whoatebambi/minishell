@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   expendeur.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: gbeaudoi <gbeaudoi@student.42.fr>          +#+  +:+       +#+        */
+/*   By: fcouserg <fcouserg@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/31 15:31:03 by gbeaudoi          #+#    #+#             */
-/*   Updated: 2024/06/13 16:05:55 by gbeaudoi         ###   ########.fr       */
+/*   Updated: 2024/06/14 18:19:45 by fcouserg         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -50,29 +50,55 @@ static void	ft_dollar_option(char *copy, t_shell *minishell, int i,
 		int flag_dbl)
 {
 	char	*to_join;
+	char	*dup;
 
+	// dup = ft_strdup()
 	if (ft_isdigit(minishell->clean_line[i + 1]) && minishell->clean_line[i
 		+ 1] != '0')
-		to_join = minishell->clean_line + (i + 2);
+	{
+		to_join = ft_strdup(minishell->clean_line + (i + 2));
+		// if (mini... == NULL)
+		// to be free;
+	}
 	else if (minishell->clean_line[i + 1] == '0')
+	{
 		to_join = ft_strjoin_no_free("miniminishell_Flo_&_G",
 				minishell->clean_line + i + 2);
+		// if (mini... == NULL)
+		// to be free;
+	}
 	else if (ft_isalpha(minishell->clean_line[i + 1]) || minishell->clean_line[i
 		+ 1] == '_')
 		ft_find_value(&to_join, minishell, i + 1);
 	else if (minishell->clean_line[i + 1] == '?')
+	{
 		to_join = ft_strjoin(ft_itoa(minishell->exit_code),
 				minishell->clean_line + i + 2);
+		// if (mini... == NULL)
+		// to be free;
+	}
 	else if ((minishell->clean_line[i + 1] == '\"' && flag_dbl == 0)
 		|| minishell->clean_line[i + 1] == '\'')
-		to_join = minishell->clean_line + i + 1;
+	{
+		to_join = ft_strdup(minishell->clean_line + i + 1);
+		// if (mini... == NULL)
+		// to be free;
+	}
 	else
 	{
 		minishell->clean_line[i] = minishell->clean_line[i] * -1;
-		to_join = minishell->clean_line + i;
+		to_join = ft_strdup(minishell->clean_line + i);
+		// if (mini... == NULL)
+		// to be free;
 	}
 	if (to_join)
+	{
+		free(minishell->clean_line);
 		minishell->clean_line = ft_strjoin(copy, to_join);
+		// if (mini... == NULL)
+		// to be free;
+	}
+	free(to_join);
 }
 
 static void	ft_define_flag(int *flag)
@@ -86,7 +112,7 @@ static void	ft_define_flag(int *flag)
 void	ft_expand_dollar(t_shell *minishell, int i)
 {
 	int		flag_sgl;
-	char	j;
+	int		delim;
 	char	*copy;
 	int		flag_dbl;
 
@@ -94,7 +120,7 @@ void	ft_expand_dollar(t_shell *minishell, int i)
 	flag_dbl = 0;
 	while (minishell->clean_line[i])
 	{
-		if (minishell->clean_line[i] == '$' && flag_sgl == 0)
+		if (minishell->clean_line[i] == '$' && flag_sgl == 0 && delim == 0)
 		{
 			copy = ft_strndup(minishell->clean_line, i);
 			if (copy == NULL)
@@ -106,13 +132,30 @@ void	ft_expand_dollar(t_shell *minishell, int i)
 			flag_sgl = 0;
 			flag_dbl = 0;
 		}
-		else
+		else if (minishell->clean_line[i] == '\'')
 		{
-			if (minishell->clean_line[i] == '\'')
-				ft_define_flag(&flag_sgl);
-			else if (minishell->clean_line[i] == '\"')
-				ft_define_flag(&flag_dbl);
+			ft_define_flag(&flag_sgl);
 			i++;
 		}
+		else if (minishell->clean_line[i] == '\"')
+		{
+			ft_define_flag(&flag_dbl);
+			i++;
+		}
+		else if (minishell->clean_line[i] == '<' && i > 0
+			&& minishell->clean_line[i - 1] == '<' && flag_dbl == 0)
+		{
+			delim = 1;
+			i++;
+			while (minishell->clean_line[i] == ' ')
+				i++;
+		}
+		else if (minishell->clean_line[i] == ' ')
+		{
+			delim = 0;
+			i++;
+		}
+		else
+			i++;
 	}
 }

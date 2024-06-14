@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   parsing_utils.c                                    :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: gbeaudoi <gbeaudoi@student.42.fr>          +#+  +:+       +#+        */
+/*   By: fcouserg <fcouserg@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/31 15:46:35 by gbeaudoi          #+#    #+#             */
-/*   Updated: 2024/06/10 18:13:32 by gbeaudoi         ###   ########.fr       */
+/*   Updated: 2024/06/14 18:22:17 by fcouserg         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,17 +25,23 @@ void	ft_rev_neg_line(t_shell *minishell)
 	}
 }
 
-void	ft_rev_neg_words(char *line)
+int	ft_rev_neg_words(char *line)
 {
 	int	i;
+	int flag;
 
 	i = 0;
+	flag = 0;
 	while (line[i])
 	{
 		if (line[i] < 0)
+		{
 			line[i] *= -1;
+			flag = 1;	
+		}
 		i++;
 	}
+	return (flag);
 }
 
 int	ft_strcmp(const char *s1, const char *s2)

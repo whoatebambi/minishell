@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   list_utils.c                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: gbeaudoi <gbeaudoi@student.42.fr>          +#+  +:+       +#+        */
+/*   By: fcouserg <fcouserg@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/05 14:56:48 by gbeaudoi          #+#    #+#             */
-/*   Updated: 2024/06/10 18:12:43 by gbeaudoi         ###   ########.fr       */
+/*   Updated: 2024/06/14 18:21:44 by fcouserg         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -40,7 +40,7 @@ static void	ft_stack_add_to_back(t_node **a, t_node *new_node)
 	}
 }
 
-static t_node	*ft_new_node(char *word)
+static t_node	*ft_new_node(char *word, int flag)
 {
 	t_node	*node;
 
@@ -54,6 +54,10 @@ static t_node	*ft_new_node(char *word)
 	}
 	node->token = 0;
 	node->redir = 0;
+	if(flag)
+		node->quote = 1;
+	else
+		node->quote = 0;
 	node->next = NULL;
 	node->previous = NULL;
 	return (node);
@@ -119,6 +123,7 @@ void	ft_init_node_list(t_node **nodes, t_cmd_table *command_table)
 	int		n;
 	t_node	*new_node;
 	char	*word;
+	int flag;
 
 	*nodes = NULL;
 	i = 0;
@@ -126,8 +131,8 @@ void	ft_init_node_list(t_node **nodes, t_cmd_table *command_table)
 	{
 		n = 0;
 		word = ft_fill_word(command_table, &i, n);
-		ft_rev_neg_words(word);
-		new_node = ft_new_node(word);
+		flag = ft_rev_neg_words(word);
+		new_node = ft_new_node(word, flag);
 		if (new_node == NULL)
 		{
 			// reset mini

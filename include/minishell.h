@@ -6,7 +6,7 @@
 /*   By: fcouserg <fcouserg@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/21 18:24:48 by gbeaudoi          #+#    #+#             */
-/*   Updated: 2024/06/14 18:03:10 by fcouserg         ###   ########.fr       */
+/*   Updated: 2024/06/14 18:24:54 by fcouserg         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -65,6 +65,7 @@ typedef struct s_redir
 {
 	t_redir_type	type;
 	char			*redir_name;
+	int				quote;
 	struct s_redir	*next;
 	struct s_redir	*previous;
 }					t_redir;
@@ -75,6 +76,7 @@ typedef struct s_node
 	char			*string;
 	int token; // 0 no, 1 token
 	int redir; // char	*redir;
+	int				quote;
 	struct s_node	*next;
 	struct s_node	*previous;
 }					t_node;
@@ -167,7 +169,7 @@ char				*ft_strjoin_no_free(char *s1, char *s2);
 int					ft_strcmp(const char *s1, const char *s2);
 void				ft_init_node_list(t_node **nodes,
 						t_cmd_table *command_table);
-void				ft_rev_neg_words(char *line);
+int				ft_rev_neg_words(char *line);
 void				ft_tokenize_list(t_node *nodes);
 void				ft_check_syntax(t_node *nodes);
 void				ft_redistribute_node(t_cmd_table **command_table,

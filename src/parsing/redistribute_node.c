@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   redistribute_node.c                                :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: gbeaudoi <gbeaudoi@student.42.fr>          +#+  +:+       +#+        */
+/*   By: fcouserg <fcouserg@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/08 13:40:22 by gbeaudoi          #+#    #+#             */
-/*   Updated: 2024/06/12 18:08:47 by gbeaudoi         ###   ########.fr       */
+/*   Updated: 2024/06/14 18:23:06 by fcouserg         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -55,11 +55,20 @@ static t_redir	*ft_new_redir(t_node *copy)
 		node->type = REDIR_IN;
 	else
 		node->type = DELIMITER;
-	node->redir_name = ft_strdup(copy->next->string);
-	if (node->redir_name == NULL)
+	if (copy->next)
 	{
-		// reset mini
+		node->redir_name = ft_strdup(copy->next->string);
+		if (node->redir_name == NULL)
+		{
+			// reset mini
+		}
+		if (copy->next->quote)
+			node->quote = 1;
+		else
+			node->quote = 0;
 	}
+	else
+		node->redir_name = NULL;
 	node->next = NULL;
 	node->previous = NULL;
 	return (node);
@@ -87,6 +96,8 @@ void	ft_init_redir_list(t_redir **redir, t_node *nodes, char *token1,
 			}
 			ft_stack_add_to_back_redir(redir, new_node);
 		}
+		else
+			new_node = NULL;
 		copy = copy->next;
 	}
 }

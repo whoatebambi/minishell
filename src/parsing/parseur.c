@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   parseur.c                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: gbeaudoi <gbeaudoi@student.42.fr>          +#+  +:+       +#+        */
+/*   By: fcouserg <fcouserg@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/20 15:42:08 by gbeaudoi          #+#    #+#             */
-/*   Updated: 2024/06/13 19:30:40 by gbeaudoi         ###   ########.fr       */
+/*   Updated: 2024/06/14 18:22:01 by fcouserg         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -86,7 +86,8 @@ static void	ft_split_pipe(t_shell *minishell)
 	// 	free_minishell(minishell); // to check avec florence
 	minishell->count_pipes = ft_find_pipes(pipes);
 	printf("minishell->count_pipes = %d\n", minishell->count_pipes);
-	minishell->cmd_table = ft_calloc(minishell->count_pipes, sizeof(t_cmd_table *));
+	minishell->cmd_table = ft_calloc(minishell->count_pipes,
+			sizeof(t_cmd_table *));
 	// if (minishell->cmd_table == NULL)
 	// {
 	// 	ft_free_double_char(pipes);
@@ -112,17 +113,19 @@ void	ft_parseur(t_shell *minishell)
 	i = 0;
 	while (i < minishell->count_pipes)
 	{
-		ft_printf("[%d] GROUP COMMAND : %s\n", i, minishell->cmd_table[i]->group_command);
+		ft_printf("[%d] GROUP COMMAND : %s\n", i,
+			minishell->cmd_table[i]->group_command);
 		copy = minishell->cmd_table[i]->nodes;
 		while (copy)
 		{
-			ft_printf("[string] : %s\n[token]  : %d | [redir] : %d\n", copy->string, copy->token, copy->redir);
+			ft_printf("[string] : %s\n[token]  : %d | [redir] : %d | [quote] :%d\n", copy->string, copy->token, copy->redir, copy->quote);
 			copy = copy->next;
 		}
 		j = 0;
 		while (minishell->cmd_table[i]->cmd_args[j])
 		{
-			ft_printf("COMMAND ARG[%d] : %s\n", j, minishell->cmd_table[i]->cmd_args[j]);
+			ft_printf("COMMAND ARG[%d] : %s\n", j,
+				minishell->cmd_table[i]->cmd_args[j]);
 			j++;
 		}
 		copie = minishell->cmd_table[i]->redirs_in;
@@ -130,6 +133,7 @@ void	ft_parseur(t_shell *minishell)
 		{
 			ft_printf("redir_in type %d\n", copie->type);
 			ft_printf("redir_in redir %s\n", copie->redir_name);
+			ft_printf("redir_in quote %d\n", copie->quote);
 			copie = copie->next;
 		}
 		copie = minishell->cmd_table[i]->redirs_out;
@@ -137,6 +141,7 @@ void	ft_parseur(t_shell *minishell)
 		{
 			ft_printf("redir_out type %d\n", copie->type);
 			ft_printf("redir_out redir %s\n", copie->redir_name);
+			ft_printf("redir_out quote %d\n", copie->quote);
 			copie = copie->next;
 		}
 		i++;

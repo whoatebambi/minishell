@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   free_utils.c                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: gbeaudoi <gbeaudoi@student.42.fr>          +#+  +:+       +#+        */
+/*   By: fcouserg <fcouserg@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/10 17:25:33 by gbeaudoi          #+#    #+#             */
-/*   Updated: 2024/06/12 17:55:25 by gbeaudoi         ###   ########.fr       */
+/*   Updated: 2024/06/14 18:20:31 by fcouserg         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -33,8 +33,8 @@ void	ft_free_redir(t_redir *redir_def)
 {
 	t_redir	*temp_node;
 
-	if (!redir_def)
-		return ;
+	// if (!redir_def)
+	// 	return ;
 	while (redir_def)
 	{
 		temp_node = redir_def->next;
