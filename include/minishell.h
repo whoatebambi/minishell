@@ -6,7 +6,7 @@
 /*   By: fcouserg <fcouserg@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/21 18:24:48 by gbeaudoi          #+#    #+#             */
-/*   Updated: 2024/06/14 16:53:44 by fcouserg         ###   ########.fr       */
+/*   Updated: 2024/06/14 18:03:10 by fcouserg         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -110,15 +110,16 @@ typedef struct s_shell
 // main.c
 char				*get_line(t_mode mode, int fd);
 
-// build_execve.c
+// exec_system.c
+void				exec_system(t_shell *minishell, int i);
 char				**build_execve_envp(t_list *env_lst);
-char	**build_execve_path(t_list *env_lst);
+char				**build_execve_path(t_list *env_lst);
+char				*test_path(char *arg, char **execve_path_table);
 
 // executing.c
 void				execute(t_shell *minishell, char *line);
 void				execute_builtin(t_cmd_table *cmd_table, t_list *env_lst);
 void				exec_in_child(t_shell *minishell, int i);
-void				exec_system(t_shell *minishell, int i);
 
 // exec_redirections.c
 void				exec_redirs(t_cmd_table *cmd, t_redir *redir_in, t_redir *redir_out);

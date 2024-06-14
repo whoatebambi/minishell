@@ -6,7 +6,7 @@
 /*   By: fcouserg <fcouserg@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/21 20:27:20 by fcouserg          #+#    #+#             */
-/*   Updated: 2024/06/14 17:03:34 by fcouserg         ###   ########.fr       */
+/*   Updated: 2024/06/14 17:27:49 by fcouserg         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -36,28 +36,6 @@ void	exec_in_child(t_shell *minishell, int i)
 		execute_builtin(minishell->cmd_table[i], minishell->env_lst);
 	else
 		exec_system(minishell, i);
-}
-
-void	exec_system(t_shell *minishell, int i)
-{
-	char	**execve_envp;
-	char	**execve_path_table;
-	char	*execve_path;
-	
-	execve_envp = build_execve_envp(minishell->env_lst);
-	execve_path_table = build_execve_path(minishell->env_lst);
-	
-	printf("///// exec_system()\n");
-	int j = 0;
-	while (execve_path_table[j])
-	{
-		printf("[%d] %s\n", j, execve_path_table[j]);
-		j++;
-	}
-	// test the right path
-	// free split
-	//execve(execve_path, minishell->cmd_table[i]->cmd_args, execve_envp);
-
 }
 
 void	execute(t_shell *minishell, char *line)

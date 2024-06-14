@@ -6,7 +6,7 @@
 /*   By: fcouserg <fcouserg@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/21 20:27:20 by fcouserg          #+#    #+#             */
-/*   Updated: 2024/06/14 16:39:20 by fcouserg         ###   ########.fr       */
+/*   Updated: 2024/06/14 17:32:42 by fcouserg         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -49,6 +49,7 @@ t_shell	*init_minishell(char **envp, int argc)
 	minishell->cmd_table = NULL;
     // TD can **envp be NULL? if yes what happens?
 	minishell->env_lst = init_env_lst(envp);
+	minishell->exit_code = 0;
 	return (minishell);
 }
 
