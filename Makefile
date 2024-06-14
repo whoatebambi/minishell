@@ -3,10 +3,10 @@
 #                                                         :::      ::::::::    #
 #    Makefile                                           :+:      :+:    :+:    #
 #                                                     +:+ +:+         +:+      #
-#    By: gbeaudoi <gbeaudoi@student.42.fr>          +#+  +:+       +#+         #
+#    By: fcouserg <fcouserg@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2024/01/08 14:30:03 by gbeaudoi          #+#    #+#              #
-#    Updated: 2024/06/10 17:26:14 by gbeaudoi         ###   ########.fr        #
+#    Updated: 2024/06/14 16:40:06 by fcouserg         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -58,7 +58,7 @@ PARSING_FILES	= 	expendeur.c parseur.c parsing_utils.c quote_handling.c list_uti
 					free_parsing.c free_utils.c
 
 OTHER_DIR 	= 	 other/
-OTHER_FILES	= 	 main.c initializing.c executing.c signals.c free_memory.c utils.c
+OTHER_FILES	= 	 main.c initializing.c executing.c signals.c free_memory.c utils.c builtin.c build_execve.c exec_redirections.c
 
 
 ######################## COMBINE DIRECTORIES AND FILES ########################

@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   minishell.h                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: gbeaudoi <gbeaudoi@student.42.fr>          +#+  +:+       +#+        */
+/*   By: fcouserg <fcouserg@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/21 18:24:48 by gbeaudoi          #+#    #+#             */
-/*   Updated: 2024/06/13 19:51:28 by gbeaudoi         ###   ########.fr       */
+/*   Updated: 2024/06/14 16:53:44 by fcouserg         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -110,19 +110,29 @@ typedef struct s_shell
 // main.c
 char				*get_line(t_mode mode, int fd);
 
+// build_execve.c
+char				**build_execve_envp(t_list *env_lst);
+char	**build_execve_path(t_list *env_lst);
+
 // executing.c
 void				execute(t_shell *minishell, char *line);
-int					is_builtin(char *cmd_arg);
 void				execute_builtin(t_cmd_table *cmd_table, t_list *env_lst);
-void				exec_redirs(t_cmd_table *cmd, t_redir *redir_in,
-						t_redir *redir_out);
+void				exec_in_child(t_shell *minishell, int i);
+void				exec_system(t_shell *minishell, int i);
+
+// exec_redirections.c
+void				exec_redirs(t_cmd_table *cmd, t_redir *redir_in, t_redir *redir_out);
+void				exec_redirs_out(t_cmd_table *cmd, t_redir *redir_out);
+void				exec_redirs_in(t_cmd_table *cmd, t_redir *redir_out);
+
+// builtin.c
 void				pwd(int fd_out);
 void				echo(char **cmd_args, int fd_out);
 void				env(t_list *env_lst, int fd_out);
 void				export(t_list *env_lst, t_cmd_table *cmd_table, int fd_out);
 t_list				*dup_env_lst(t_list *env_lst);
 void				print_export(t_list *env_lst, int fd_out);
-t_cmd_table			**temp_parse_commands(char *line);
+int					is_builtin(char *cmd_arg);
 
 // initializing.c
 int					init_argc(int argc, char **argv, int fd);

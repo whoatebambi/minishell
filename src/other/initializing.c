@@ -6,7 +6,7 @@
 /*   By: fcouserg <fcouserg@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/21 20:27:20 by fcouserg          #+#    #+#             */
-/*   Updated: 2024/06/11 17:40:14 by fcouserg         ###   ########.fr       */
+/*   Updated: 2024/06/14 16:39:20 by fcouserg         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -65,28 +65,6 @@ int	init_fd(int argc, char **argv, int fd)
     return (fd);
 }
 
-t_env	*add_env_var(char *envp)
-{
-	t_env	*env_var;
-    int i;
-
-    if (!envp)
-        return (NULL);
-    i = 0;
-    env_var = ft_calloc(sizeof(t_env), 1);
-    if (!env_var)
-        return (NULL);
-    while (envp[i] != '=' && envp[i])
-        i++;    
-	env_var->key = ft_substr(envp, 0, i);
-    // TD manage SHLVH levels here
-    if (envp[i])
-	    env_var->var = ft_strdup(envp + i + 1);
-    else
-        env_var->var = NULL;
-    // TD protect ft_strdup & ft_substr here
-	return (env_var);
-}
 
 t_list  *init_env_lst(char **envp)
 {
@@ -112,4 +90,27 @@ t_list  *init_env_lst(char **envp)
 		i++;
 	}
     return (env_lst);
+}
+
+t_env	*add_env_var(char *envp)
+{
+	t_env	*env_var;
+    int i;
+
+    if (!envp)
+        return (NULL);
+    i = 0;
+    env_var = ft_calloc(sizeof(t_env), 1);
+    if (!env_var)
+        return (NULL);
+    while (envp[i] != '=' && envp[i])
+        i++;
+	env_var->key = ft_substr(envp, 0, i);
+    // TD manage SHLVH levels here
+    if (envp[i])
+	    env_var->var = ft_strdup(envp + i + 1);
+    else
+        env_var->var = NULL;
+    // TD protect ft_strdup & ft_substr here
+	return (env_var);
 }
