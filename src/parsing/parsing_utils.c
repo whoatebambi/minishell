@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   parsing_utils.c                                    :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: fcouserg <fcouserg@student.42.fr>          +#+  +:+       +#+        */
+/*   By: gbeaudoi <gbeaudoi@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/31 15:46:35 by gbeaudoi          #+#    #+#             */
-/*   Updated: 2024/06/14 18:22:17 by fcouserg         ###   ########.fr       */
+/*   Updated: 2024/06/17 15:47:49 by gbeaudoi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,7 +28,7 @@ void	ft_rev_neg_line(t_shell *minishell)
 int	ft_rev_neg_words(char *line)
 {
 	int	i;
-	int flag;
+	int	flag;
 
 	i = 0;
 	flag = 0;
@@ -37,7 +37,7 @@ int	ft_rev_neg_words(char *line)
 		if (line[i] < 0)
 		{
 			line[i] *= -1;
-			flag = 1;	
+			flag = 1;
 		}
 		i++;
 	}

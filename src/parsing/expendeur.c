@@ -3,16 +3,16 @@
 /*                                                        :::      ::::::::   */
 /*   expendeur.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: fcouserg <fcouserg@student.42.fr>          +#+  +:+       +#+        */
+/*   By: gbeaudoi <gbeaudoi@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/31 15:31:03 by gbeaudoi          #+#    #+#             */
-/*   Updated: 2024/06/14 18:19:45 by fcouserg         ###   ########.fr       */
+/*   Updated: 2024/06/17 16:35:13 by gbeaudoi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-static void	ft_find_value(char **to_join, t_shell *minishell, int i)
+void	ft_find_value(char **to_join, t_shell *minishell, int i)
 {
 	int		j;
 	char	*key;
@@ -23,11 +23,7 @@ static void	ft_find_value(char **to_join, t_shell *minishell, int i)
 	while (isalnum(minishell->clean_line[i + j]) || minishell->clean_line[i
 		+ j] == '_')
 		j++;
-	key = ft_strndup(minishell->clean_line + i, j);
-	if (key == NULL)
-	{
-		// reset
-	}
+	ft_check_strdup(minishell->clean_line + i, j, &key, 1);
 	list = minishell->env_lst;
 	while (list)
 	{
@@ -39,13 +35,12 @@ static void	ft_find_value(char **to_join, t_shell *minishell, int i)
 			break ;
 		}
 		else
-			*to_join = minishell->clean_line + i + j;
+			ft_check_strdup(minishell->clean_line + i + j, 0, to_join, 0);
 		list = list->next;
 	}
 	free(key);
 }
 
-// no free 0 et ?
 static void	ft_dollar_option(char *copy, t_shell *minishell, int i,
 		int flag_dbl)
 {
@@ -98,9 +93,8 @@ static void	ft_dollar_option(char *copy, t_shell *minishell, int i,
 		// if (mini... == NULL)
 		// to be free;
 	}
-	free(to_join);
+	// free(to_join);
 }
-
 static void	ft_define_flag(int *flag)
 {
 	if (*flag == 1)

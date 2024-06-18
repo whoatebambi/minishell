@@ -1,1 +1,1 @@
-hello | ls
+cat < Makefile | grep "MINISHELL"

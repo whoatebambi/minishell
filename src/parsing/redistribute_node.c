@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   redistribute_node.c                                :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: fcouserg <fcouserg@student.42.fr>          +#+  +:+       +#+        */
+/*   By: gbeaudoi <gbeaudoi@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/08 13:40:22 by gbeaudoi          #+#    #+#             */
-/*   Updated: 2024/06/14 18:23:06 by fcouserg         ###   ########.fr       */
+/*   Updated: 2024/06/17 15:39:07 by gbeaudoi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -39,6 +39,23 @@ static void	ft_stack_add_to_back_redir(t_redir **a, t_redir *new_node)
 		*a = new_node;
 	}
 }
+static void	ft_help_redir(t_redir *node, t_node *copy)
+{
+	if (copy->next)
+	{
+		node->redir_name = ft_strdup(copy->next->string);
+		if (node->redir_name == NULL)
+		{
+			// make necessary exit
+		}
+		if (copy->next->quote)
+			node->quote = 1;
+		else
+			node->quote = 0;
+	}
+	else
+		node->redir_name = NULL;
+}
 
 static t_redir	*ft_new_redir(t_node *copy)
 {
@@ -55,20 +72,7 @@ static t_redir	*ft_new_redir(t_node *copy)
 		node->type = REDIR_IN;
 	else
 		node->type = DELIMITER;
-	if (copy->next)
-	{
-		node->redir_name = ft_strdup(copy->next->string);
-		if (node->redir_name == NULL)
-		{
-			// reset mini
-		}
-		if (copy->next->quote)
-			node->quote = 1;
-		else
-			node->quote = 0;
-	}
-	else
-		node->redir_name = NULL;
+	ft_help_redir(node, copy);
 	node->next = NULL;
 	node->previous = NULL;
 	return (node);

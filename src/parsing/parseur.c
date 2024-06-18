@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   parseur.c                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: fcouserg <fcouserg@student.42.fr>          +#+  +:+       +#+        */
+/*   By: gbeaudoi <gbeaudoi@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/20 15:42:08 by gbeaudoi          #+#    #+#             */
-/*   Updated: 2024/06/14 18:22:01 by fcouserg         ###   ########.fr       */
+/*   Updated: 2024/06/17 18:02:04 by gbeaudoi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -44,7 +44,7 @@ void	ft_init_command_group(t_cmd_table **command_table, char **pipes,
 		ft_tokenize_list(command_table[i]->nodes);
 		ft_check_syntax(command_table[i]->nodes);
 		ft_redistribute_node(&command_table[i], command_table[i]->nodes);
-		command_table[i]->fd_in = -42;
+		command_table[i]->fd_in = -42; //-42
 		command_table[i]->fd_out = -42;
 		i++;
 	}
@@ -85,7 +85,6 @@ static void	ft_split_pipe(t_shell *minishell)
 	// if (pipes == NULL)
 	// 	free_minishell(minishell); // to check avec florence
 	minishell->count_pipes = ft_find_pipes(pipes);
-	printf("minishell->count_pipes = %d\n", minishell->count_pipes);
 	minishell->cmd_table = ft_calloc(minishell->count_pipes,
 			sizeof(t_cmd_table *));
 	// if (minishell->cmd_table == NULL)
@@ -111,39 +110,41 @@ void	ft_parseur(t_shell *minishell)
 	ft_parseur_quote(minishell);
 	ft_split_pipe(minishell);
 	i = 0;
-	while (i < minishell->count_pipes)
+while (i < minishell->count_pipes)
+{
+	ft_printf("[%d] GROUP COMMAND : %s\n", i,
+		minishell->cmd_table[i]->group_command);
+	copy = minishell->cmd_table[i]->nodes;
+	while (copy)
 	{
-		ft_printf("[%d] GROUP COMMAND : %s\n", i,
-			minishell->cmd_table[i]->group_command);
-		copy = minishell->cmd_table[i]->nodes;
-		while (copy)
-		{
-			ft_printf("[string] : %s\n[token]  : %d | [redir] : %d | [quote] :%d\n", copy->string, copy->token, copy->redir, copy->quote);
-			copy = copy->next;
-		}
-		j = 0;
-		while (minishell->cmd_table[i]->cmd_args[j])
-		{
-			ft_printf("COMMAND ARG[%d] : %s\n", j,
-				minishell->cmd_table[i]->cmd_args[j]);
-			j++;
-		}
-		copie = minishell->cmd_table[i]->redirs_in;
-		while (copie)
-		{
-			ft_printf("redir_in type %d\n", copie->type);
-			ft_printf("redir_in redir %s\n", copie->redir_name);
-			ft_printf("redir_in quote %d\n", copie->quote);
-			copie = copie->next;
-		}
-		copie = minishell->cmd_table[i]->redirs_out;
-		while (copie)
-		{
-			ft_printf("redir_out type %d\n", copie->type);
-			ft_printf("redir_out redir %s\n", copie->redir_name);
-			ft_printf("redir_out quote %d\n", copie->quote);
-			copie = copie->next;
-		}
-		i++;
+		ft_printf("[string] : %s\n[token]  : %d | [redir] : %d | [quote] :%d\n",
+copy->string, copy->token, copy->redir, copy->quote);
+		copy = copy->next;
 	}
+	j = 0;
+	while (minishell->cmd_table[i]->cmd_args[j])
+	{
+		ft_printf("COMMAND ARG[%d] : %s\n", j,
+			minishell->cmd_table[i]->cmd_args[j]);
+		j++;
+	}
+	copie = minishell->cmd_table[i]->redirs_in;
+	while (copie)
+	{
+		ft_printf("redir_in type %d\n", copie->type);
+		ft_printf("redir_in redir %s\n", copie->redir_name);
+		ft_printf("redir_in quote %d\n", copie->quote);
+		copie = copie->next;
+	}
+	copie = minishell->cmd_table[i]->redirs_out;
+	while (copie)
+	{
+		ft_printf("redir_out type %d\n", copie->type);
+		ft_printf("redir_out redir %s\n", copie->redir_name);
+		ft_printf("redir_out quote %d\n", copie->quote);
+		copie = copie->next;
+	}
+	i++;
 }
+}
+

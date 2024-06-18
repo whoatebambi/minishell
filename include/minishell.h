@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   minishell.h                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: fcouserg <fcouserg@student.42.fr>          +#+  +:+       +#+        */
+/*   By: gbeaudoi <gbeaudoi@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/21 18:24:48 by gbeaudoi          #+#    #+#             */
-/*   Updated: 2024/06/14 18:24:54 by fcouserg         ###   ########.fr       */
+/*   Updated: 2024/06/17 16:33:28 by gbeaudoi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -177,16 +177,21 @@ void				ft_redistribute_node(t_cmd_table **command_table,
 void				ft_init_redir_list(t_redir **redir, t_node *nodes,
 						char *token1, char *token2);
 
+// NODE INIT
+t_node	*ft_new_node(char *word, int flag);
+void	ft_stack_add_to_back(t_node **a, t_node *new_node);
+
 // free
 void				ft_free_cmd_table_loop(t_cmd_table **cmd_table,
 						int count_pipes);
 void				ft_free_cmd_table_final(t_cmd_table **cmd_table,
 						int count_pipes);
 void				ft_free_child(pid_t *i);
-void				ft_free_int(int i);
 void				ft_free_double_char(char **tab);
 void				ft_free_line(char *string);
 void				ft_free_redir(t_redir *redir_def);
 void				ft_free_node(t_node *node_def);
+void	ft_check_strdup(char *str, int i, char **dest, int flag);
+
 
 #endif

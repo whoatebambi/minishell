@@ -3,29 +3,26 @@
 /*                                                        :::      ::::::::   */
 /*   exec_redirections.c                                :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: fcouserg <fcouserg@student.42.fr>          +#+  +:+       +#+        */
+/*   By: gbeaudoi <gbeaudoi@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/21 20:27:20 by fcouserg          #+#    #+#             */
-/*   Updated: 2024/06/14 16:38:11 by fcouserg         ###   ########.fr       */
+/*   Updated: 2024/06/17 17:42:17 by gbeaudoi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
 
-void	exec_redirs_in(t_cmd_table *cmd, t_redir *redir_out)
+void	exec_redirs_in(t_cmd_table *cmd, t_redir *redir_in)
 {
-	if (redir_out->type == APPEND)
+	if (redir_in->type == REDIR_IN)
 	{
-		cmd->fd_out = open(redir_out->redir_name, O_RDWR | O_CREAT | O_APPEND,
-				00755);
-		if (redir_out->next)
-			close(cmd->fd_out);
+		cmd->fd_in = open(redir_in->redir_name, O_RDWR, 00755);
+		if (redir_in->next)
+			close(cmd->fd_in);
 	}
-	else if (redir_out->type == REDIR_OUT)
-		cmd->fd_out = open(redir_out->redir_name, O_RDWR | O_CREAT | O_TRUNC,
-				00755);
-	if (cmd->fd_out == -1)
+	else if (redir_in->type == DELIMITER)
+		// exec_heredoc()`
 		return ;
 }
 
@@ -51,15 +48,15 @@ void	exec_redirs_out(t_cmd_table *cmd, t_redir *redir_out)
 
 void	exec_redirs(t_cmd_table *cmd, t_redir *redir_in, t_redir *redir_out)
 {
-	// while (redir_in)
-	// {
-	// 	if (redir_in->type == REDIR_IN)
-	// 	{
-	// 		printf("REDIR_IN\n");
-	// 		exec_redirs_in(cmd, redir_out);
-	// 	}
-	// 	redir_out = redir_out->next;
-	// }
+	while (redir_in)
+	{
+		if (redir_in->type == REDIR_IN)
+		{
+			printf("REDIR_IN\n");
+			exec_redirs_in(cmd, redir_in);
+		}
+		redir_in = redir_in->next;
+	}
 	while (redir_out)
 	{
 		exec_redirs_out(cmd, redir_out);

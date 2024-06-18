@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   builtin.c                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: fcouserg <fcouserg@student.42.fr>          +#+  +:+       +#+        */
+/*   By: gbeaudoi <gbeaudoi@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/21 20:27:20 by fcouserg          #+#    #+#             */
-/*   Updated: 2024/06/14 16:11:40 by fcouserg         ###   ########.fr       */
+/*   Updated: 2024/06/17 16:49:04 by gbeaudoi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,7 +21,10 @@ int	is_builtin(char *cmd_arg)
 	else if (ft_strncmp(cmd_arg, "env", 3) == 0)
 		return (1);
 	else if (ft_strncmp(cmd_arg, "export", 6) == 0)
-		return (1);
+		return (2);
+	// cd
+	// unset
+	// exit
 	else
 		return (0);
 }
@@ -58,6 +61,7 @@ void	echo(char **cmd_args, int fd_out)
 	}
 	// TD (flag == '-n')
 	write(fd_out, "\n", 1);
+	// exit(1);
 }
 
 void	env(t_list *env_lst, int fd_out)

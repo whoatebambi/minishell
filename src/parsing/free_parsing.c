@@ -6,7 +6,7 @@
 /*   By: gbeaudoi <gbeaudoi@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/10 15:59:26 by gbeaudoi          #+#    #+#             */
-/*   Updated: 2024/06/12 16:22:34 by gbeaudoi         ###   ########.fr       */
+/*   Updated: 2024/06/17 16:32:53 by gbeaudoi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -44,7 +44,7 @@ void	ft_free_cmd_table_loop(t_cmd_table **cmd_table, int count_pipes)
 // to remove in a bit since i make a new one (similar)
 void	ft_free_cmd_table_final(t_cmd_table **cmd_table, int count_pipes)
 {
-	int i;
+	int	i;
 
 	if (cmd_table == NULL)
 		return ;
@@ -53,20 +53,20 @@ void	ft_free_cmd_table_final(t_cmd_table **cmd_table, int count_pipes)
 	// ft_printf("1\n");
 	// while (i < count_pipes)
 	// {
-		// ft_printf("a\n");
-		// ft_free_line(cmd_table[i]->group_command);
-		// ft_printf("b\n");
-		// ft_free_node(cmd_table[i]->nodes);
-		// ft_printf("c\n");
-		// ft_free_double_char(cmd_table[i]->cmd_args);
-		// ft_printf("d\n");
-		// ft_free_redir(cmd_table[i]->redirs_in);
-		// ft_printf("e\n");
-		// ft_free_redir(cmd_table[i]->redirs_out);
-		// ft_printf("f\n");
-		// free(cmd_table[i]);
-		// ft_printf("g\n");
-		// printf("freed cmd_table[%d]\n", i);
+	// ft_printf("a\n");
+	// ft_free_line(cmd_table[i]->group_command);
+	// ft_printf("b\n");
+	// ft_free_node(cmd_table[i]->nodes);
+	// ft_printf("c\n");
+	// ft_free_double_char(cmd_table[i]->cmd_args);
+	// ft_printf("d\n");
+	// ft_free_redir(cmd_table[i]->redirs_in);
+	// ft_printf("e\n");
+	// ft_free_redir(cmd_table[i]->redirs_out);
+	// ft_printf("f\n");
+	// free(cmd_table[i]);
+	// ft_printf("g\n");
+	// printf("freed cmd_table[%d]\n", i);
 	// 	i++;
 	// }
 	// ft_printf("h\n");
@@ -74,4 +74,16 @@ void	ft_free_cmd_table_final(t_cmd_table **cmd_table, int count_pipes)
 	// ft_printf("i\n");
 	// printf("freed **cmd_table\n");
 	cmd_table = NULL;
+}
+
+void	ft_check_strdup(char *str, int i, char **dest, int flag)
+{
+	if (flag == 1)
+		*dest = ft_strndup(str, i);
+	else 
+		*dest = ft_strdup(str);
+	if (*dest == NULL)
+	{
+		// reset
+	}
 }
