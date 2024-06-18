@@ -29,6 +29,7 @@
 # include <sys/types.h>
 # include <sys/wait.h>
 # include <unistd.h>
+# include <stdarg.h>
 
 typedef enum e_mode
 {
@@ -36,9 +37,6 @@ typedef enum e_mode
 	NON_INTERACTIVE,
 }					t_mode;
 
-// Les structs que je pensais utiliser
-
-// Utile pour toi pour quand tu codera le builtin export ou env
 typedef struct s_env
 {
 	char			*key;
@@ -129,12 +127,13 @@ void				exec_redirs_out(t_cmd_table *cmd, t_redir *redir_out);
 void				exec_redirs_in(t_cmd_table *cmd, t_redir *redir_out);
 
 // builtin.c
-void				pwd(int fd_out);
-void				echo(char **cmd_args, int fd_out);
-void				env(t_list *env_lst, int fd_out);
-void				export(t_list *env_lst, t_cmd_table *cmd_table, int fd_out);
+int 				pwd(int fd_out);
+int 				echo(char **cmd_args, int fd_out);
+int 				env(t_list *env_lst, int fd_out);
+int				    export(t_list *env_lst, t_cmd_table *cmd_table, int fd_out);
 t_list				*dup_env_lst(t_list *env_lst);
-void				print_export(t_list *env_lst, int fd_out);
+int				    print_export(t_list *env_lst, int fd_out);
+void                sort_env_lst(t_list **list);
 int					is_builtin(char *cmd_arg);
 
 // initializing.c
@@ -146,6 +145,9 @@ t_env				*add_env_var(char *envp);
 
 // utils.c
 t_shell				*get_minishell(t_shell *minishell);
+int                 safe_write(int fd, const char *str, ...);
+int	                safe_strcmp(char *s1, char *s2);
+void                swap_env(t_list *a, t_list *b);
 
 // signals.c
 void				set_signals(t_mode mode);

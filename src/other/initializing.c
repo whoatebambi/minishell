@@ -78,7 +78,7 @@ t_list  *init_env_lst(char **envp)
 	env_lst = NULL;
     env_var = NULL;
     if (!envp)
-        return (NULL);
+        return (NULL); // TD is this the right way to handle this?
 	while (envp[i])
 	{
 		env_var = add_env_var(envp[i]);
@@ -90,6 +90,7 @@ t_list  *init_env_lst(char **envp)
 		ft_lstadd_back(&env_lst, new);
 		i++;
 	}
+    // if env_lst is NULL, we should free env_var here
     return (env_lst);
 }
 

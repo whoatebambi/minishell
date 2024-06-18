@@ -1,1 +1,3 @@
-cat < Makefile | grep "MINISHELL"
+echo -n "Hello World!"
+echo "Hello World!"
+echo -n "Hello World!"

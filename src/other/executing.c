@@ -14,10 +14,12 @@
 
 void	execute_builtin(t_cmd_table *cmd_table, t_list *env_lst)
 {
+    int exit_code;
+
 	if (ft_strncmp(cmd_table->cmd_args[0], "pwd", 3) == 0)
-		pwd(cmd_table->fd_out);
+		exit_code = pwd(cmd_table->fd_out);
 	else if (ft_strncmp(cmd_table->cmd_args[0], "echo", 4) == 0)
-		echo(cmd_table->cmd_args, cmd_table->fd_out);
+		exit_code = echo(cmd_table->cmd_args, cmd_table->fd_out);
 	else if (ft_strncmp(cmd_table->cmd_args[0], "env", 3) == 0)
 		env(env_lst, cmd_table->fd_out);
 	else if (ft_strncmp(cmd_table->cmd_args[0], "export", 6) == 0)
@@ -111,19 +113,19 @@ void	execute(t_shell *minishell, char *line)
 		if (is_builtin(minishell->cmd_table[i]->cmd_args[0])
 			&& nb_commands == 1)
 		{
-			printf("is_builtin == 1 || 2\n");
+			// printf("is_builtin == 1 || 2\n");
 			execute_builtin(minishell->cmd_table[i], minishell->env_lst);
 		}
 		else if (is_builtin(minishell->cmd_table[i]->cmd_args[0]) == 2)
 		{
-			printf("is_builtin == 2\n");
+			// printf("is_builtin == 2\n");
 			execute_builtin(minishell->cmd_table[i], minishell->env_lst);
 		}
 		// fork() only for env, pwd and echo
 		// otherwise fork and then check
 		else
 		{
-			printf("else\n");
+			// printf("else\n");
 			exec_in_child(minishell, i);
 		}
 		if (minishell->cmd_table[i]->fd_out != 1)

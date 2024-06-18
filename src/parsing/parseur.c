@@ -110,41 +110,41 @@ void	ft_parseur(t_shell *minishell)
 	ft_parseur_quote(minishell);
 	ft_split_pipe(minishell);
 	i = 0;
-while (i < minishell->count_pipes)
-{
-	ft_printf("[%d] GROUP COMMAND : %s\n", i,
-		minishell->cmd_table[i]->group_command);
-	copy = minishell->cmd_table[i]->nodes;
-	while (copy)
-	{
-		ft_printf("[string] : %s\n[token]  : %d | [redir] : %d | [quote] :%d\n",
-copy->string, copy->token, copy->redir, copy->quote);
-		copy = copy->next;
-	}
-	j = 0;
-	while (minishell->cmd_table[i]->cmd_args[j])
-	{
-		ft_printf("COMMAND ARG[%d] : %s\n", j,
-			minishell->cmd_table[i]->cmd_args[j]);
-		j++;
-	}
-	copie = minishell->cmd_table[i]->redirs_in;
-	while (copie)
-	{
-		ft_printf("redir_in type %d\n", copie->type);
-		ft_printf("redir_in redir %s\n", copie->redir_name);
-		ft_printf("redir_in quote %d\n", copie->quote);
-		copie = copie->next;
-	}
-	copie = minishell->cmd_table[i]->redirs_out;
-	while (copie)
-	{
-		ft_printf("redir_out type %d\n", copie->type);
-		ft_printf("redir_out redir %s\n", copie->redir_name);
-		ft_printf("redir_out quote %d\n", copie->quote);
-		copie = copie->next;
-	}
-	i++;
-}
+// while (i < minishell->count_pipes)
+// {
+// 	ft_printf("[%d] GROUP COMMAND : %s\n", i,
+// 		minishell->cmd_table[i]->group_command);
+// 	copy = minishell->cmd_table[i]->nodes;
+// 	while (copy)
+// 	{
+// 		ft_printf("[string] : %s\n[token]  : %d | [redir] : %d | [quote] :%d\n",
+// copy->string, copy->token, copy->redir, copy->quote);
+// 		copy = copy->next;
+// 	}
+// 	j = 0;
+// 	while (minishell->cmd_table[i]->cmd_args[j])
+// 	{
+// 		ft_printf("COMMAND ARG[%d] : %s\n", j,
+// 			minishell->cmd_table[i]->cmd_args[j]);
+// 		j++;
+// 	}
+// 	copie = minishell->cmd_table[i]->redirs_in;
+// 	while (copie)
+// 	{
+// 		ft_printf("redir_in type %d\n", copie->type);
+// 		ft_printf("redir_in redir %s\n", copie->redir_name);
+// 		ft_printf("redir_in quote %d\n", copie->quote);
+// 		copie = copie->next;
+// 	}
+// 	copie = minishell->cmd_table[i]->redirs_out;
+// 	while (copie)
+// 	{
+// 		ft_printf("redir_out type %d\n", copie->type);
+// 		ft_printf("redir_out redir %s\n", copie->redir_name);
+// 		ft_printf("redir_out quote %d\n", copie->quote);
+// 		copie = copie->next;
+// 	}
+// 	i++;
+// }
 }
 

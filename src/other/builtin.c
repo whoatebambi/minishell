@@ -14,13 +14,13 @@
 
 int	is_builtin(char *cmd_arg)
 {
-	if (ft_strncmp(cmd_arg, "pwd", 3) == 0)
+	if (safe_strcmp(cmd_arg, "pwd") == 0)
 		return (1);
-	else if (ft_strncmp(cmd_arg, "echo", 4) == 0)
+	else if (safe_strcmp(cmd_arg, "echo") == 0)
 		return (1);
-	else if (ft_strncmp(cmd_arg, "env", 3) == 0)
+	else if (safe_strcmp(cmd_arg, "env") == 0)
 		return (1);
-	else if (ft_strncmp(cmd_arg, "export", 6) == 0)
+	else if (safe_strcmp(cmd_arg, "export") == 0)
 		return (2);
 	// cd
 	// unset
@@ -29,53 +29,87 @@ int	is_builtin(char *cmd_arg)
 		return (0);
 }
 
-void	pwd(int fd_out)
+int	pwd(int fd_out)
 {
 	char	*buffer;
+    int     exit_code;
 
-	// TD char buffer[PATH_MAX] // # define PATH_MAX  4096
 	buffer = NULL;
 	buffer = getcwd(buffer, 4096);
 	if (buffer == NULL)
 	{
 		perror("Error");
 		free(buffer);
-		return ;
+		return (0);
 	}
-	ft_putstr_fd(buffer, fd_out);
-	write(fd_out, "\n", 1);
+	exit_code = safe_write(fd_out, buffer, "\n", NULL);
 	free(buffer);
+    if (exit_code == -1)
+        return (exit_code);
+    return (0);
 }
 
-void	echo(char **cmd_args, int fd_out)
+int echo(char **cmd_args, int fd_out)
 {
-	int	i;
+    int exit_code;
+    int i;
 
-	i = 1;
+    i = 1;
+    if (cmd_args[1] && safe_strcmp(cmd_args[1], "-n") == 0)
+        i = 2;
 	while (cmd_args[i])
 	{
-		ft_putstr_fd(cmd_args[i], fd_out);
-		if (cmd_args[i + 1])
-			write(fd_out, " ", 1);
+        if (cmd_args[i + 1])
+            exit_code = safe_write(fd_out, cmd_args[i], " ", NULL);
+        else
+            exit_code = safe_write(fd_out, cmd_args[i], NULL);
+        if (exit_code == -1)
+            return (exit_code);
 		i++;
 	}
-	// TD (flag == '-n')
-	write(fd_out, "\n", 1);
-	// exit(1);
+	if (cmd_args[1] && safe_strcmp(cmd_args[1], "-n") == -1)
+        return (safe_write(fd_out, "\n", NULL));
+	return (0);
 }
 
-void	env(t_list *env_lst, int fd_out)
+int	env(t_list *env_lst, int fd_out)
 {
-	if (env_lst == NULL)
-		return ;
+    int     exit_code;
+    char    *key;
+    char    *var;
+
+	// if (env_lst == NULL)
+	// 	return (-1);
 	while (env_lst)
 	{
-		ft_putstr_fd(((t_env *)(env_lst->content))->key, fd_out);
-		write(fd_out, "=", 1);
-		ft_putstr_fd(((t_env *)(env_lst->content))->var, fd_out);
-		write(fd_out, "\n", 1);
+        key = ((t_env *)(env_lst->content))->key;
+        var = ((t_env *)(env_lst->content))->var;
+        exit_code = safe_write(fd_out, key, "=", var, "\n", NULL);
+        if (exit_code == -1)
+            return (exit_code);
 		env_lst = env_lst->next;
 	}
+    return (0);
+}
+
+int	print_export(t_list *env_lst, int fd_out)
+{
+    int exit_code;
+    char    *key;
+    char    *var;
+
+	// if (env_lst == NULL)
+	// 	return (0);
+	while (env_lst)
+	{
+        key = ((t_env *)(env_lst->content))->key;
+        var = ((t_env *)(env_lst->content))->var;
+        exit_code = safe_write(fd_out, "export ", key, "=", var, "\n", NULL);
+		if (exit_code == -1)
+            return (exit_code);
+		env_lst = env_lst->next;
+	}
+    return (0);
 }
 
 t_list	*dup_env_lst(t_list *env_lst)
@@ -102,32 +136,39 @@ t_list	*dup_env_lst(t_list *env_lst)
 	return (dup_env_lst);
 }
 
-void	print_export(t_list *env_lst, int fd_out)
+void sort_env_lst(t_list **list)
 {
-	if (env_lst == NULL)
-		return ;
-	while (env_lst)
-	{
-		ft_putstr_fd("export ", fd_out);
-		ft_putstr_fd(((t_env *)(env_lst->content))->key, fd_out);
-		write(fd_out, "=", 1);
-		ft_putstr_fd(((t_env *)(env_lst->content))->var, fd_out);
-		write(fd_out, "\n", 1);
-		env_lst = env_lst->next;
-	}
+    t_list *i;
+    t_list *j;
+    t_env *env_i;
+    t_env *env_j;
+
+    if (!list || !(*list))
+        return;
+    i = *list;
+    while (i->next != NULL)
+    {
+        j = i->next;
+        while (j != NULL)
+        {
+            env_i = (t_env *)(i->content);
+            env_j = (t_env *)(j->content);
+            if (ft_strncmp(env_i->key, env_j->key, 900) > 0)
+                swap_env(i, j);
+            j = j->next;
+        }
+        i = i->next;
+    }
 }
 
-void	export(t_list *env_lst, t_cmd_table *cmd_table, int fd_out)
+int	export(t_list *env_lst, t_cmd_table *cmd_table, int fd_out)
 {
 	t_list	*sorted_env_lst;
-	int		i;
+    int exit_code;
 
-	i = 0;
-	if (cmd_table->cmd_args[1] == 0)
-	{
-		sorted_env_lst = dup_env_lst(env_lst);
-		// sort alphabetically
-		print_export(sorted_env_lst, fd_out);
-		// clean
-	}
+    sorted_env_lst = dup_env_lst(env_lst);
+    sort_env_lst(&sorted_env_lst);
+    exit_code = print_export(sorted_env_lst, fd_out);
+    // free sorted_env_lst
+    return (0);
 }
