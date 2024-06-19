@@ -128,6 +128,8 @@ void				exec_redirs_in(t_cmd_table *cmd, t_redir *redir_out);
 
 // builtin.c
 int 				pwd(int fd_out);
+int                 cd(char **cmd_args, t_list *env_lst);
+void	            replace_env_var(char *pwd, char *key, t_list *env_lst);
 int 				echo(char **cmd_args, int fd_out);
 int 				env(t_list *env_lst, int fd_out);
 int				    export(t_list *env_lst, t_cmd_table *cmd_table, int fd_out);
@@ -142,6 +144,7 @@ t_shell				*init_minishell(char **envp, int argc);
 int					init_fd(int argc, char **argv, int fd);
 t_list				*init_env_lst(char **envp);
 t_env				*add_env_var(char *envp);
+char    **add_oldpwd(char **envp);
 
 // utils.c
 t_shell				*get_minishell(t_shell *minishell);

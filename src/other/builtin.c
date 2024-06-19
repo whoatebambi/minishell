@@ -22,11 +22,62 @@ int	is_builtin(char *cmd_arg)
 		return (1);
 	else if (safe_strcmp(cmd_arg, "export") == 0)
 		return (2);
-	// cd
+    else if (safe_strcmp(cmd_arg, "cd") == 0)
+		return (1);
 	// unset
 	// exit
 	else
 		return (0);
+}
+
+void	replace_env_var(char *pwd, char *key, t_list *env_lst)
+{
+	while (env_lst)
+	{
+		if (safe_strcmp(((t_env *)(env_lst->content))->key, key) == 0)
+		{
+			free(((t_env *)(env_lst->content))->var);
+			((t_env *)(env_lst->content))->var = ft_strdup(pwd);
+		}
+		env_lst = env_lst->next;
+	}
+}
+
+int    cd(char **cmd_args, t_list *env_lst)
+{
+	char	*old_pwd;
+    char	*new_pwd;
+    int		exit_code;
+
+	old_pwd = getcwd(old_pwd, 0);
+	if (old_pwd == NULL)
+	{
+		perror("getcwd");
+		return (-1);
+	}
+    if (cmd_args[1] == NULL)
+		exit_code = chdir(getenv("HOME"));
+	else if (safe_strcmp(cmd_args[1], "-") == 0)
+		exit_code = chdir(getenv("OLDPWD"));
+	else
+		exit_code = chdir(cmd_args[1]);
+    if (exit_code == -1)
+	{
+		perror("chdir");
+		return (exit_code);
+	}
+	new_pwd = getcwd(new_pwd, 0);
+	if (new_pwd == NULL)
+	{
+		perror("getcwd");
+		return (-1);
+	}
+	replace_env_var(old_pwd, "OLDPWD", env_lst);
+	replace_env_var(new_pwd, "PWD", env_lst);
+	if (cmd_args[1] && safe_strcmp(cmd_args[1], "-") == 0)
+		exit_code = pwd(1);
+	// free(new_pwd);
+    return (exit_code);
 }
 
 int	pwd(int fd_out)
@@ -35,11 +86,11 @@ int	pwd(int fd_out)
     int     exit_code;
 
 	buffer = NULL;
-	buffer = getcwd(buffer, 4096);
+	buffer = getcwd(buffer, 4096); // what value to choose ? 0?
 	if (buffer == NULL)
 	{
-		perror("Error");
-		free(buffer);
+		perror("getcwd");
+		free(buffer); // not sure i need to free it
 		return (0);
 	}
 	exit_code = safe_write(fd_out, buffer, "\n", NULL);
@@ -169,6 +220,6 @@ int	export(t_list *env_lst, t_cmd_table *cmd_table, int fd_out)
     sorted_env_lst = dup_env_lst(env_lst);
     sort_env_lst(&sorted_env_lst);
     exit_code = print_export(sorted_env_lst, fd_out);
-    // free sorted_env_lst
+    // free_env_lst(sorted_env_lst);
     return (0);
 }

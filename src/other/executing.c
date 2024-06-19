@@ -16,13 +16,15 @@ void	execute_builtin(t_cmd_table *cmd_table, t_list *env_lst)
 {
     int exit_code;
 
-	if (ft_strncmp(cmd_table->cmd_args[0], "pwd", 3) == 0)
+	if (safe_strcmp(cmd_table->cmd_args[0], "pwd") == 0)
 		exit_code = pwd(cmd_table->fd_out);
-	else if (ft_strncmp(cmd_table->cmd_args[0], "echo", 4) == 0)
+    else if (safe_strcmp(cmd_table->cmd_args[0], "cd") == 0)
+		exit_code = cd(cmd_table->cmd_args, env_lst);
+	else if (safe_strcmp(cmd_table->cmd_args[0], "echo") == 0)
 		exit_code = echo(cmd_table->cmd_args, cmd_table->fd_out);
-	else if (ft_strncmp(cmd_table->cmd_args[0], "env", 3) == 0)
+	else if (safe_strcmp(cmd_table->cmd_args[0], "env") == 0)
 		env(env_lst, cmd_table->fd_out);
-	else if (ft_strncmp(cmd_table->cmd_args[0], "export", 6) == 0)
+	else if (safe_strcmp(cmd_table->cmd_args[0], "export") == 0)
 		export(env_lst, cmd_table, cmd_table->fd_out);
 }
 

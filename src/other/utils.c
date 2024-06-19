@@ -64,7 +64,7 @@ int safe_write(int fd, const char *str, ...)
             bytes_written = write(fd, &current_str[i], 1);
             if (bytes_written == -1)
             {
-                perror("write() failed");
+                perror("write");
                 va_end(args);
                 return (-1);
             }

@@ -67,6 +67,53 @@ int	init_fd(int argc, char **argv, int fd)
 }
 
 
+char    *find_oldpwd(char **envp)
+{
+    char *pwd_path;
+    int i;
+
+    i = 0;
+    while (envp[i])
+    {
+        if (ft_strncmp(envp[i], "PWD=", 4) == 0)
+           pwd_path = ft_strdup(envp[i] + 4);
+        if (ft_strncmp(envp[i], "OLDPWD=", 7) == 0)
+        {
+            if (pwd_path)
+                free(pwd_path);
+            return (NULL);
+        }
+        i++;
+    }
+    return (pwd_path);
+}
+
+char    **add_oldpwd(char **envp)
+{
+    char **envp_new;
+    char *pwd_path;
+    int i;
+    int len;
+
+    i = 0;
+    len = 0;
+    pwd_path = find_oldpwd(envp);
+    if (pwd_path == NULL)
+        return (envp);
+    while (envp[len])
+        len++;
+    envp_new = (char **)ft_calloc(sizeof(char *), len + 2);
+    while (envp[i])
+    {
+        envp_new[i] = ft_strdup(envp[i]);
+        i++;
+    }
+    envp_new[i] = ft_strjoin_no_free("OLDPWD=", pwd_path);
+    envp_new[i + 1] = NULL;
+    free(pwd_path);
+    return (envp_new);
+}
+
 t_list  *init_env_lst(char **envp)
 {
     t_list  *env_lst;
@@ -79,6 +126,7 @@ t_list  *init_env_lst(char **envp)
     env_var = NULL;
     if (!envp)
         return (NULL); // TD is this the right way to handle this?
+    envp = add_oldpwd(envp); // check to make sure OLDPWD exists or creates it
 	while (envp[i])
 	{
 		env_var = add_env_var(envp[i]);
