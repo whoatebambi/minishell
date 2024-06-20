@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   initializing.c                                     :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: fcouserg <fcouserg@student.42.fr>          +#+  +:+       +#+        */
+/*   By: gbeaudoi <gbeaudoi@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/21 20:27:20 by fcouserg          #+#    #+#             */
-/*   Updated: 2024/06/14 17:32:42 by fcouserg         ###   ########.fr       */
+/*   Updated: 2024/06/20 19:11:01 by gbeaudoi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -42,6 +42,7 @@ t_shell	*init_minishell(char **envp, int argc)
 	minishell = ft_calloc(sizeof(t_shell), 1);
     // TD protect ft_calloc here
 	get_minishell(minishell);
+    
 	if (argc == 1)
 		minishell->mode = INTERACTIVE;
 	else
@@ -49,6 +50,7 @@ t_shell	*init_minishell(char **envp, int argc)
 	minishell->cmd_table = NULL;
     // TD can **envp be NULL? if yes what happens?
 	minishell->env_lst = init_env_lst(envp);
+	minishell->child_pids = NULL;
 	minishell->exit_code = 0;
 	return (minishell);
 }
@@ -66,17 +68,17 @@ int	init_fd(int argc, char **argv, int fd)
     return (fd);
 }
 
-
 char    *find_oldpwd(char **envp)
 {
     char *pwd_path;
     int i;
 
     i = 0;
+    pwd_path = NULL;
     while (envp[i])
     {
         if (ft_strncmp(envp[i], "PWD=", 4) == 0)
-           pwd_path = ft_strdup(envp[i] + 4);
+            pwd_path = ft_strdup(envp[i] + 4);
         if (ft_strncmp(envp[i], "OLDPWD=", 7) == 0)
         {
             if (pwd_path)
@@ -112,6 +114,7 @@ char    **add_oldpwd(char **envp)
     envp_new[i + 1] = NULL;
     free(pwd_path);
     return (envp_new);
+    return (envp);
 }
 
 t_list  *init_env_lst(char **envp)

@@ -6,7 +6,7 @@
 /*   By: gbeaudoi <gbeaudoi@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/21 20:27:20 by fcouserg          #+#    #+#             */
-/*   Updated: 2024/06/17 16:40:58 by gbeaudoi         ###   ########.fr       */
+/*   Updated: 2024/06/20 19:10:41 by gbeaudoi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -41,16 +41,17 @@ int	main(int argc, char **argv, char **envp)
 	t_shell	*minishell;
 
 	(void)envp;
-	fd = init_argc(argc, argv, fd);        
+	fd = init_argc(argc, argv, fd);      
+	   
 	minishell = init_minishell(envp, argc);
-	set_signals(minishell->mode);          
+	set_signals(minishell->mode);       
 	while (1)
 	{
 		minishell->line = get_line(minishell->mode, fd);
 		if (minishell->line == NULL)
 			break ;
 		ft_parseur(minishell);
-		execute(minishell, minishell->clean_line);		
+		execute(minishell);		
 		free_minishell_loop(minishell);
 	}
 	close(fd);

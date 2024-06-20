@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   utils.c                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: fcouserg <fcouserg@student.42.fr>          +#+  +:+       +#+        */
+/*   By: gbeaudoi <gbeaudoi@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/21 20:27:20 by fcouserg          #+#    #+#             */
-/*   Updated: 2024/05/24 16:47:06 by fcouserg         ###   ########.fr       */
+/*   Updated: 2024/06/20 18:42:45 by gbeaudoi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,29 +23,6 @@ t_shell	*get_minishell(t_shell *minishell)
 		pointer_to_minishell = minishell;
 	return (pointer_to_minishell);
 }
-
-// int    safe_write( char *str, int fd)
-// {
-//     int bytes_written;
-//     int len;
-//     int i;
-
-//     if (!str)
-//         return (0);
-//     len = ft_strlen(str);
-//     i = 0;
-//     while (str[i])
-//     {
-//         bytes_written = write(fd, &str[i], 1);
-//         if (bytes_written == -1)
-//         {
-//             perror("write() failed:");
-//             return (-1);
-//         }
-//         i++;
-//     }
-//     return (bytes_written);
-// }
 
 int safe_write(int fd, const char *str, ...)
 {

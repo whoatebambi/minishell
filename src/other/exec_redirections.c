@@ -6,60 +6,99 @@
 /*   By: gbeaudoi <gbeaudoi@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/21 20:27:20 by fcouserg          #+#    #+#             */
-/*   Updated: 2024/06/17 17:42:17 by gbeaudoi         ###   ########.fr       */
+/*   Updated: 2024/06/20 18:37:42 by gbeaudoi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-
-void	exec_redirs_in(t_cmd_table *cmd, t_redir *redir_in)
+void	close_fds(t_fds *fd)
 {
-	if (redir_in->type == REDIR_IN)
-	{
-		cmd->fd_in = open(redir_in->redir_name, O_RDWR, 00755);
-		if (redir_in->next)
-			close(cmd->fd_in);
-	}
-	else if (redir_in->type == DELIMITER)
-		// exec_heredoc()`
-		return ;
+	if (!(fd->redir[0] == -42) && fd->redir[0] >= 0)
+		close(fd->redir[0]);
+	if (!(fd->redir[1] == -42) && fd->redir[1] >= 0)
+		close(fd->redir[1]);
+	if (fd->input != -42 && fd->input >= 0)
+		close(fd->input);
+	if (fd->output != -42 && fd->output >= 0)
+		close(fd->output);
+	if (!(fd->pipes[0] == -42) && fd->pipes[0] >= 0)
+		close(fd->pipes[0]);
+	if (!(fd->pipes[1] == -42) && fd->pipes[1] >= 0)
+		close(fd->pipes[1]);
 }
 
-void	exec_redirs_out(t_cmd_table *cmd, t_redir *redir_out)
+void	ft_init_fds(t_fds *fd)
 {
-	if (redir_out->type == APPEND)
+	fd->input = -42;
+	fd->output = -42;
+	fd->pipes[0] = -42;
+	fd->pipes[1] = -42;
+	fd->redir[1] = -42;
+}
+
+void	set_redirs(t_fds *fd)
+{
+	if (fd->pipes[1] != -42)
+		fd->redir[1] = fd->pipes[1];
+	if (fd->input != -42)
 	{
-		cmd->fd_out = open(redir_out->redir_name, O_RDWR | O_CREAT | O_APPEND,
-				00755);
-		if (redir_out->next)
-			close(cmd->fd_out);
+		if (fd->redir[0] != -42)
+			close(fd->redir[0]);
+		fd->redir[0] = fd->input;
 	}
-	else if (redir_out->type == REDIR_OUT)
+	if (fd->output != -42)
 	{
-		cmd->fd_out = open(redir_out->redir_name, O_RDWR | O_CREAT | O_TRUNC,
-				00755);
-		if (redir_out->next)
-			close(cmd->fd_out);
+		if (fd->pipes[1] != -42)
+			close(fd->pipes[1]);
+		fd->redir[1] = fd->output;
 	}
+}
+
+static void	exec_redirs_in(t_redir *copy_in, t_fds *fd)
+{
+	if (fd->input != -42)
+		close(fd->input);
+	if (copy_in->type == REDIR_IN)
+		fd->input = open(copy_in->redir_name, O_RDWR, 00755);	
+	// if (fd->input == -1)
+	// checker message avec les free et tout le tralala
+	else if (copy_in->type == DELIMITER)
+	{
+		// exec_heredoc()
+	}
+
+}
+
+static void	exec_redirs_out(t_redir *copy_out, t_fds *fd)
+{
+	if (fd->output != -42)
+		close(fd->output);
+	if (copy_out->type == APPEND)
+		fd->output = open(copy_out->redir_name, O_RDWR | O_CREAT | O_APPEND,
+				00755);
+	else if (copy_out->type == REDIR_OUT)
+		fd->output = open(copy_out->redir_name, O_RDWR | O_CREAT | O_TRUNC,
+				00755);
 	// if (cmd->fd_out == -1)
-		//checker message avec les free et tout le tralala
+	// checker message avec les free et tout le tralala
 }
 
-void	exec_redirs(t_cmd_table *cmd, t_redir *redir_in, t_redir *redir_out)
+void	exec_redirs(t_shell *minishell, t_fds *fd, int i)
 {
-	while (redir_in)
+	t_redir	*copy_in;
+	t_redir	*copy_out;
+
+	copy_in = minishell->cmd_table[i]->redirs_in;
+	copy_out = minishell->cmd_table[i]->redirs_out;
+	while (copy_in)
 	{
-		if (redir_in->type == REDIR_IN)
-		{
-			printf("REDIR_IN\n");
-			exec_redirs_in(cmd, redir_in);
-		}
-		redir_in = redir_in->next;
+		exec_redirs_in(copy_in, fd);
+		copy_in = copy_in->next;
 	}
-	while (redir_out)
+	while (copy_out)
 	{
-		exec_redirs_out(cmd, redir_out);
-		redir_out = redir_out->next;
+		exec_redirs_out(copy_out, fd);
+		copy_out = copy_out->next;
 	}
 }

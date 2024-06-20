@@ -6,7 +6,7 @@
 /*   By: gbeaudoi <gbeaudoi@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/21 20:27:20 by fcouserg          #+#    #+#             */
-/*   Updated: 2024/06/17 17:46:02 by gbeaudoi         ###   ########.fr       */
+/*   Updated: 2024/06/20 18:38:48 by gbeaudoi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -68,8 +68,6 @@ void	exec_system(t_shell *minishell, int i)
 	// 	printf("exec_system() path VALID\n");
 	ft_free_double_char(execve_path_table);
 	execve(execve_path, minishell->cmd_table[i]->cmd_args, execve_envp);
-	printf("MOUHAAH\n");
-
 }
 
 char	*test_path(char *arg, char **execve_path_table)

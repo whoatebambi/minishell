@@ -6,7 +6,7 @@
 /*   By: gbeaudoi <gbeaudoi@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/21 18:24:48 by gbeaudoi          #+#    #+#             */
-/*   Updated: 2024/06/17 16:33:28 by gbeaudoi         ###   ########.fr       */
+/*   Updated: 2024/06/20 18:45:39 by gbeaudoi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -59,6 +59,14 @@ typedef enum e_redir_type
 	APPEND,
 }					t_redir_type;
 
+typedef struct s_fds
+{
+	int				pipes[2];
+	int				redir[2];
+	int				input;
+	int				output;
+}					t_fds;
+
 typedef struct s_redir
 {
 	t_redir_type	type;
@@ -87,9 +95,8 @@ typedef struct s_cmd_table
 	char			**cmd_args;
 	t_redir			*redirs_in;
 	t_redir			*redirs_out;
-	int				fd_in;
-	int				fd_out;	
-	int				fd_pipe[2];
+	int				is_infile_tmp;
+	char			*infile_tmp;
 }					t_cmd_table;
 
 // tentative structure qui aurait toutes les autres structs afin de passer en argument dans les fonctions.
@@ -103,7 +110,6 @@ typedef struct s_shell
 	int				exit_code;
 	char			*line;
 	char			*clean_line;
-
 	int				count_pipes;
 }					t_shell;
 
@@ -117,14 +123,16 @@ char				**build_execve_path(t_list *env_lst);
 char				*test_path(char *arg, char **execve_path_table);
 
 // executing.c
-void				execute(t_shell *minishell, char *line);
-void				execute_builtin(t_cmd_table *cmd_table, t_list *env_lst);
-void				exec_in_child(t_shell *minishell, int i);
+void				execute(t_shell *minishell);
+int					execute_builtin(t_cmd_table *cmd_table, t_list *env_lst, t_fds *fd);
+void				exec_in_child(t_shell *minishell, int i, t_fds *fd);
 
 // exec_redirections.c
-void				exec_redirs(t_cmd_table *cmd, t_redir *redir_in, t_redir *redir_out);
-void				exec_redirs_out(t_cmd_table *cmd, t_redir *redir_out);
-void				exec_redirs_in(t_cmd_table *cmd, t_redir *redir_out);
+void				exec_redirs(t_shell *minishell, t_fds *fd, int i);
+void				set_redirs(t_fds *fd);
+void				ft_init_fds(t_fds *fd);
+void	close_fds(t_fds *fd);
+void	close_fds_parent(t_fds *fd);
 
 // builtin.c
 int 				pwd(int fd_out);

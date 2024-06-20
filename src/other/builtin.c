@@ -6,7 +6,7 @@
 /*   By: gbeaudoi <gbeaudoi@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/21 20:27:20 by fcouserg          #+#    #+#             */
-/*   Updated: 2024/06/17 16:49:04 by gbeaudoi         ###   ########.fr       */
+/*   Updated: 2024/06/20 19:24:58 by gbeaudoi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -45,12 +45,11 @@ void	replace_env_var(char *pwd, char *key, t_list *env_lst)
 
 int    cd(char **cmd_args, t_list *env_lst)
 {
-	char	*old_pwd;
-    char	*new_pwd;
+	char	old_pwd[1024];
+    char	new_pwd[1024];
     int		exit_code;
 
-	old_pwd = getcwd(old_pwd, 0);
-	if (old_pwd == NULL)
+	if (getcwd(old_pwd, sizeof(old_pwd)) == NULL)
 	{
 		perror("getcwd");
 		return (-1);
@@ -66,8 +65,8 @@ int    cd(char **cmd_args, t_list *env_lst)
 		perror("chdir");
 		return (exit_code);
 	}
-	new_pwd = getcwd(new_pwd, 0);
-	if (new_pwd == NULL)
+
+	if (getcwd(new_pwd, sizeof(new_pwd)) == NULL)
 	{
 		perror("getcwd");
 		return (-1);
