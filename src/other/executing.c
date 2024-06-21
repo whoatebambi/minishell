@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   executing.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: gbeaudoi <gbeaudoi@student.42.fr>          +#+  +:+       +#+        */
+/*   By: fcouserg <fcouserg@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/21 20:27:20 by fcouserg          #+#    #+#             */
-/*   Updated: 2024/06/20 19:30:26 by gbeaudoi         ###   ########.fr       */
+/*   Updated: 2024/06/21 19:29:35 by fcouserg         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -51,7 +51,7 @@ void	exec_in_child(t_shell *minishell, int i, t_fds *fd)
 			exit(execute_builtin(minishell->cmd_table[i], minishell->env_lst, fd));
 		else
 		{
-			exec_system(minishell, i);
+			exec_system(minishell->cmd_table[i]->cmd_args, minishell->env_lst);
 		}
 	}
 	close_fds_parent(fd);

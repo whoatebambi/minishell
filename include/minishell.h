@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   minishell.h                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: gbeaudoi <gbeaudoi@student.42.fr>          +#+  +:+       +#+        */
+/*   By: fcouserg <fcouserg@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/21 18:24:48 by gbeaudoi          #+#    #+#             */
-/*   Updated: 2024/06/20 18:45:39 by gbeaudoi         ###   ########.fr       */
+/*   Updated: 2024/06/21 19:29:54 by fcouserg         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -117,10 +117,10 @@ typedef struct s_shell
 char				*get_line(t_mode mode, int fd);
 
 // exec_system.c
-void				exec_system(t_shell *minishell, int i);
+void	exec_system(char **cmd_args, t_list *env_lst);
 char				**build_execve_envp(t_list *env_lst);
 char				**build_execve_path(t_list *env_lst);
-char				*test_path(char *arg, char **execve_path_table);
+char				*find_relative_path(char *arg, char **execve_path_table);
 
 // executing.c
 void				execute(t_shell *minishell);

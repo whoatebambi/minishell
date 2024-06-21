@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   exec_system.c                                      :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: gbeaudoi <gbeaudoi@student.42.fr>          +#+  +:+       +#+        */
+/*   By: fcouserg <fcouserg@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/21 20:27:20 by fcouserg          #+#    #+#             */
-/*   Updated: 2024/06/20 18:38:48 by gbeaudoi         ###   ########.fr       */
+/*   Updated: 2024/06/21 19:32:28 by fcouserg         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -53,24 +53,28 @@ char	**build_execve_path(t_list *env_lst)
 	return (execve_path_table);
 }
 
-void	exec_system(t_shell *minishell, int i)
+void	exec_system(char **cmd_args, t_list *env_lst)
 {
 	char	**execve_envp;
 	char	**execve_path_table;
 	char	*execve_path;
-
-	execve_envp = build_execve_envp(minishell->env_lst);
-	execve_path_table = build_execve_path(minishell->env_lst);
-	execve_path = test_path(minishell->cmd_table[i]->cmd_args[0], execve_path_table);
+	
+	execve_envp = build_execve_envp(env_lst);
+	execve_path_table = build_execve_path(env_lst);
+	
+	if (ft_strncmp("/", cmd_args[0], 1) == 0)
+		execve_path = cmd_args[0];
+	else
+		execve_path = find_relative_path(cmd_args[0], execve_path_table);
 	// if (execve_path == NULL)
-	// 	printf("exec_system() path not valid\n");
-	// else
-	// 	printf("exec_system() path VALID\n");
+	// 	perror("access");
+	// ft_free_double_char(execve_envp);
 	ft_free_double_char(execve_path_table);
-	execve(execve_path, minishell->cmd_table[i]->cmd_args, execve_envp);
+	execve(execve_path, cmd_args, execve_envp);
+	//perror("execve");
 }
 
-char	*test_path(char *arg, char **execve_path_table)
+char	*find_relative_path(char *arg, char **execve_path_table)
 {
 	char	*execve_path;
 	char	*path_arg;
@@ -81,7 +85,7 @@ char	*test_path(char *arg, char **execve_path_table)
 	while (execve_path_table[i])
 	{
 		execve_path = ft_strjoin_no_free(execve_path_table[i], path_arg);
-		if (access(execve_path, F_OK) == 0 && access(execve_path, X_OK) == 0)
+		if (access(execve_path, F_OK | X_OK) == 0)
 		{
 			free(path_arg);
 			return (execve_path);
