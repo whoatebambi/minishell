@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   executing.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: fcouserg <fcouserg@student.42.fr>          +#+  +:+       +#+        */
+/*   By: gbeaudoi <gbeaudoi@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/21 20:27:20 by fcouserg          #+#    #+#             */
-/*   Updated: 2024/06/21 19:29:35 by fcouserg         ###   ########.fr       */
+/*   Updated: 2024/08/20 17:31:25 by gbeaudoi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -33,9 +33,7 @@ void	exec_in_child(t_shell *minishell, int i, t_fds *fd)
 {
 	minishell->child_pids[i] = fork();
 	if (minishell->child_pids[i] == -1)
-	{
 		perror("minishell->child_pids[i]");
-	}
 	if (minishell->child_pids[i] == 0)
 	{
 		if (fd->pipes[0] != -42)
@@ -82,13 +80,6 @@ static void	ft_wait_all_children(t_shell *minishell)
 	while (i < minishell->count_pipes)
 	{
 		pid_wait = waitpid(minishell->child_pids[i], &status, 0);
-		if (pid_wait > 0)
-		{
-			// printf("Parent: Child with PID %d terminated with status %d\n",
-			// 	minishell->child_pids[i], WEXITSTATUS(status));
-			// printf("Parent: Child with PID %d finished, i is %d\n",
-			// minishell->child_pids[i], i);
-		}
 		if (WIFEXITED(status))
 			exit_codes[i] = WEXITSTATUS(status);
 		i++;
@@ -110,18 +101,13 @@ void	execute(t_shell *minishell)
 	{
 		minishell->child_pids[i] = -2;
 		ft_init_fds(&fd);
-		// ft_printf("i is %d, pid is %d\n", i, minishell->child_pids[i]);
-		// ft_printf("1: input %d output %d pipe0 %d pipe1 %d redir0 %d redir1 %d\n", fd.input, fd.output, fd.pipes[0], fd.pipes[1], fd.redir[0],fd.redir[1]);
 		if (i < minishell->count_pipes - 1)
 		{
 			if (pipe(fd.pipes) == -1)
 				ft_printf("ERROR");
 		}
-		// ft_printf("2: input %d output %d pipe0 %d pipe1 %d redir0 %d redir1 %d\n", fd.input, fd.output, fd.pipes[0], fd.pipes[1], fd.redir[0], fd.redir[1]);
 		exec_redirs(minishell, &fd, i);
-		// ft_printf("3: input %d output %d pipe0 %d pipe1 %d redir0 %d redir1 %d\n", fd.input, fd.output, fd.pipes[0], fd.pipes[1], fd.redir[0],fd.redir[1]);
 		set_redirs(&fd);
-		// ft_printf("4: input %d output %d pipe0 %d pipe1 %d redir0 %d redir1 %d\n", fd.input, fd.output, fd.pipes[0], fd.pipes[1], fd.redir[0],fd.redir[1]);
 		if (is_builtin(minishell->cmd_table[i]->cmd_args[0])
 			&& minishell->count_pipes == 1)
 			execute_builtin(minishell->cmd_table[i], minishell->env_lst, &fd);

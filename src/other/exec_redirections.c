@@ -6,7 +6,7 @@
 /*   By: gbeaudoi <gbeaudoi@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/21 20:27:20 by fcouserg          #+#    #+#             */
-/*   Updated: 2024/06/20 18:37:42 by gbeaudoi         ###   ########.fr       */
+/*   Updated: 2024/08/28 18:20:56 by gbeaudoi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -31,6 +31,7 @@ void	close_fds(t_fds *fd)
 void	ft_init_fds(t_fds *fd)
 {
 	fd->input = -42;
+	fd->in = -42;
 	fd->output = -42;
 	fd->pipes[0] = -42;
 	fd->pipes[1] = -42;
@@ -55,7 +56,7 @@ void	set_redirs(t_fds *fd)
 	}
 }
 
-static void	exec_redirs_in(t_redir *copy_in, t_fds *fd)
+static void	exec_redirs_in(t_shell *minishell, t_redir *copy_in, t_fds *fd)
 {
 	if (fd->input != -42)
 		close(fd->input);
@@ -65,7 +66,12 @@ static void	exec_redirs_in(t_redir *copy_in, t_fds *fd)
 	// checker message avec les free et tout le tralala
 	else if (copy_in->type == DELIMITER)
 	{
-		// exec_heredoc()
+		ft_sig_heredoc_setting();
+		if (!copy_in->quote)
+			ft_here_doc_exp(minishell, copy_in, fd);
+		else
+			ft_here_doc(minishell, copy_in, fd);
+		ft_signals();
 	}
 
 }
@@ -93,7 +99,7 @@ void	exec_redirs(t_shell *minishell, t_fds *fd, int i)
 	copy_out = minishell->cmd_table[i]->redirs_out;
 	while (copy_in)
 	{
-		exec_redirs_in(copy_in, fd);
+		exec_redirs_in(minishell, copy_in, fd);
 		copy_in = copy_in->next;
 	}
 	while (copy_out)

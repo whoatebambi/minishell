@@ -6,11 +6,13 @@
 /*   By: gbeaudoi <gbeaudoi@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/21 20:27:20 by fcouserg          #+#    #+#             */
-/*   Updated: 2024/06/20 19:10:41 by gbeaudoi         ###   ########.fr       */
+/*   Updated: 2024/08/28 17:43:06 by gbeaudoi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
+
+int			g_sig = 0;
 
 char	*get_line(t_mode mode, int fd)
 {
@@ -44,7 +46,7 @@ int	main(int argc, char **argv, char **envp)
 	fd = init_argc(argc, argv, fd);      
 	   
 	minishell = init_minishell(envp, argc);
-	set_signals(minishell->mode);       
+	ft_signals();       
 	while (1)
 	{
 		minishell->line = get_line(minishell->mode, fd);

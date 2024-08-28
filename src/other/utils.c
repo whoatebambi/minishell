@@ -6,7 +6,7 @@
 /*   By: gbeaudoi <gbeaudoi@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/21 20:27:20 by fcouserg          #+#    #+#             */
-/*   Updated: 2024/06/20 18:42:45 by gbeaudoi         ###   ########.fr       */
+/*   Updated: 2024/08/21 15:08:16 by gbeaudoi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -60,11 +60,11 @@ int	safe_strcmp(char *s1, char *s2)
 
 	i = 0;
     if (ft_strlen(s1) != ft_strlen(s2))
-        return (-1);
+        return (1);
 	while (s1[i] != '\0' || s2[i] != '\0')
 	{
 		if (s1[i] != s2[i])
-			return (-1);
+			return (1);
 		i++;
 	}
 	return (0);
@@ -77,4 +77,15 @@ void swap_env(t_list *a, t_list *b)
     temp_content = a->content;
     a->content = b->content;
     b->content = temp_content;
+}
+
+void	ft_exit_msg(t_shell *minishell, char *errmsg)
+{
+	int	ext;
+
+	ext = minishell->exit_code;
+	if (errmsg)
+		perror(errmsg);
+	free_minishell(minishell);
+	exit(ext);
 }

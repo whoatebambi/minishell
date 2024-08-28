@@ -6,7 +6,7 @@
 /*   By: gbeaudoi <gbeaudoi@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/21 20:27:20 by fcouserg          #+#    #+#             */
-/*   Updated: 2024/06/20 19:11:01 by gbeaudoi         ###   ########.fr       */
+/*   Updated: 2024/08/20 18:00:31 by gbeaudoi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -51,6 +51,7 @@ t_shell	*init_minishell(char **envp, int argc)
     // TD can **envp be NULL? if yes what happens?
 	minishell->env_lst = init_env_lst(envp);
 	minishell->child_pids = NULL;
+	minishell->tmp_exit_code = 0;
 	minishell->exit_code = 0;
 	return (minishell);
 }

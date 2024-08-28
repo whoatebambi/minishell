@@ -6,7 +6,7 @@
 /*   By: gbeaudoi <gbeaudoi@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/21 20:27:20 by fcouserg          #+#    #+#             */
-/*   Updated: 2024/06/20 19:24:58 by gbeaudoi         ###   ########.fr       */
+/*   Updated: 2024/08/21 14:50:44 by gbeaudoi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -117,7 +117,7 @@ int echo(char **cmd_args, int fd_out)
             return (exit_code);
 		i++;
 	}
-	if (cmd_args[1] && safe_strcmp(cmd_args[1], "-n") == -1)
+	if (cmd_args[1] && safe_strcmp(cmd_args[1], "-n") == 1)
         return (safe_write(fd_out, "\n", NULL));
 	return (0);
 }

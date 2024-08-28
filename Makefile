@@ -6,7 +6,7 @@
 #    By: gbeaudoi <gbeaudoi@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2024/01/08 14:30:03 by gbeaudoi          #+#    #+#              #
-#    Updated: 2024/06/17 16:03:12 by gbeaudoi         ###   ########.fr        #
+#    Updated: 2024/08/28 17:57:12 by gbeaudoi         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -58,7 +58,8 @@ PARSING_FILES	= 	expendeur.c parseur.c parsing_utils.c quote_handling.c node_ini
 					free_parsing.c free_utils.c expendeur_helper.c
 
 OTHER_DIR 	= 	 other/
-OTHER_FILES	= 	 main.c initializing.c executing.c signals.c free_memory.c utils.c builtin.c exec_system.c exec_redirections.c
+OTHER_FILES	= 	 main.c initializing.c executing.c signals.c free_memory.c utils.c builtin.c exec_system.c exec_redirections.c \
+				 heredoc_exp.c heredoc.c
 
 
 ######################## COMBINE DIRECTORIES AND FILES ########################

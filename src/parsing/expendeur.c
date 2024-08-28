@@ -6,7 +6,7 @@
 /*   By: gbeaudoi <gbeaudoi@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/31 15:31:03 by gbeaudoi          #+#    #+#             */
-/*   Updated: 2024/06/17 16:35:13 by gbeaudoi         ###   ########.fr       */
+/*   Updated: 2024/08/28 17:00:55 by gbeaudoi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,7 +20,7 @@ void	ft_find_value(char **to_join, t_shell *minishell, int i)
 	t_env	*cur_content;
 
 	j = 0;
-	while (isalnum(minishell->clean_line[i + j]) || minishell->clean_line[i
+	while (ft_isalnum(minishell->clean_line[i + j]) || minishell->clean_line[i
 		+ j] == '_')
 		j++;
 	ft_check_strdup(minishell->clean_line + i, j, &key, 1);
