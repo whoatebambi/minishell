@@ -6,7 +6,7 @@
 /*   By: gbeaudoi <gbeaudoi@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/20 17:31:47 by gbeaudoi          #+#    #+#             */
-/*   Updated: 2024/08/28 18:05:22 by gbeaudoi         ###   ########.fr       */
+/*   Updated: 2024/08/29 20:06:13 by gbeaudoi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -48,7 +48,7 @@ int	ft_here_doc(t_shell *minishell, t_redir *copy_in, t_fds *fd)
 	fd->input = open(heredoc, O_RDONLY);
 	fd->in = dup(STDIN_FILENO);
 	str = readline("> ");
-	while (str && safe_strcmp(copy_in->next->redir_name, str) == 1)
+	while (str && safe_strcmp(copy_in->redir_name, str) == 1)
 	{
 		write(tmp, str, ft_strlen(str));
 		write(tmp, "\n", 1);
