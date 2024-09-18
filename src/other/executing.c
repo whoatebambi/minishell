@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   executing.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: gbeaudoi <gbeaudoi@student.42.fr>          +#+  +:+       +#+        */
+/*   By: fcouserg <fcouserg@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/21 20:27:20 by fcouserg          #+#    #+#             */
-/*   Updated: 2024/08/20 17:31:25 by gbeaudoi         ###   ########.fr       */
+/*   Updated: 2024/09/18 15:53:52 by fcouserg         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -108,8 +108,7 @@ void	execute(t_shell *minishell)
 		}
 		exec_redirs(minishell, &fd, i);
 		set_redirs(&fd);
-		if (is_builtin(minishell->cmd_table[i]->cmd_args[0])
-			&& minishell->count_pipes == 1)
+		if (is_builtin(minishell->cmd_table[i]->cmd_args[0]) && minishell->count_pipes == 1)
 			execute_builtin(minishell->cmd_table[i], minishell->env_lst, &fd);
 		else if (is_builtin(minishell->cmd_table[i]->cmd_args[0]) == 2)
 			execute_builtin(minishell->cmd_table[i], minishell->env_lst, &fd);

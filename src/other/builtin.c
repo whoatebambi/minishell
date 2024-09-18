@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   builtin.c                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: gbeaudoi <gbeaudoi@student.42.fr>          +#+  +:+       +#+        */
+/*   By: fcouserg <fcouserg@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/21 20:27:20 by fcouserg          #+#    #+#             */
-/*   Updated: 2024/08/21 14:50:44 by gbeaudoi         ###   ########.fr       */
+/*   Updated: 2024/09/18 18:51:02 by fcouserg         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -99,14 +99,30 @@ int	pwd(int fd_out)
     return (0);
 }
 
+int	check_newline(char *cmd_arg)
+{
+	int	i;
+
+	while (cmd_arg && cmd_arg[0] == '-' && cmd_arg[1] == 'n')
+	{
+		i = 2;
+		while (cmd_arg[i] == 'n')
+			i++;
+		if (cmd_arg[i] == '\0')
+			return (2);
+		else
+			return (1);
+	}
+	return (1);
+}
+
+
 int echo(char **cmd_args, int fd_out)
 {
     int exit_code;
     int i;
 
-    i = 1;
-    if (cmd_args[1] && safe_strcmp(cmd_args[1], "-n") == 0)
-        i = 2;
+    i = check_newline(cmd_args[1]);
 	while (cmd_args[i])
 	{
         if (cmd_args[i + 1])

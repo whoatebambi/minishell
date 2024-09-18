@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   minishell.h                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: gbeaudoi <gbeaudoi@student.42.fr>          +#+  +:+       +#+        */
+/*   By: fcouserg <fcouserg@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/21 18:24:48 by gbeaudoi          #+#    #+#             */
-/*   Updated: 2024/08/28 18:04:38 by gbeaudoi         ###   ########.fr       */
+/*   Updated: 2024/09/18 18:46:03 by fcouserg         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -153,6 +153,7 @@ int					pwd(int fd_out);
 int					cd(char **cmd_args, t_list *env_lst);
 void				replace_env_var(char *pwd, char *key, t_list *env_lst);
 int					echo(char **cmd_args, int fd_out);
+int					check_newline(char *cmd_arg);
 int					env(t_list *env_lst, int fd_out);
 int					export(t_list *env_lst, t_cmd_table *cmd_table, int fd_out);
 t_list				*dup_env_lst(t_list *env_lst);
