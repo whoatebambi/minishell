@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   utils.c                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: gbeaudoi <gbeaudoi@student.42.fr>          +#+  +:+       +#+        */
+/*   By: fcouserg <fcouserg@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/21 20:27:20 by fcouserg          #+#    #+#             */
-/*   Updated: 2024/08/21 15:08:16 by gbeaudoi         ###   ########.fr       */
+/*   Updated: 2024/09/19 17:15:34 by fcouserg         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,7 +24,7 @@ t_shell	*get_minishell(t_shell *minishell)
 	return (pointer_to_minishell);
 }
 
-int safe_write(int fd, const char *str, ...)
+void safe_write(int fd, const char *str, ...)
 {
     va_list     args;
     const char *current_str;
@@ -43,16 +43,14 @@ int safe_write(int fd, const char *str, ...)
             {
                 perror("write");
                 va_end(args);
-                return (-1);
+                return ;
             }
             i++;
         }
         current_str = va_arg(args, const char *);
     }
     va_end(args);
-    return (0);
 }
-
 
 int	safe_strcmp(char *s1, char *s2)
 {

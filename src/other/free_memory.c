@@ -3,42 +3,35 @@
 /*                                                        :::      ::::::::   */
 /*   free_memory.c                                      :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: gbeaudoi <gbeaudoi@student.42.fr>          +#+  +:+       +#+        */
+/*   By: fcouserg <fcouserg@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/21 20:27:20 by fcouserg          #+#    #+#             */
-/*   Updated: 2024/06/12 16:07:16 by gbeaudoi         ###   ########.fr       */
+/*   Updated: 2024/09/19 19:50:01 by fcouserg         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-void    free_env(void *content)
-{
-    t_env   *current_env;
-
-    if (content == NULL)
-        return ;
-    current_env = (t_env *)content;
-    free(current_env->key);
-    free(current_env->var);
-    // content = NULL;
-}
-
 void    free_env_lst(t_list *env_lst)
 {
-    t_list  *tmp_next;
+    t_list  *tmp;
+    t_env   *env_var;
     
     if (env_lst == NULL)
         return ;
     while (env_lst)
     {
-        tmp_next = env_lst->next;
-        free_env(env_lst->content);
-        free(env_lst->content);
+        tmp = env_lst->next;
+        env_var = (t_env *)env_lst->content;
+        if (env_var)
+        {
+            free(env_var->key);
+            free(env_var->var);
+            free(env_var);
+        }
         free(env_lst);
-        env_lst = tmp_next;
+        env_lst = tmp;
     }
-    free(env_lst);
 }
 
 // to remove in a bit since i make a new one (similar)
@@ -73,6 +66,7 @@ void	free_minishell(t_shell *minishell)
 	free_env_lst(minishell->env_lst);
 	ft_free_cmd_table_final(minishell->cmd_table, minishell->count_pipes);
 	ft_free_double_char(minishell->env);
+    ft_free_double_char(minishell->execve_envp);
 	// ft_free_line(minishell->line);
 	// ft_free_line(minishell->clean_line);
 	free(minishell);

@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   initializing.c                                     :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: gbeaudoi <gbeaudoi@student.42.fr>          +#+  +:+       +#+        */
+/*   By: fcouserg <fcouserg@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/21 20:27:20 by fcouserg          #+#    #+#             */
-/*   Updated: 2024/08/20 18:00:31 by gbeaudoi         ###   ########.fr       */
+/*   Updated: 2024/09/19 19:39:16 by fcouserg         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -115,7 +115,6 @@ char    **add_oldpwd(char **envp)
     envp_new[i + 1] = NULL;
     free(pwd_path);
     return (envp_new);
-    return (envp);
 }
 
 t_list  *init_env_lst(char **envp)
@@ -124,16 +123,17 @@ t_list  *init_env_lst(char **envp)
     t_list  *new;
     t_env   *env_var;
     int     i;
+    char **envp_new;
 
 	i = 0;
 	env_lst = NULL;
     env_var = NULL;
     if (!envp)
         return (NULL); // TD is this the right way to handle this?
-    envp = add_oldpwd(envp); // check to make sure OLDPWD exists or creates it
-	while (envp[i])
+    envp_new = add_oldpwd(envp); // check to make sure OLDPWD exists or creates it
+	while (envp_new[i])
 	{
-		env_var = add_env_var(envp[i]);
+		env_var = add_env_var(envp_new[i]);
         if (!env_var)
             return (NULL);
         new = ft_lstnew((void *)env_var);
@@ -142,7 +142,6 @@ t_list  *init_env_lst(char **envp)
 		ft_lstadd_back(&env_lst, new);
 		i++;
 	}
-    // if env_lst is NULL, we should free env_var here
     return (env_lst);
 }
 

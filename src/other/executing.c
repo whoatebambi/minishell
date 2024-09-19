@@ -6,7 +6,7 @@
 /*   By: fcouserg <fcouserg@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/21 20:27:20 by fcouserg          #+#    #+#             */
-/*   Updated: 2024/09/18 15:53:52 by fcouserg         ###   ########.fr       */
+/*   Updated: 2024/09/19 19:42:55 by fcouserg         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,18 +14,16 @@
 
 int	execute_builtin(t_cmd_table *cmd_table, t_list *env_lst, t_fds *fd)
 {
-    int exit_code;
-
 	if (safe_strcmp(cmd_table->cmd_args[0], "pwd") == 0)
-		exit_code = pwd(STDOUT_FILENO);
+		pwd(STDOUT_FILENO);
     else if (safe_strcmp(cmd_table->cmd_args[0], "cd") == 0)
-		exit_code = cd(cmd_table->cmd_args, env_lst);
+		cd(cmd_table->cmd_args, env_lst);
 	else if (safe_strcmp(cmd_table->cmd_args[0], "echo") == 0)
-		exit_code = echo(cmd_table->cmd_args, STDOUT_FILENO);
+		echo(cmd_table->cmd_args, STDOUT_FILENO);
 	else if (safe_strcmp(cmd_table->cmd_args[0], "env") == 0)
 		env(env_lst, STDOUT_FILENO);
 	else if (safe_strcmp(cmd_table->cmd_args[0], "export") == 0)
-		export(env_lst, cmd_table, STDOUT_FILENO);
+		export(env_lst, cmd_table->cmd_args, STDOUT_FILENO);
 	return (1);
 }
 
@@ -49,7 +47,7 @@ void	exec_in_child(t_shell *minishell, int i, t_fds *fd)
 			exit(execute_builtin(minishell->cmd_table[i], minishell->env_lst, fd));
 		else
 		{
-			exec_system(minishell->cmd_table[i]->cmd_args, minishell->env_lst);
+			exec_system(minishell->cmd_table[i]->cmd_args, minishell->env_lst, minishell);
 		}
 	}
 	close_fds_parent(fd);

@@ -6,7 +6,7 @@
 /*   By: fcouserg <fcouserg@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/21 18:24:48 by gbeaudoi          #+#    #+#             */
-/*   Updated: 2024/09/18 18:46:03 by fcouserg         ###   ########.fr       */
+/*   Updated: 2024/09/19 19:49:16 by fcouserg         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -124,13 +124,14 @@ typedef struct s_shell
 	char			*line;
 	char			*clean_line;
 	int				count_pipes;
+	char	**execve_envp;
 }					t_shell;
 
 // main.c
 char				*get_line(t_mode mode, int fd);
 
 // exec_system.c
-void				exec_system(char **cmd_args, t_list *env_lst);
+void				exec_system(char **cmd_args, t_list *env_lst, t_shell *minishell);
 char				**build_execve_envp(t_list *env_lst);
 char				**build_execve_path(t_list *env_lst);
 char				*find_relative_path(char *arg, char **execve_path_table);
@@ -149,16 +150,16 @@ void				close_fds(t_fds *fd);
 void				close_fds_parent(t_fds *fd);
 
 // builtin.c
-int					pwd(int fd_out);
-int					cd(char **cmd_args, t_list *env_lst);
+void					pwd(int fd_out);
+void					cd(char **cmd_args, t_list *env_lst);
 void				replace_env_var(char *pwd, char *key, t_list *env_lst);
-int					echo(char **cmd_args, int fd_out);
-int					check_newline(char *cmd_arg);
-int					env(t_list *env_lst, int fd_out);
-int					export(t_list *env_lst, t_cmd_table *cmd_table, int fd_out);
-t_list				*dup_env_lst(t_list *env_lst);
-int					print_export(t_list *env_lst, int fd_out);
-void				sort_env_lst(t_list **list);
+void					echo(char **cmd_args, int fd_out);
+int	check_newline(char **cmd_args, int *flag);
+void					env(t_list *env_lst, int fd_out);
+void	export(t_list *env_lst, char **cmd_args, int fd_out);
+void					print_export(t_list *env_lst, int fd_out);
+void	add_env_list(char *arg, t_list *env_lst, int fd_out);
+void	del_env_content(void *env_lst);
 int					is_builtin(char *cmd_arg);
 
 // initializing.c
@@ -171,7 +172,7 @@ char				**add_oldpwd(char **envp);
 
 // utils.c
 t_shell				*get_minishell(t_shell *minishell);
-int					safe_write(int fd, const char *str, ...);
+void					safe_write(int fd, const char *str, ...);
 int					safe_strcmp(char *s1, char *s2);
 void				swap_env(t_list *a, t_list *b);
 void				ft_exit_msg(t_shell *minishell, char *errmsg);
@@ -186,7 +187,7 @@ void				ft_signals(void);
 int					ft_catchsignals(t_shell *minishell);
 
 // free_memory.c
-void				free_env(void *content);
+// void				free_env(t_env *content);
 void				free_env_lst(t_list *env_lst);
 void				free_cmd_table(t_cmd_table **cmd_table);
 void				free_minishell(t_shell *minishell);
