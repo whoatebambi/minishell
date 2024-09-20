@@ -6,7 +6,7 @@
 /*   By: fcouserg <fcouserg@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/21 20:27:20 by fcouserg          #+#    #+#             */
-/*   Updated: 2024/09/19 19:49:46 by fcouserg         ###   ########.fr       */
+/*   Updated: 2024/09/20 16:44:23 by fcouserg         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -35,12 +35,10 @@ char	**build_execve_envp(t_list *env_lst)
 char	**build_execve_path(t_list *env_lst)
 {
 	char	**execve_path_table;
-	char	*path_to_split;
 	int		i;
 	
 	i = 0;
 	execve_path_table = NULL;
-	path_to_split = NULL;
 	while (env_lst)
 	{
 		if (ft_strncmp(((t_env *)(env_lst->content))->key, "PATH", 4) == 0)
@@ -50,18 +48,24 @@ char	**build_execve_path(t_list *env_lst)
 		}
 		env_lst = env_lst->next;
 	}
+	i = 0;
+	while (execve_path_table[i])
+	{
+		printf("execve_path_table[i] = %s\n", execve_path_table[i]);
+		i++;
+	}
 	return (execve_path_table);
 }
 
 void	exec_system(char **cmd_args, t_list *env_lst, t_shell *minishell)
 {
-	char	**execve_envp;
 	char	**execve_path_table;
 	char	*execve_path;
 	
-	minishell->execve_envp = build_execve_envp(env_lst);
+	if (minishell->envp)
+	    ft_free_double_char(minishell->envp);
+	minishell->envp = build_execve_envp(env_lst);
 	execve_path_table = build_execve_path(env_lst);
-	
 	if (ft_strncmp("/", cmd_args[0], 1) == 0)
 		execve_path = cmd_args[0];
 	else
@@ -69,7 +73,7 @@ void	exec_system(char **cmd_args, t_list *env_lst, t_shell *minishell)
 	// if (execve_path == NULL)
 	// 	perror("access");
 	ft_free_double_char(execve_path_table);
-	execve(execve_path, cmd_args, minishell->execve_envp);
+	execve(execve_path, cmd_args, minishell->envp);
 	perror("execve");
 }
 

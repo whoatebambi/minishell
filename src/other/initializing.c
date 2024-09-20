@@ -6,7 +6,7 @@
 /*   By: fcouserg <fcouserg@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/21 20:27:20 by fcouserg          #+#    #+#             */
-/*   Updated: 2024/09/19 19:39:16 by fcouserg         ###   ########.fr       */
+/*   Updated: 2024/09/20 16:08:29 by fcouserg         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -50,6 +50,7 @@ t_shell	*init_minishell(char **envp, int argc)
 	minishell->cmd_table = NULL;
     // TD can **envp be NULL? if yes what happens?
 	minishell->env_lst = init_env_lst(envp);
+    minishell->envp = NULL;
 	minishell->child_pids = NULL;
 	minishell->tmp_exit_code = 0;
 	minishell->exit_code = 0;

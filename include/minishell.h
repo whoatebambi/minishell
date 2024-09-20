@@ -6,7 +6,7 @@
 /*   By: fcouserg <fcouserg@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/21 18:24:48 by gbeaudoi          #+#    #+#             */
-/*   Updated: 2024/09/19 19:49:16 by fcouserg         ###   ########.fr       */
+/*   Updated: 2024/09/20 16:04:47 by fcouserg         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -115,7 +115,7 @@ typedef struct s_cmd_table
 typedef struct s_shell
 {
 	t_mode			mode;
-	char			**env;
+	char			**envp;
 	t_cmd_table		**cmd_table;
 	t_list			*env_lst;
 	pid_t			*child_pids;
@@ -124,7 +124,7 @@ typedef struct s_shell
 	char			*line;
 	char			*clean_line;
 	int				count_pipes;
-	char	**execve_envp;
+	// char	**execve_envp;
 }					t_shell;
 
 // main.c

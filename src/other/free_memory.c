@@ -6,7 +6,7 @@
 /*   By: fcouserg <fcouserg@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/21 20:27:20 by fcouserg          #+#    #+#             */
-/*   Updated: 2024/09/19 19:50:01 by fcouserg         ###   ########.fr       */
+/*   Updated: 2024/09/20 16:42:09 by fcouserg         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -65,8 +65,8 @@ void	free_minishell(t_shell *minishell)
 		return;
 	free_env_lst(minishell->env_lst);
 	ft_free_cmd_table_final(minishell->cmd_table, minishell->count_pipes);
-	ft_free_double_char(minishell->env);
-    ft_free_double_char(minishell->execve_envp);
+    if (minishell->envp)
+	    ft_free_double_char(minishell->envp);
 	// ft_free_line(minishell->line);
 	// ft_free_line(minishell->clean_line);
 	free(minishell);
@@ -78,7 +78,8 @@ void	free_minishell_loop(t_shell *minishell)
 	if (minishell == NULL)
 		return;
 	ft_free_cmd_table_loop(minishell->cmd_table, minishell->count_pipes);
-	ft_free_double_char(minishell->env);
+    if (minishell->envp)
+	    ft_free_double_char(minishell->envp);
 	ft_free_line(minishell->line);
 	ft_free_line(minishell->clean_line);
 }
