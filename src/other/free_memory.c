@@ -6,7 +6,7 @@
 /*   By: fcouserg <fcouserg@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/21 20:27:20 by fcouserg          #+#    #+#             */
-/*   Updated: 2024/09/20 16:42:09 by fcouserg         ###   ########.fr       */
+/*   Updated: 2024/09/24 18:08:43 by fcouserg         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -34,52 +34,65 @@ void    free_env_lst(t_list *env_lst)
     }
 }
 
-// to remove in a bit since i make a new one (similar)
-void    free_cmd_table(t_cmd_table **cmd_table)
+// // to remove in a bit since i make a new one (similar)
+// void    free_cmd_table(t_cmd_table **cmd_table)
+// {
+//     int     i;
+//     int     j;
+
+//     if (cmd_table == NULL)
+//         return ;
+//     i = 0;
+//     while (cmd_table[i] != NULL)
+//     {
+//         j = 0;
+//         while (cmd_table[i]->cmd_args[j] != NULL)
+//         {
+//             free(cmd_table[i]->cmd_args[j]);
+//             j++;
+//         }
+//         free(cmd_table[i]->cmd_args);
+//         free(cmd_table[i]);
+//         i++;
+//     }
+//     free(cmd_table);
+// }
+
+void	reset_loop(t_shell *minishell) // || reset_shell
 {
-    int     i;
-    int     j;
-
-    if (cmd_table == NULL)
-        return ;
-    i = 0;
-    while (cmd_table[i] != NULL)
+	if (minishell == NULL)
+		return;
+	free_cmd_table(minishell->cmd_table, minishell->count_pipes);
+    if (minishell->child_pids)
     {
-        j = 0;
-        while (cmd_table[i]->cmd_args[j] != NULL)
-        {
-            free(cmd_table[i]->cmd_args[j]);
-            j++;
-        }
-        free(cmd_table[i]->cmd_args);
-        free(cmd_table[i]);
-        i++;
+        free(minishell->child_pids);
+        minishell->child_pids = NULL;
     }
-    free(cmd_table);
+    // if (minishell->envp)
+	//     ft_free_double_char(minishell->envp);
 }
-
 
 void	free_minishell(t_shell *minishell)
 {
 	if (minishell == NULL)
 		return;
-	free_env_lst(minishell->env_lst);
-	ft_free_cmd_table_final(minishell->cmd_table, minishell->count_pipes);
+    // if (minishell->cmd_table)
+    //     free_cmd_table(minishell->cmd_table, minishell->count_pipes);
     if (minishell->envp)
-	    ft_free_double_char(minishell->envp);
-	// ft_free_line(minishell->line);
-	// ft_free_line(minishell->clean_line);
-	free(minishell);
-	minishell = NULL;
-}
-
-void	free_minishell_loop(t_shell *minishell)
-{
-	if (minishell == NULL)
-		return;
-	ft_free_cmd_table_loop(minishell->cmd_table, minishell->count_pipes);
-    if (minishell->envp)
-	    ft_free_double_char(minishell->envp);
-	ft_free_line(minishell->line);
-	ft_free_line(minishell->clean_line);
+    {
+        ft_free_double_char(minishell->envp);
+        minishell->envp = NULL;
+    }
+    if (minishell->child_pids)
+    {
+        free(minishell->child_pids);
+        minishell->child_pids = NULL;
+    }
+    if (minishell->env_lst)
+    {
+        free_env_lst(minishell->env_lst);
+        minishell->env_lst = NULL;
+    }
+	// safe_free(minishell->line);
+	safe_free(minishell->clean_line);
 }

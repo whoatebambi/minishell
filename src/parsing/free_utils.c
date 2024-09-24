@@ -6,7 +6,7 @@
 /*   By: fcouserg <fcouserg@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/10 17:25:33 by gbeaudoi          #+#    #+#             */
-/*   Updated: 2024/06/14 18:20:31 by fcouserg         ###   ########.fr       */
+/*   Updated: 2024/09/24 17:33:55 by fcouserg         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,7 +21,7 @@ void	ft_free_node(t_node *node_def)
 	while (node_def)
 	{
 		temp_node = node_def->next;
-		ft_free_line(node_def->string);
+		safe_free(node_def->string);
 		free(node_def);
 		node_def = temp_node;
 	}
@@ -38,7 +38,7 @@ void	ft_free_redir(t_redir *redir_def)
 	while (redir_def)
 	{
 		temp_node = redir_def->next;
-		ft_free_line(redir_def->redir_name);
+		safe_free(redir_def->redir_name);
 		free(redir_def);
 		redir_def = temp_node;
 	}
@@ -46,12 +46,13 @@ void	ft_free_redir(t_redir *redir_def)
 	redir_def = NULL;
 }
 
-void	ft_free_line(char *string)
+void	safe_free(char *string)
 {
-	if (!string)// || !string[0])
-		return ;
-	free(string);
-	string = NULL;
+	if (string)
+	{
+		free(string);
+		string = NULL;
+	}
 }
 
 void	ft_free_double_char(char **tab)

@@ -6,7 +6,7 @@
 /*   By: fcouserg <fcouserg@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/21 18:24:48 by gbeaudoi          #+#    #+#             */
-/*   Updated: 2024/09/20 16:04:47 by fcouserg         ###   ########.fr       */
+/*   Updated: 2024/09/24 16:30:16 by fcouserg         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -164,7 +164,7 @@ int					is_builtin(char *cmd_arg);
 
 // initializing.c
 int					init_argc(int argc, char **argv, int fd);
-t_shell				*init_minishell(char **envp, int argc);
+t_shell				*init_minishell(t_shell	*minishell, char **envp, int argc);
 int					init_fd(int argc, char **argv, int fd);
 t_list				*init_env_lst(char **envp);
 t_env				*add_env_var(char *envp);
@@ -189,9 +189,9 @@ int					ft_catchsignals(t_shell *minishell);
 // free_memory.c
 // void				free_env(t_env *content);
 void				free_env_lst(t_list *env_lst);
-void				free_cmd_table(t_cmd_table **cmd_table);
+// void	free_cmd_table(t_cmd_table **cmd_table, int count_pipes);
 void				free_minishell(t_shell *minishell);
-void				free_minishell_loop(t_shell *minishell);
+void				reset_loop(t_shell *minishell);
 
 // Parseur expendeur llexeur
 void				ft_parseur(t_shell *minishell);
@@ -228,11 +228,11 @@ void				ft_stack_add_to_back(t_node **a, t_node *new_node);
 // free
 void				ft_free_cmd_table_loop(t_cmd_table **cmd_table,
 						int count_pipes);
-void				ft_free_cmd_table_final(t_cmd_table **cmd_table,
+void				free_cmd_table(t_cmd_table **cmd_table,
 						int count_pipes);
 void				ft_free_child(pid_t *i);
 void				ft_free_double_char(char **tab);
-void				ft_free_line(char *string);
+void				safe_free(char *string);
 void				ft_free_redir(t_redir *redir_def);
 void				ft_free_node(t_node *node_def);
 void				ft_check_strdup(char *str, int i, char **dest, int flag);

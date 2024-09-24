@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   free_parsing.c                                     :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: gbeaudoi <gbeaudoi@student.42.fr>          +#+  +:+       +#+        */
+/*   By: fcouserg <fcouserg@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/10 15:59:26 by gbeaudoi          #+#    #+#             */
-/*   Updated: 2024/06/17 16:32:53 by gbeaudoi         ###   ########.fr       */
+/*   Updated: 2024/09/24 18:18:57 by fcouserg         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,7 +29,7 @@ void	ft_free_cmd_table_loop(t_cmd_table **cmd_table, int count_pipes)
 	i = 0;
 	while (i < count_pipes)
 	{
-		ft_free_line(cmd_table[i]->group_command);
+		safe_free(cmd_table[i]->group_command);
 		ft_free_node(cmd_table[i]->nodes);
 		ft_free_double_char(cmd_table[i]->cmd_args);
 		ft_free_redir(cmd_table[i]->redirs_in);
@@ -41,8 +41,18 @@ void	ft_free_cmd_table_loop(t_cmd_table **cmd_table, int count_pipes)
 	cmd_table = NULL;
 }
 
-// to remove in a bit since i make a new one (similar)
-void	ft_free_cmd_table_final(t_cmd_table **cmd_table, int count_pipes)
+// typedef struct s_cmd_table
+// {
+// 	char			*group_command;
+// 	t_node			*nodes;
+// 	char			**cmd_args;
+// 	t_redir			*redirs_in;
+// 	t_redir			*redirs_out;
+// 	int				is_infile_tmp;
+// 	char			*infile_tmp;
+// }					t_cmd_table;
+
+void	free_cmd_table(t_cmd_table **cmd_table, int count_pipes)
 {
 	int	i;
 
@@ -50,28 +60,19 @@ void	ft_free_cmd_table_final(t_cmd_table **cmd_table, int count_pipes)
 		return ;
 	i = 0;
 	// printf("count_pipes = %d\n", count_pipes);
-	// ft_printf("1\n");
-	// while (i < count_pipes)
-	// {
-	// ft_printf("a\n");
-	// ft_free_line(cmd_table[i]->group_command);
-	// ft_printf("b\n");
-	// ft_free_node(cmd_table[i]->nodes);
-	// ft_printf("c\n");
-	// ft_free_double_char(cmd_table[i]->cmd_args);
-	// ft_printf("d\n");
-	// ft_free_redir(cmd_table[i]->redirs_in);
-	// ft_printf("e\n");
-	// ft_free_redir(cmd_table[i]->redirs_out);
-	// ft_printf("f\n");
-	// free(cmd_table[i]);
-	// ft_printf("g\n");
-	// printf("freed cmd_table[%d]\n", i);
-	// 	i++;
-	// }
-	// ft_printf("h\n");
-	// free(cmd_table);
-	// ft_printf("i\n");
+	while (i < count_pipes && cmd_table[i])
+	{
+		safe_free(cmd_table[i]->group_command);
+		ft_free_node(cmd_table[i]->nodes);
+		ft_free_double_char(cmd_table[i]->cmd_args);
+		ft_free_redir(cmd_table[i]->redirs_in);
+		ft_free_redir(cmd_table[i]->redirs_out);
+		safe_free(cmd_table[i]->infile_tmp);
+		free(cmd_table[i]);
+		// printf("freed cmd_table[%d]\n", i);
+		i++;
+	}
+	free(cmd_table);
 	// printf("freed **cmd_table\n");
 	cmd_table = NULL;
 }

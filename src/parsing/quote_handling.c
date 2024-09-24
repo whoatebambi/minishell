@@ -6,7 +6,7 @@
 /*   By: fcouserg <fcouserg@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/31 15:31:44 by gbeaudoi          #+#    #+#             */
-/*   Updated: 2024/06/14 18:22:30 by fcouserg         ###   ########.fr       */
+/*   Updated: 2024/09/24 18:16:56 by fcouserg         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -47,10 +47,10 @@ int	ft_parseur_quote(t_shell *minishell)
 	char	*copy;
 
 	copy = ft_strdup(minishell->clean_line);
-	if (minishell->clean_line == NULL)
-	{
-		// clean the stuff
-	}
+	// if (minishell->clean_line == NULL)
+	// {
+	// 	// clean the stuff
+	// }
 	ft_bzero(minishell->clean_line, ft_strlen(minishell->clean_line));
 	i = 0;
 	k = 0;
@@ -68,10 +68,15 @@ int	ft_parseur_quote(t_shell *minishell)
 
 void	ft_neg_inside_quote(t_shell *minishell, int i)
 {
-	minishell->clean_line = ft_calloc(ft_strlen(minishell->line) + 1,
-			sizeof(char));
+	i = 0;
+	
+	if (minishell->clean_line)
+		safe_free(minishell->clean_line);
+	minishell->clean_line = ft_calloc(ft_strlen(minishell->line) + 1, sizeof(char));
 	if (minishell->clean_line == NULL)
 	{
+		printf("malloc error\n");
+		return ;
 		// clean the stuff
 	}
 	while (minishell->line[i])
@@ -93,4 +98,5 @@ void	ft_neg_inside_quote(t_shell *minishell, int i)
 			minishell->clean_line[i] = minishell->line[i];
 		i++;
 	}
+	free(minishell->line);
 }

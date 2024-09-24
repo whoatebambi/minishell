@@ -6,7 +6,7 @@
 /*   By: fcouserg <fcouserg@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/21 20:27:20 by fcouserg          #+#    #+#             */
-/*   Updated: 2024/09/20 16:44:23 by fcouserg         ###   ########.fr       */
+/*   Updated: 2024/09/24 15:25:53 by fcouserg         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -48,12 +48,6 @@ char	**build_execve_path(t_list *env_lst)
 		}
 		env_lst = env_lst->next;
 	}
-	i = 0;
-	while (execve_path_table[i])
-	{
-		printf("execve_path_table[i] = %s\n", execve_path_table[i]);
-		i++;
-	}
 	return (execve_path_table);
 }
 
@@ -73,8 +67,8 @@ void	exec_system(char **cmd_args, t_list *env_lst, t_shell *minishell)
 	// if (execve_path == NULL)
 	// 	perror("access");
 	ft_free_double_char(execve_path_table);
-	execve(execve_path, cmd_args, minishell->envp);
-	perror("execve");
+	if (execve(execve_path, cmd_args, minishell->envp) == -1)
+		perror("execve");
 }
 
 char	*find_relative_path(char *arg, char **execve_path_table)
