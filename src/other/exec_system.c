@@ -6,7 +6,7 @@
 /*   By: fcouserg <fcouserg@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/21 20:27:20 by fcouserg          #+#    #+#             */
-/*   Updated: 2024/09/24 15:25:53 by fcouserg         ###   ########.fr       */
+/*   Updated: 2024/09/24 19:34:46 by fcouserg         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -51,24 +51,19 @@ char	**build_execve_path(t_list *env_lst)
 	return (execve_path_table);
 }
 
-void	exec_system(char **cmd_args, t_list *env_lst, t_shell *minishell)
+void	exec_system(char **cmd_args, t_shell *minishell)
 {
-	char	**execve_path_table;
 	char	*execve_path;
 	
-	if (minishell->envp)
-	    ft_free_double_char(minishell->envp);
-	minishell->envp = build_execve_envp(env_lst);
-	execve_path_table = build_execve_path(env_lst);
 	if (ft_strncmp("/", cmd_args[0], 1) == 0)
 		execve_path = cmd_args[0];
 	else
-		execve_path = find_relative_path(cmd_args[0], execve_path_table);
-	// if (execve_path == NULL)
-	// 	perror("access");
-	ft_free_double_char(execve_path_table);
-	if (execve(execve_path, cmd_args, minishell->envp) == -1)
-		perror("execve");
+		execve_path = find_relative_path(cmd_args[0], minishell->path_table);
+	if (execve_path == NULL)
+		perror("access");
+	execve(execve_path, cmd_args, minishell->env);
+	// if (execve(execve_path, cmd_args, minishell->envp) == -1)
+		// perror("execve");
 }
 
 char	*find_relative_path(char *arg, char **execve_path_table)

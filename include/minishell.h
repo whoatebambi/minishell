@@ -6,7 +6,7 @@
 /*   By: fcouserg <fcouserg@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/21 18:24:48 by gbeaudoi          #+#    #+#             */
-/*   Updated: 2024/09/24 16:30:16 by fcouserg         ###   ########.fr       */
+/*   Updated: 2024/09/24 19:41:44 by fcouserg         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -115,7 +115,8 @@ typedef struct s_cmd_table
 typedef struct s_shell
 {
 	t_mode			mode;
-	char			**envp;
+	char			**env;
+	char			**path_table;
 	t_cmd_table		**cmd_table;
 	t_list			*env_lst;
 	pid_t			*child_pids;
@@ -131,7 +132,7 @@ typedef struct s_shell
 char				*get_line(t_mode mode, int fd);
 
 // exec_system.c
-void				exec_system(char **cmd_args, t_list *env_lst, t_shell *minishell);
+void				exec_system(char **cmd_args, t_shell *minishell);
 char				**build_execve_envp(t_list *env_lst);
 char				**build_execve_path(t_list *env_lst);
 char				*find_relative_path(char *arg, char **execve_path_table);
@@ -198,7 +199,7 @@ void				ft_parseur(t_shell *minishell);
 void				ft_expand_dollar(t_shell *minishell, int i);
 void				ft_rev_neg_line(t_shell *minishell);
 char				*ft_strndup(char *str, int n);
-void				ft_neg_inside_quote(t_shell *minishell, int i);
+void				ft_neg_inside_quote(t_shell *minishell);
 int					ft_parseur_quote(t_shell *minishell);
 char				*ft_strjoin_no_free(char *s1, char *s2);
 int					ft_strcmp(const char *s1, const char *s2);

@@ -6,7 +6,7 @@
 /*   By: fcouserg <fcouserg@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/21 20:27:20 by fcouserg          #+#    #+#             */
-/*   Updated: 2024/09/20 15:58:10 by fcouserg         ###   ########.fr       */
+/*   Updated: 2024/09/24 18:42:11 by fcouserg         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -70,10 +70,10 @@ static void	ft_wait_all_children(t_shell *minishell)
 	pid_t	pid_wait;
 
 	exit_codes = ft_calloc(sizeof(int), minishell->count_pipes);
-	if (exit_codes == NULL)
-	{
-		// exit;
-	}
+	// if (exit_codes == NULL)
+	// {
+	// 	// exit;
+	// }
 	i = 0;
 	while (i < minishell->count_pipes)
 	{
@@ -84,7 +84,7 @@ static void	ft_wait_all_children(t_shell *minishell)
 	}
 	// if (minishell->exit_code != EXIT_SIGQUIT
 	// 	&& minishell->exit_code != EXIT_SIGINT)
-		minishell->exit_code = exit_codes[minishell->count_pipes - 1];
+	// 	minishell->exit_code = exit_codes[minishell->count_pipes - 1];
 	free(exit_codes);
 }
 
@@ -102,7 +102,8 @@ void	execute(t_shell *minishell)
 		if (i < minishell->count_pipes - 1)
 		{
 			if (pipe(fd.pipes) == -1)
-				ft_printf("ERROR");
+				perror("pipe");
+				// ft_printf("ERROR");
 		}
 		exec_redirs(minishell, &fd, i);
 		set_redirs(&fd);

@@ -6,7 +6,7 @@
 /*   By: fcouserg <fcouserg@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/21 20:27:20 by fcouserg          #+#    #+#             */
-/*   Updated: 2024/09/24 18:19:10 by fcouserg         ###   ########.fr       */
+/*   Updated: 2024/09/24 19:40:07 by fcouserg         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -42,9 +42,8 @@ int	main(int argc, char **argv, char **envp)
 	int		fd;
 	t_shell	minishell;
 
-	(void)envp;
+	// (void)envp;
 	fd = init_argc(argc, argv, fd);      
-	   
 	init_minishell(&minishell, envp, argc);
 	ft_signals();       
 	while (1)
@@ -53,10 +52,11 @@ int	main(int argc, char **argv, char **envp)
 		if (minishell.line == NULL)
 			break ;
 		ft_parseur(&minishell);
-		execute(&minishell);	
+		// execute(&minishell);
 		reset_loop(&minishell);
 	}
 	close(fd);
 	free_minishell(&minishell);
+	printf("END\n");
 	return (0);
 }

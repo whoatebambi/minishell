@@ -6,7 +6,7 @@
 /*   By: fcouserg <fcouserg@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/20 15:42:08 by gbeaudoi          #+#    #+#             */
-/*   Updated: 2024/09/24 18:05:48 by fcouserg         ###   ########.fr       */
+/*   Updated: 2024/09/24 19:41:14 by fcouserg         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -106,12 +106,9 @@ static void	ft_split_pipe(t_shell *minishell)
 
 void	ft_parseur(t_shell *minishell)
 {
-	int		i;
-
-	i = 0;
-	ft_neg_inside_quote(minishell, i);
-	ft_expand_dollar(minishell, i);
-	ft_rev_neg_line(minishell);
-	ft_parseur_quote(minishell);
-	ft_split_pipe(minishell);
+	ft_neg_inside_quote(minishell);
+	// ft_expand_dollar(minishell, i);
+	// ft_rev_neg_line(minishell);
+	// ft_parseur_quote(minishell);
+	// ft_split_pipe(minishell);
 }

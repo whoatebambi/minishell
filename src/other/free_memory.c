@@ -6,7 +6,7 @@
 /*   By: fcouserg <fcouserg@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/21 20:27:20 by fcouserg          #+#    #+#             */
-/*   Updated: 2024/09/24 18:08:43 by fcouserg         ###   ########.fr       */
+/*   Updated: 2024/09/24 19:54:50 by fcouserg         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -34,65 +34,45 @@ void    free_env_lst(t_list *env_lst)
     }
 }
 
-// // to remove in a bit since i make a new one (similar)
-// void    free_cmd_table(t_cmd_table **cmd_table)
-// {
-//     int     i;
-//     int     j;
-
-//     if (cmd_table == NULL)
-//         return ;
-//     i = 0;
-//     while (cmd_table[i] != NULL)
-//     {
-//         j = 0;
-//         while (cmd_table[i]->cmd_args[j] != NULL)
-//         {
-//             free(cmd_table[i]->cmd_args[j]);
-//             j++;
-//         }
-//         free(cmd_table[i]->cmd_args);
-//         free(cmd_table[i]);
-//         i++;
-//     }
-//     free(cmd_table);
-// }
-
 void	reset_loop(t_shell *minishell) // || reset_shell
 {
-	if (minishell == NULL)
-		return;
-	free_cmd_table(minishell->cmd_table, minishell->count_pipes);
+	if (minishell->cmd_table)
+        free_cmd_table(minishell->cmd_table, minishell->count_pipes);
     if (minishell->child_pids)
     {
         free(minishell->child_pids);
         minishell->child_pids = NULL;
     }
-    // if (minishell->envp)
-	//     ft_free_double_char(minishell->envp);
+    if (minishell->line)
+    {
+        free(minishell->line);
+        minishell->line = NULL;
+    }
+    if (minishell->clean_line)
+    {
+        free(minishell->clean_line);
+        minishell->clean_line = NULL;
+    }
 }
 
 void	free_minishell(t_shell *minishell)
 {
 	if (minishell == NULL)
 		return;
-    // if (minishell->cmd_table)
-    //     free_cmd_table(minishell->cmd_table, minishell->count_pipes);
-    if (minishell->envp)
-    {
-        ft_free_double_char(minishell->envp);
-        minishell->envp = NULL;
-    }
-    if (minishell->child_pids)
-    {
-        free(minishell->child_pids);
-        minishell->child_pids = NULL;
-    }
+    reset_loop(minishell);
     if (minishell->env_lst)
     {
         free_env_lst(minishell->env_lst);
         minishell->env_lst = NULL;
     }
-	// safe_free(minishell->line);
-	safe_free(minishell->clean_line);
+    if (minishell->env)
+    {
+        ft_free_double_char(minishell->env);
+        minishell->env = NULL;
+    }      
+    if (minishell->path_table)
+    {
+        ft_free_double_char(minishell->path_table);
+        minishell->path_table = NULL;
+    } 
 }

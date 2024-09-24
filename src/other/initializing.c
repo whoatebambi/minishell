@@ -6,7 +6,7 @@
 /*   By: fcouserg <fcouserg@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/21 20:27:20 by fcouserg          #+#    #+#             */
-/*   Updated: 2024/09/24 18:16:38 by fcouserg         ###   ########.fr       */
+/*   Updated: 2024/09/24 19:34:39 by fcouserg         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -41,9 +41,13 @@ t_shell	*init_minishell(t_shell	*minishell, char **envp, int argc)
 		minishell->mode = INTERACTIVE;
 	else
 		minishell->mode = NON_INTERACTIVE;
-    minishell->envp = NULL;
+    minishell->env_lst = init_env_lst(envp);    
+    minishell->env = build_execve_envp(minishell->env_lst);
+    minishell->path_table = build_execve_path(minishell->env_lst);
+
+    
 	minishell->cmd_table = NULL;
-    minishell->env_lst = init_env_lst(envp);
+    
     minishell->child_pids = NULL;
 	minishell->tmp_exit_code = 0;
 	minishell->exit_code = 0;

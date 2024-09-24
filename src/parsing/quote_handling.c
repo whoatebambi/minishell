@@ -6,7 +6,7 @@
 /*   By: fcouserg <fcouserg@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/31 15:31:44 by gbeaudoi          #+#    #+#             */
-/*   Updated: 2024/09/24 18:16:56 by fcouserg         ###   ########.fr       */
+/*   Updated: 2024/09/24 19:56:43 by fcouserg         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -66,12 +66,11 @@ int	ft_parseur_quote(t_shell *minishell)
 	return (1);
 }
 
-void	ft_neg_inside_quote(t_shell *minishell, int i)
+void	ft_neg_inside_quote(t_shell *minishell)
 {
-	i = 0;
+	int	i;
 	
-	if (minishell->clean_line)
-		safe_free(minishell->clean_line);
+	i = 0;
 	minishell->clean_line = ft_calloc(ft_strlen(minishell->line) + 1, sizeof(char));
 	if (minishell->clean_line == NULL)
 	{
@@ -98,5 +97,4 @@ void	ft_neg_inside_quote(t_shell *minishell, int i)
 			minishell->clean_line[i] = minishell->line[i];
 		i++;
 	}
-	free(minishell->line);
 }
