@@ -6,7 +6,7 @@
 /*   By: fcouserg <fcouserg@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/21 20:27:20 by fcouserg          #+#    #+#             */
-/*   Updated: 2024/09/19 17:15:34 by fcouserg         ###   ########.fr       */
+/*   Updated: 2024/09/25 17:39:51 by fcouserg         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -81,7 +81,7 @@ void	ft_exit_msg(t_shell *minishell, char *errmsg)
 {
 	int	ext;
 
-	ext = minishell->exit_code;
+	ext = minishell->excode;
 	if (errmsg)
 		perror(errmsg);
 	free_minishell(minishell);

@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   heredoc.c                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: gbeaudoi <gbeaudoi@student.42.fr>          +#+  +:+       +#+        */
+/*   By: fcouserg <fcouserg@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/20 17:31:47 by gbeaudoi          #+#    #+#             */
-/*   Updated: 2024/08/29 20:06:13 by gbeaudoi         ###   ########.fr       */
+/*   Updated: 2024/09/25 17:40:04 by fcouserg         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,12 +16,12 @@ void	ft_ctrlc(t_shell *minishell, t_fds *fd, char *heredoc)
 {
 	if (g_sig == SIGINT)
 	{
-		minishell->exit_code = 130;
+		minishell->excode = 130;
 		g_sig = 0;
 		close(fd->input);
 		dup2(fd->in, STDIN_FILENO);
 		unlink(heredoc);
-		minishell->tmp_exit_code = 130;
+		minishell->tmpexcode = 130;
 	}
 }
 

@@ -6,7 +6,7 @@
 /*   By: fcouserg <fcouserg@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/21 20:27:20 by fcouserg          #+#    #+#             */
-/*   Updated: 2024/09/24 19:54:50 by fcouserg         ###   ########.fr       */
+/*   Updated: 2024/09/25 17:41:24 by fcouserg         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,7 +26,7 @@ void    free_env_lst(t_list *env_lst)
         if (env_var)
         {
             free(env_var->key);
-            free(env_var->var);
+            free(env_var->value);
             free(env_var);
         }
         free(env_lst);
@@ -37,7 +37,7 @@ void    free_env_lst(t_list *env_lst)
 void	reset_loop(t_shell *minishell) // || reset_shell
 {
 	if (minishell->cmd_table)
-        free_cmd_table(minishell->cmd_table, minishell->count_pipes);
+        free_cmd_table(minishell);
     if (minishell->child_pids)
     {
         free(minishell->child_pids);
@@ -65,14 +65,14 @@ void	free_minishell(t_shell *minishell)
         free_env_lst(minishell->env_lst);
         minishell->env_lst = NULL;
     }
-    if (minishell->env)
+    if (minishell->envp)
     {
-        ft_free_double_char(minishell->env);
-        minishell->env = NULL;
+        ft_free_double_char(minishell->envp);
+        minishell->envp = NULL;
     }      
-    if (minishell->path_table)
+    if (minishell->tabpath)
     {
-        ft_free_double_char(minishell->path_table);
-        minishell->path_table = NULL;
+        ft_free_double_char(minishell->tabpath);
+        minishell->tabpath = NULL;
     } 
 }

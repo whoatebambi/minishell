@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   signals.c                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: gbeaudoi <gbeaudoi@student.42.fr>          +#+  +:+       +#+        */
+/*   By: fcouserg <fcouserg@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/21 20:27:20 by fcouserg          #+#    #+#             */
-/*   Updated: 2024/08/28 17:52:05 by gbeaudoi         ###   ########.fr       */
+/*   Updated: 2024/09/25 17:40:04 by fcouserg         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -88,13 +88,13 @@ int	ft_catchsignals(t_shell *minishell)
 {
 	if (g_sig == SIGINT)
 	{
-		minishell->tmp_exit_code = 130;
+		minishell->tmpexcode = 130;
 		g_sig = 0;
 		return (1);
 	}
 	else if (g_sig == SIGQUIT)
 	{
-		minishell->tmp_exit_code = 131;
+		minishell->tmpexcode = 131;
 		g_sig = 0;
 		return (1);
 	}

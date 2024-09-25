@@ -6,7 +6,7 @@
 /*   By: fcouserg <fcouserg@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/21 20:27:20 by fcouserg          #+#    #+#             */
-/*   Updated: 2024/09/24 19:34:46 by fcouserg         ###   ########.fr       */
+/*   Updated: 2024/09/25 17:41:24 by fcouserg         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,7 +24,7 @@ char	**build_execve_envp(t_list *env_lst)
 	while (env_lst)
 	{
 		execve_envp[i] = ft_strjoin_no_free(((t_env *)(env_lst->content))->key, "=");
-		execve_envp[i] = ft_strjoin(execve_envp[i], ((t_env *)(env_lst->content))->var);
+		execve_envp[i] = ft_strjoin(execve_envp[i], ((t_env *)(env_lst->content))->value);
 		env_lst = env_lst->next;
 		i++;
 	}
@@ -43,7 +43,7 @@ char	**build_execve_path(t_list *env_lst)
 	{
 		if (ft_strncmp(((t_env *)(env_lst->content))->key, "PATH", 4) == 0)
 		{
-			execve_path_table = ft_split(((t_env *)(env_lst->content))->var, ':');
+			execve_path_table = ft_split(((t_env *)(env_lst->content))->value, ':');
 			break;
 		}
 		env_lst = env_lst->next;
@@ -58,12 +58,12 @@ void	exec_system(char **cmd_args, t_shell *minishell)
 	if (ft_strncmp("/", cmd_args[0], 1) == 0)
 		execve_path = cmd_args[0];
 	else
-		execve_path = find_relative_path(cmd_args[0], minishell->path_table);
+		execve_path = find_relative_path(cmd_args[0], minishell->tabpath);
 	if (execve_path == NULL)
 		perror("access");
-	execve(execve_path, cmd_args, minishell->env);
-	// if (execve(execve_path, cmd_args, minishell->envp) == -1)
-		// perror("execve");
+	// execve(execve_path, cmd_args, minishell->envp);
+	if (execve(execve_path, cmd_args, minishell->envp) == -1)
+		perror("execve");
 }
 
 char	*find_relative_path(char *arg, char **execve_path_table)

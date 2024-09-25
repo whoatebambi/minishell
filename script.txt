@@ -1,3 +1,2 @@
 ls
-echo hello
-ls
+echo "echo papa >file1 | cat < file1"

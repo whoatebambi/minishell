@@ -34,21 +34,21 @@ int safe_write(int fd, const char *str, ...)
 }
 
 int main() {
-    int exit_code;
+    int excode;
     int fd_out = STDOUT_FILENO;
     int fd_in = STDIN_FILENO;
 
-    exit_code = safe_write(fd_out, "hello\n", NULL);
-    printf("exit_code: %d\n", exit_code);
+    excode = safe_write(fd_out, "hello\n", NULL);
+    printf("excode: %d\n", excode);
 
-    exit_code = safe_write(fd_out, "hello", " world!\n", NULL);
-    printf("exit_code: %d\n", exit_code);
+    excode = safe_write(fd_out, "hello", " world!\n", NULL);
+    printf("excode: %d\n", excode);
 
-    exit_code = safe_write(fd_out, "aaa ", "bbb", " ccc!\n", NULL);
-    printf("exit_code: %d\n", exit_code);
+    excode = safe_write(fd_out, "aaa ", "bbb", " ccc!\n", NULL);
+    printf("excode: %d\n", excode);
 
-    exit_code = safe_write(fd_out, "", NULL);
-    printf("exit_code: %d\n", exit_code);
+    excode = safe_write(fd_out, "", NULL);
+    printf("excode: %d\n", excode);
 
     return 0;
 }

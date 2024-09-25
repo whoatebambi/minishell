@@ -6,7 +6,7 @@
 /*   By: fcouserg <fcouserg@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/21 20:27:20 by fcouserg          #+#    #+#             */
-/*   Updated: 2024/09/24 18:42:11 by fcouserg         ###   ########.fr       */
+/*   Updated: 2024/09/25 17:39:51 by fcouserg         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,8 +20,8 @@ int	execute_builtin(t_cmd_table *cmd_table, t_list *env_lst, t_fds *fd)
 		cd(cmd_table->cmd_args, env_lst);
 	else if (safe_strcmp(cmd_table->cmd_args[0], "echo") == 0)
 		echo(cmd_table->cmd_args, STDOUT_FILENO);
-	else if (safe_strcmp(cmd_table->cmd_args[0], "env") == 0)
-		env(env_lst, STDOUT_FILENO);
+	else if (safe_strcmp(cmd_table->cmd_args[0], "envp") == 0)
+		envp(env_lst, STDOUT_FILENO);
 	else if (safe_strcmp(cmd_table->cmd_args[0], "export") == 0)
 		export(env_lst, cmd_table->cmd_args, STDOUT_FILENO);
 	return (1);
@@ -47,7 +47,7 @@ void	exec_in_child(t_shell *minishell, int i, t_fds *fd)
 			exit(execute_builtin(minishell->cmd_table[i], minishell->env_lst, fd));
 		else
 		{
-			exec_system(minishell->cmd_table[i]->cmd_args, minishell->env_lst, minishell);
+			exec_system(minishell->cmd_table[i]->cmd_args, minishell);
 		}
 	}
 	close_fds_parent(fd);
@@ -82,19 +82,35 @@ static void	ft_wait_all_children(t_shell *minishell)
 			exit_codes[i] = WEXITSTATUS(status);
 		i++;
 	}
-	// if (minishell->exit_code != EXIT_SIGQUIT
-	// 	&& minishell->exit_code != EXIT_SIGINT)
-	// 	minishell->exit_code = exit_codes[minishell->count_pipes - 1];
+	// if (minishell->excode != EXIT_SIGQUIT
+	// 	&& minishell->excode != EXIT_SIGINT)
+	// 	minishell->excode = exit_codes[minishell->count_pipes - 1];
 	free(exit_codes);
 }
 
-void	execute(t_shell *minishell)
+void	prep_exec(t_shell *minishell, t_fds *fd)
+{
+	int		i;
+	int j;
+
+	i = 0;
+	fd->redir[0] = -42;
+	while (i < minishell->count_pipes)
+	{
+		j = is_builtin(minishell->cmd_table[i]->cmd_args[0]);
+		i++;
+	}
+	// minishell->tabpath = get_execpath(minishell);
+	// handle_withpath(minishell, node, -1, 0);
+}
+
+void	start_exec(t_shell *minishell)
 {
 	int		i;
 	t_fds	fd;
 
 	i = 0;
-	fd.redir[0] = -42;
+	prep_exec(minishell, &fd);
 	while (i < minishell->count_pipes)
 	{
 		minishell->child_pids[i] = -2;

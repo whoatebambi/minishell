@@ -6,7 +6,7 @@
 /*   By: fcouserg <fcouserg@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/21 20:27:20 by fcouserg          #+#    #+#             */
-/*   Updated: 2024/09/24 19:34:39 by fcouserg         ###   ########.fr       */
+/*   Updated: 2024/09/25 19:01:21 by fcouserg         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -35,22 +35,95 @@ int	init_argc(int argc, char **argv, int fd)
     return (fd);
 }
 
+
+	// char			*cwd;
+	// char			**envp;
+	// char			**tabpath;
+	// t_path			*path_char;
+	// t_env			*env;
+	// t_lex			*lex;
+	// t_cmd			*cmd;
+	// int				excode;
+	// int				tmpexcode;
+	// char			*inp;
+	// char			*newinp;
+	// char			*finalinp;
+	// int				inflagerr;
+	// int				outflagerr;
+
+	// t_mode			mode;
+	// char			**envp;
+	// char			**tabpath;
+	// t_path			*path;
+	// char			*path_char; //
+	// t_env			*env;
+	// t_list			*env_lst; //
+	// t_lex			*lex;
+	// t_cmd_table		**cmd_table; //
+	// t_cmd			*cmd;
+	// pid_t			*child_pids; //
+	// int				excode;	
+	// int				tmpexcode;
+	// char			*inp;
+	// char			*newinp;
+	// char			*finalinp;
+	// int				inflagerr;
+	// int				outflagerr;
+	// char			*line;
+	// char			*clean_line;
+	// int				count_pipes;
+
+
+
+char    **init_envp(t_shell *minishell, char **envp)
+{
+    char    **envp_new;
+    t_env	*newnode;
+	int		i;
+
+	i = 0;
+	minishell->tmpexcode = 0;
+	minishell->inflagerr = 0;
+	minishell->outflagerr = 0;
+	if (!envp || !envp[i])
+	{
+		ft_no_env(minishell);
+		return ;
+	}
+	while (envp && envp[i])
+	{
+		newnode = malloc(sizeof(t_env));
+		if (!newnode)
+			exitmsg(shell, MERROR);
+		init_env_nodes(shell, newnode, envp, i);
+		i++;
+	}
+    return (envp_new);
+}
+
 t_shell	*init_minishell(t_shell	*minishell, char **envp, int argc)
 {
 	if (argc == 1)
 		minishell->mode = INTERACTIVE;
 	else
 		minishell->mode = NON_INTERACTIVE;
+        
+    // shell->path = ft_calloc(1, sizeof(t_path));
+	// if (!shell->path)
+	// 	exitmsg(shell, MERROR);
+        
+    minishell->envp = NULL;
+    minishell->envp = init_envp(minishell, envp);
+    
+	minishell->lex = NULL;
+    minishell->cmd = NULL;
     minishell->env_lst = init_env_lst(envp);    
-    minishell->env = build_execve_envp(minishell->env_lst);
-    minishell->path_table = build_execve_path(minishell->env_lst);
-
     
+    minishell->tabpath = build_execve_path(minishell->env_lst);
 	minishell->cmd_table = NULL;
-    
     minishell->child_pids = NULL;
-	minishell->tmp_exit_code = 0;
-	minishell->exit_code = 0;
+	minishell->tmpexcode = 0;
+	minishell->excode = 0;
     minishell->line = NULL;
     minishell->clean_line = NULL;
 	return (minishell);
@@ -161,9 +234,9 @@ t_env	*add_env_var(char *envp)
 	env_var->key = ft_substr(envp, 0, i);
     // TD manage SHLVH levels here
     if (envp[i])
-	    env_var->var = ft_strdup(envp + i + 1);
+	    env_var->value = ft_strdup(envp + i + 1);
     else
-        env_var->var = NULL;
+        env_var->value = NULL;
     // TD protect ft_strdup & ft_substr here
 	return (env_var);
 }

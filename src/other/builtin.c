@@ -6,7 +6,7 @@
 /*   By: fcouserg <fcouserg@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/21 20:27:20 by fcouserg          #+#    #+#             */
-/*   Updated: 2024/09/19 19:27:35 by fcouserg         ###   ########.fr       */
+/*   Updated: 2024/09/25 17:41:24 by fcouserg         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,7 +18,7 @@ int	is_builtin(char *cmd_arg)
 		return (1);
 	else if (safe_strcmp(cmd_arg, "echo") == 0)
 		return (1);
-	else if (safe_strcmp(cmd_arg, "env") == 0)
+	else if (safe_strcmp(cmd_arg, "envp") == 0)
 		return (1);
 	else if (safe_strcmp(cmd_arg, "export") == 0)
 		return (2);
@@ -36,8 +36,8 @@ void	replace_env_var(char *pwd, char *key, t_list *env_lst)
 	{
 		if (safe_strcmp(((t_env *)(env_lst->content))->key, key) == 0)
 		{
-			free(((t_env *)(env_lst->content))->var);
-			((t_env *)(env_lst->content))->var = ft_strdup(pwd);
+			free(((t_env *)(env_lst->content))->value);
+			((t_env *)(env_lst->content))->value = ft_strdup(pwd);
 		}
 		env_lst = env_lst->next;
 	}
@@ -47,17 +47,17 @@ void    cd(char **cmd_args, t_list *env_lst)
 {
 	char	old_pwd[1024];
     char	new_pwd[1024];
-    int		exit_code;
+    int		excode;
 
 	if (getcwd(old_pwd, sizeof(old_pwd)) == NULL)
 		return (perror("getcwd"));
     if (cmd_args[1] == NULL)
-		exit_code = chdir(getenv("HOME"));
+		excode = chdir(getenv("HOME"));
 	else if (safe_strcmp(cmd_args[1], "-") == 0)
-		exit_code = chdir(getenv("OLDPWD"));
+		excode = chdir(getenv("OLDPWD"));
 	else
-		exit_code = chdir(cmd_args[1]);
-    if (exit_code == -1)
+		excode = chdir(cmd_args[1]);
+    if (excode == -1)
 		return (perror("chdir"));
 	if (getcwd(new_pwd, sizeof(new_pwd)) == NULL)
 		return (perror("getcwd"));
@@ -125,19 +125,19 @@ void echo(char **cmd_args, int fd_out)
         safe_write(fd_out, "\n", NULL);
 }
 
-void	env(t_list *env_lst, int fd_out)
+void	envp(t_list *env_lst, int fd_out)
 {
-    int     exit_code;
+    int     excode;
     char    *key;
-    char    *var;
+    char    *value;
 
 	if (env_lst == NULL)
 		return ;
 	while (env_lst)
 	{
         key = ((t_env *)(env_lst->content))->key;
-        var = ((t_env *)(env_lst->content))->var;
-        safe_write(fd_out, key, "=", var, "\n", NULL);
+        value = ((t_env *)(env_lst->content))->value;
+        safe_write(fd_out, key, "=", value, "\n", NULL);
 		env_lst = env_lst->next;
 	}
 }
@@ -145,15 +145,15 @@ void	env(t_list *env_lst, int fd_out)
 void	print_export(t_list *env_lst, int fd_out)
 {
     char    *key;
-    char    *var;
+    char    *value;
 
 	if (env_lst == NULL)
 		return ;
 	while (env_lst)
 	{
         key = ((t_env *)(env_lst->content))->key;
-        var = ((t_env *)(env_lst->content))->var;
-        safe_write(fd_out, "export ", key, "=", var, "\n", NULL);
+        value = ((t_env *)(env_lst->content))->value;
+        safe_write(fd_out, "export ", key, "=", value, "\n", NULL);
 		env_lst = env_lst->next;
 	}
 }
@@ -162,7 +162,7 @@ void	add_env_list(char *arg, t_list *env_lst, int fd_out)
 {
 	int		i;
 	char	*key;
-	char	*var;
+	char	*value;
 
 	if (!ft_isalpha(arg[0]))
 		return (safe_write(1, "export: `", arg,"': not a valid identifier\n", NULL));
@@ -172,15 +172,15 @@ void	add_env_list(char *arg, t_list *env_lst, int fd_out)
 	if (arg[i] != '=' || !arg[i + 1])
 		return ;
 	key = ft_substr(arg, 0, i);
-	var = ft_strdup(arg + i + 1);
+	value = ft_strdup(arg + i + 1);
 	// if (get_env_lst(key, env_lst))
 	// {
-	// 	set_env_value(key, var);
+	// 	set_env_value(key, value);
 	// 	free(key);
-	// 	free(var);
+	// 	free(value);
 	// }
 	// else
-	// 	create_and_add_env_list(key, var, env_lst);
+	// 	create_and_add_env_list(key, value, env_lst);
 }
 
 void	export(t_list *env_lst, char **cmd_args, int fd_out)

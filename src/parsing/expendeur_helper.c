@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   expendeur_helper.c                                 :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: gbeaudoi <gbeaudoi@student.42.fr>          +#+  +:+       +#+        */
+/*   By: fcouserg <fcouserg@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/17 16:02:51 by gbeaudoi          #+#    #+#             */
-/*   Updated: 2024/06/17 16:12:31 by gbeaudoi         ###   ########.fr       */
+/*   Updated: 2024/09/25 17:41:24 by fcouserg         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -31,7 +31,7 @@
 // 		cur_content = (t_env *)list->content;
 // 		if (!ft_strcmp(key, cur_content->key))
 // 		{
-// 			*to_join = ft_strjoin_no_free(cur_content->var,
+// 			*to_join = ft_strjoin_no_free(cur_content->value,
 // 					minishell->clean_line + i + j);
 // 			break ;
 // 		}

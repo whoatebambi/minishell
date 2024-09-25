@@ -6,7 +6,7 @@
 /*   By: fcouserg <fcouserg@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/21 18:24:48 by gbeaudoi          #+#    #+#             */
-/*   Updated: 2024/09/24 19:41:44 by fcouserg         ###   ########.fr       */
+/*   Updated: 2024/09/25 18:46:21 by fcouserg         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -31,6 +31,7 @@
 # include <sys/types.h>
 # include <sys/wait.h>
 # include <unistd.h>
+# include <stdbool.h>
 
 # define ERRARG "No args allowed"
 # define MERROR "Malloc error"
@@ -48,11 +49,56 @@ typedef enum e_mode
 	NON_INTERACTIVE,
 }					t_mode;
 
+typedef enum e_token
+{
+	NOT_TOKEN,
+	PIPE,
+	GREATER,
+	D_GREATER,
+	LOWER,
+	D_LOWER,
+}					t_token;
+
+typedef enum e_builtin
+{
+	NOT,
+	ECHO,
+	CD,
+	PWD,
+	EXPORT,
+	UNSET,
+	ENV,
+	EXIT,
+}					t_builtin;
+
+typedef struct s_lex
+{
+	char			*word;
+	bool			istoken;
+	bool			isred;
+	bool			quotelim;
+	int				i;
+	t_token			token;
+	struct s_lex	*next;
+	struct s_lex	*prev;
+}					t_lex;
+
 typedef struct s_env
 {
 	char			*key;
-	char			*var;
+	char			*value;
+	int				index;
+	bool			isunset;
+	bool			oldpwd;
+	struct s_env	*prev;
+	struct s_env	*next;
 }					t_env;
+
+typedef struct s_path
+{
+	char			*pwd;
+	char			*oldpwd;
+}					t_path;
 
 // Permet degarder les changement d environement qui change
 typedef struct s_env_moving
@@ -75,8 +121,10 @@ typedef struct s_fds
 	int				pipes[2];
 	int				redir[2];
 	int				input;
+	int				output;	
 	int				in;
-	int				output;
+	int				savedpipe;
+	bool			prevpipe;
 }					t_fds;
 
 typedef struct s_redir
@@ -111,21 +159,44 @@ typedef struct s_cmd_table
 	char			*infile_tmp;
 }					t_cmd_table;
 
-// tentative structure qui aurait toutes les autres structs afin de passer en argument dans les fonctions.
+typedef struct s_cmd
+{
+	char			**tab;
+	char			*path_char;
+	bool			pathnoaccess;
+	t_builtin		builtin;
+	int				num_redirections;
+	t_fds			*fds;
+	char			*heredoc;
+	t_lex			*redir;
+	pid_t			pid;
+	struct s_cmd	*next;
+	struct s_cmd	*prev;
+}					t_cmd;
+
 typedef struct s_shell
 {
 	t_mode			mode;
-	char			**env;
-	char			**path_table;
-	t_cmd_table		**cmd_table;
-	t_list			*env_lst;
-	pid_t			*child_pids;
-	int				tmp_exit_code;
-	int				exit_code;
+	char			**envp;
+	char			**tabpath;
+	t_path			*path;
+	char			*path_char; //
+	t_env			*env;
+	t_list			*env_lst; //
+	t_lex			*lex;
+	t_cmd_table		**cmd_table; //
+	t_cmd			*cmd;
+	pid_t			*child_pids; //
+	int				excode;	
+	int				tmpexcode;
+	char			*inp;
+	char			*newinp;
+	char			*finalinp;
+	int				inflagerr;
+	int				outflagerr;
 	char			*line;
 	char			*clean_line;
 	int				count_pipes;
-	// char	**execve_envp;
 }					t_shell;
 
 // main.c
@@ -133,12 +204,13 @@ char				*get_line(t_mode mode, int fd);
 
 // exec_system.c
 void				exec_system(char **cmd_args, t_shell *minishell);
+void	prep_exec(t_shell *minishell, t_fds *fd);
 char				**build_execve_envp(t_list *env_lst);
 char				**build_execve_path(t_list *env_lst);
 char				*find_relative_path(char *arg, char **execve_path_table);
 
 // executing.c
-void				execute(t_shell *minishell);
+void				start_exec(t_shell *minishell);
 int					execute_builtin(t_cmd_table *cmd_table, t_list *env_lst,
 						t_fds *fd);
 void				exec_in_child(t_shell *minishell, int i, t_fds *fd);
@@ -156,7 +228,7 @@ void					cd(char **cmd_args, t_list *env_lst);
 void				replace_env_var(char *pwd, char *key, t_list *env_lst);
 void					echo(char **cmd_args, int fd_out);
 int	check_newline(char **cmd_args, int *flag);
-void					env(t_list *env_lst, int fd_out);
+void					envp(t_list *env_lst, int fd_out);
 void	export(t_list *env_lst, char **cmd_args, int fd_out);
 void					print_export(t_list *env_lst, int fd_out);
 void	add_env_list(char *arg, t_list *env_lst, int fd_out);
@@ -196,7 +268,7 @@ void				reset_loop(t_shell *minishell);
 
 // Parseur expendeur llexeur
 void				ft_parseur(t_shell *minishell);
-void				ft_expand_dollar(t_shell *minishell, int i);
+void				ft_expand_dollar(t_shell *minishell);
 void				ft_rev_neg_line(t_shell *minishell);
 char				*ft_strndup(char *str, int n);
 void				ft_neg_inside_quote(t_shell *minishell);
@@ -229,8 +301,7 @@ void				ft_stack_add_to_back(t_node **a, t_node *new_node);
 // free
 void				ft_free_cmd_table_loop(t_cmd_table **cmd_table,
 						int count_pipes);
-void				free_cmd_table(t_cmd_table **cmd_table,
-						int count_pipes);
+void	free_cmd_table(t_shell *minishell);
 void				ft_free_child(pid_t *i);
 void				ft_free_double_char(char **tab);
 void				safe_free(char *string);

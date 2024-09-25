@@ -6,7 +6,7 @@
 /*   By: fcouserg <fcouserg@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/31 15:31:03 by gbeaudoi          #+#    #+#             */
-/*   Updated: 2024/09/24 18:13:08 by fcouserg         ###   ########.fr       */
+/*   Updated: 2024/09/25 17:41:24 by fcouserg         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,7 +30,7 @@ void	ft_find_value(char **to_join, t_shell *minishell, int i)
 		cur_content = (t_env *)list->content;
 		if (!ft_strcmp(key, cur_content->key))
 		{
-			*to_join = ft_strjoin_no_free(cur_content->var,
+			*to_join = ft_strjoin_no_free(cur_content->value,
 					minishell->clean_line + i + j);
 			break ;
 		}
@@ -67,7 +67,7 @@ static void	ft_dollar_option(char *copy, t_shell *minishell, int i,
 		ft_find_value(&to_join, minishell, i + 1);
 	else if (minishell->clean_line[i + 1] == '?')
 	{
-		to_join = ft_strjoin(ft_itoa(minishell->exit_code),
+		to_join = ft_strjoin(ft_itoa(minishell->excode),
 				minishell->clean_line + i + 2);
 		// if (mini... == NULL)
 		// to be free;
@@ -103,12 +103,13 @@ static void	ft_define_flag(int *flag)
 		*flag = 1;
 }
 
-void	ft_expand_dollar(t_shell *minishell, int i)
+void	ft_expand_dollar(t_shell *minishell)
 {
 	int		flag_sgl;
 	int		delim = 0; // This variable was not initialized
 	char	*copy;
 	int		flag_dbl;
+	int i = 0;
 
 	flag_sgl = 0;
 	flag_dbl = 0;

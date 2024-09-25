@@ -3,16 +3,16 @@
 /*                                                        :::      ::::::::   */
 /*   ft_utility3.c                                      :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: gbeaudoi <gbeaudoi@student.42.fr>          +#+  +:+       +#+        */
+/*   By: fcouserg <fcouserg@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/28 18:47:44 by gbeaudoi          #+#    #+#             */
-/*   Updated: 2023/12/02 18:34:55 by gbeaudoi         ###   ########.fr       */
+/*   Updated: 2024/09/25 17:38:53 by fcouserg         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "ft_printf.h"
 
-// print all the different flags for the no dash path
+// print all the different flags for the no dash path_char
 void	ft_check_intdec(t_print *format, int k, int m, int i)
 {
 	int	sign;

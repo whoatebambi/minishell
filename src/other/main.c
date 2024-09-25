@@ -6,7 +6,7 @@
 /*   By: fcouserg <fcouserg@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/21 20:27:20 by fcouserg          #+#    #+#             */
-/*   Updated: 2024/09/24 19:40:07 by fcouserg         ###   ########.fr       */
+/*   Updated: 2024/09/25 17:07:05 by fcouserg         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -52,11 +52,11 @@ int	main(int argc, char **argv, char **envp)
 		if (minishell.line == NULL)
 			break ;
 		ft_parseur(&minishell);
-		// execute(&minishell);
+		start_exec(&minishell);
 		reset_loop(&minishell);
 	}
 	close(fd);
 	free_minishell(&minishell);
-	printf("END\n");
+	// printf("END\n");
 	return (0);
 }

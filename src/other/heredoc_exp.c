@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   heredoc_exp.c                                      :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: gbeaudoi <gbeaudoi@student.42.fr>          +#+  +:+       +#+        */
+/*   By: fcouserg <fcouserg@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/20 19:13:21 by gbeaudoi          #+#    #+#             */
-/*   Updated: 2024/08/29 20:01:14 by gbeaudoi         ###   ########.fr       */
+/*   Updated: 2024/09/25 17:41:24 by fcouserg         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,9 +30,9 @@ void	ft_find_value_hd(char **to_join, char *str, t_shell *minishell, int i)
 		if (!ft_strcmp(key, cur_content->key))
 		{
 			if (*(str + i + j) != '\n')
-				*to_join = ft_strjoin_no_free(cur_content->var, (str + i + j));
+				*to_join = ft_strjoin_no_free(cur_content->value, (str + i + j));
 			else
-				ft_check_strdup(cur_content->var, 0, to_join, 0);
+				ft_check_strdup(cur_content->value, 0, to_join, 0);
 			break ;
 		}
 		else
@@ -73,7 +73,7 @@ static char	*ft_dollar_option_hd(char *copy, char *str, int i,
 	}
 	else if (str[i + 1] == '?')
 	{
-		to_join = ft_strjoin(ft_itoa(minishell->exit_code), str + i + 2);
+		to_join = ft_strjoin(ft_itoa(minishell->excode), str + i + 2);
 		// if (mini... == NULL)
 		// to be free;
 	}
