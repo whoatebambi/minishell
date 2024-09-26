@@ -1,12 +1,12 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   redir_list.c                                       :+:      :+:    :+:   */
+/*   redir_init.c                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: fcouserg <fcouserg@student.42.fr>          +#+  +:+       +#+        */
+/*   By: codespace <codespace@student.42.fr>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/05 16:11:15 by gbeaudoi          #+#    #+#             */
-/*   Updated: 2024/06/14 18:22:53 by fcouserg         ###   ########.fr       */
+/*   Updated: 2024/09/26 17:17:10 by codespace        ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -88,10 +88,12 @@ void	ft_check_syntax(t_node *nodes)
 	}
 }
 
-void	ft_tokenize_list(t_node *nodes)
+void	ft_tokenize_list(t_node *nodes, t_shell *minishell)
 {
 	t_node	*copy;
 
+	if (!nodes || !nodes->string)
+		exitmsg(minishell, MERROR);
 	copy = nodes;
 	while (copy)
 	{
@@ -103,9 +105,9 @@ void	ft_tokenize_list(t_node *nodes)
 			(copy)->token = 0;
 		if ((copy)->token == 0)
 		{
-			if ((copy)->previous && (copy)->previous->token == 1)
-				(copy)->redir = 1;
-			else
+			// if ((copy)->previous && (copy)->previous->token == 1)
+			// 	(copy)->redir = 1;
+			// else
 				(copy)->redir = 0;
 		}
 		copy = (copy)->next;

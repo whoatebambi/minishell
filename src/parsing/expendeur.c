@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   expendeur.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: fcouserg <fcouserg@student.42.fr>          +#+  +:+       +#+        */
+/*   By: codespace <codespace@student.42.fr>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/31 15:31:03 by gbeaudoi          #+#    #+#             */
-/*   Updated: 2024/09/25 17:41:24 by fcouserg         ###   ########.fr       */
+/*   Updated: 2024/09/26 16:54:47 by codespace        ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -106,11 +106,12 @@ static void	ft_define_flag(int *flag)
 void	ft_expand_dollar(t_shell *minishell)
 {
 	int		flag_sgl;
-	int		delim = 0; // This variable was not initialized
+	int		delim;
 	char	*copy;
 	int		flag_dbl;
 	int i = 0;
 
+	delim = 0;
 	flag_sgl = 0;
 	flag_dbl = 0;
 	while (minishell->clean_line[i])
@@ -119,9 +120,7 @@ void	ft_expand_dollar(t_shell *minishell)
 		{
 			copy = ft_strndup(minishell->clean_line, i);
 			if (copy == NULL)
-			{
-				// reset
-			}
+				exitmsg(minishell, MERROR);
 			ft_dollar_option(copy, minishell, i, flag_dbl);
 			i = 0;
 			flag_sgl = 0;

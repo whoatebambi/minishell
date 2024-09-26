@@ -6,7 +6,7 @@
 /*   By: codespace <codespace@student.42.fr>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/21 20:27:20 by fcouserg          #+#    #+#             */
-/*   Updated: 2024/09/26 15:47:07 by codespace        ###   ########.fr       */
+/*   Updated: 2024/09/26 17:01:49 by codespace        ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -44,12 +44,12 @@ void	free_cmd_table(t_shell *minishell)
 	{
 		if (minishell->cmd_table[i] != NULL)
 		{
-			safe_free(minishell->cmd_table[i]->group_command);
-			ft_free_node(minishell->cmd_table[i]->nodes);
-			ft_free_double_char(minishell->cmd_table[i]->cmd_args);
-			ft_free_redir(minishell->cmd_table[i]->redirs_in);
-			ft_free_redir(minishell->cmd_table[i]->redirs_out);
-			safe_free(minishell->cmd_table[i]->infile_tmp);
+			// safe_free(minishell->cmd_table[i]->group_command);
+			// ft_free_node(minishell->cmd_table[i]->nodes);
+			// ft_free_double_char(minishell->cmd_table[i]->cmd_args);
+			// ft_free_redir(minishell->cmd_table[i]->redirs_in);
+			// ft_free_redir(minishell->cmd_table[i]->redirs_out);
+			// safe_free(minishell->cmd_table[i]->infile_tmp);
             free(minishell->cmd_table[i]);
             minishell->cmd_table[i] = NULL;
         }
@@ -61,8 +61,8 @@ void	free_cmd_table(t_shell *minishell)
 
 void	reset_loop(t_shell *minishell) // || reset_shell
 {
-	// if (minishell->cmd_table)
-	// 	free_cmd_table(minishell);
+	if (minishell->cmd_table)
+		free_cmd_table(minishell);
     if (minishell->child_pids)
     {
         free(minishell->child_pids);
@@ -78,11 +78,11 @@ void	reset_loop(t_shell *minishell) // || reset_shell
         free(minishell->clean_line);
         minishell->clean_line = NULL;
     }
-    if (minishell->tabpath)
-    {
-        ft_free_double_char(minishell->tabpath);
-        minishell->tabpath = NULL;
-    }
+    // if (minishell->tabpath)
+    // {
+    //     ft_free_double_char(minishell->tabpath);
+    //     minishell->tabpath = NULL;
+    // }
     if (minishell->cwd)
     {
         free(minishell->cwd);

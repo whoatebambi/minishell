@@ -6,7 +6,7 @@
 /*   By: codespace <codespace@student.42.fr>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/21 18:24:48 by gbeaudoi          #+#    #+#             */
-/*   Updated: 2024/09/26 15:43:28 by codespace        ###   ########.fr       */
+/*   Updated: 2024/09/26 17:16:10 by codespace        ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -258,7 +258,6 @@ void	fill_envp(t_shell *minishell);
 void	fill_path(t_shell *minishell);
 int	env_size(t_shell *shell);
 char	*getpath(t_shell *minishell, char *key);
-char	*safe_join_envp(char *key, char *symb, char *value);
 
 // init_no_env.c
 void	set_pwd(t_shell *shell);
@@ -277,6 +276,7 @@ void					safe_write(int fd, const char *str, ...);
 int					safe_strcmp(char *s1, char *s2);
 void				swap_env(t_list *a, t_list *b);
 void				ft_exit_msg(t_shell *minishell, char *errmsg);
+char	*safe_join_envp(char *key, char *symb, char *value);
 
 // free_memory.c
 void				free_env(t_env *env);
@@ -304,9 +304,9 @@ int					ft_parseur_quote(t_shell *minishell);
 char				*ft_strjoin_no_free(char *s1, char *s2);
 int					ft_strcmp(const char *s1, const char *s2);
 void				ft_init_node_list(t_node **nodes,
-						t_cmd_table *command_table);
+						t_cmd_table *command_table, t_shell *minishell);
 int					ft_rev_neg_words(char *line);
-void				ft_tokenize_list(t_node *nodes);
+void				ft_tokenize_list(t_node *nodes, t_shell *minishell);
 void				ft_check_syntax(t_node *nodes);
 void				ft_redistribute_node(t_cmd_table **command_table,
 						t_node *nodes);

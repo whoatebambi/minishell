@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   utils.c                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: fcouserg <fcouserg@student.42.fr>          +#+  +:+       +#+        */
+/*   By: codespace <codespace@student.42.fr>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/21 20:27:20 by fcouserg          #+#    #+#             */
-/*   Updated: 2024/09/25 17:39:51 by fcouserg         ###   ########.fr       */
+/*   Updated: 2024/09/26 16:40:18 by codespace        ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -86,4 +86,30 @@ void	ft_exit_msg(t_shell *minishell, char *errmsg)
 		perror(errmsg);
 	free_minishell(minishell);
 	exit(ext);
+}
+
+char	*safe_join_envp(char *key, char *symb, char *value)
+{
+	char	*str;
+	int i;
+	int len;
+
+	i = 0;
+	if (!key || !symb)
+		return (NULL);
+	len = ft_strlen(key) + ft_strlen(symb) + ft_strlen(value) + 1;
+	str = ft_calloc(len, sizeof(char));
+	if (!str)
+		return (NULL);
+	while (*key)
+		str[i++] = *key++;
+	while (*symb)
+		str[i++] = *symb++;
+	if (value)
+	{
+		while (*value)
+		str[i++] = *value++;
+	}
+	str[i] = '\0';
+	return (str);
 }

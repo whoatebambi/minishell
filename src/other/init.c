@@ -6,7 +6,7 @@
 /*   By: codespace <codespace@student.42.fr>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/21 20:27:20 by fcouserg          #+#    #+#             */
-/*   Updated: 2024/09/26 15:43:19 by codespace        ###   ########.fr       */
+/*   Updated: 2024/09/26 16:47:45 by codespace        ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -89,33 +89,6 @@ int	env_size(t_shell *minishell)
 	return (len);
 }
 
-char	*safe_join_envp(char *key, char *symb, char *value)
-{
-	char	*str;
-	int i;
-	int len;
-
-	i = 0;
-	if (!key || !symb)
-		return (NULL);
-	len = ft_strlen(key) + ft_strlen(symb) + ft_strlen(value) + 1;
-	str = ft_calloc(len, sizeof(char));
-	if (!str)
-		return (NULL);
-	while (*key)
-		str[i++] = *key++;
-	while (*symb)
-		str[i++] = *symb++;
-	if (value)
-	{
-		while (*value)
-		str[i++] = *value++;
-	}
-	str[i] = '\0';
-	return (str);
-}
-
-
 void	fill_envp(t_shell *minishell)
 {
 	int		len;
@@ -165,25 +138,17 @@ void	fill_path(t_shell *minishell)
 	if (!minishell->path)
 		exitmsg(minishell, MERROR);
 	path = getpath(minishell, "PWD");
-	if (path)
-	{
-		minishell->path->pwd = ft_strdup(path);
-		if (!minishell->path->pwd)
-		{
-			free(path);
-			exitmsg(minishell, MERROR);
-		}	
-	}
+	if (!path)
+		exitmsg(minishell, MERROR);
+	minishell->path->pwd = ft_strdup(path);
+	if (!minishell->path->pwd)
+		exitmsg(minishell, MERROR);
 	path = getpath(minishell, "OLDPWD");
-	if (path)
-	{
-		minishell->path->oldpwd = ft_strdup(path);
-		if (!minishell->path->oldpwd)
-		{
-			free(path);
-			exitmsg(minishell, MERROR);
-		}
-	}
+	if (!path)
+		exitmsg(minishell, MERROR);
+	minishell->path->oldpwd = ft_strdup(path);
+	if (!minishell->path->oldpwd)
+		exitmsg(minishell, MERROR);
 }
 
 
@@ -202,7 +167,6 @@ void	init_minishell(t_shell	*minishell, char **envp, int argc)
 	fill_path(minishell);
 	minishell->lex = NULL;
     minishell->cmd = NULL;
-    // minishell->tabpath = build_execve_path(minishell->env_lst);
 	minishell->cmd_table = NULL;
     minishell->child_pids = NULL;
 	minishell->tmpexcode = 0;
@@ -212,6 +176,7 @@ void	init_minishell(t_shell	*minishell, char **envp, int argc)
 	minishell->inflagerr = 0;
 	minishell->outflagerr = 0;
 	minishell->tabpath = NULL;
+	// minishell->tabpath = build_execve_path(minishell->env_lst);
 	minishell->inp = NULL;
 	minishell->newinp = NULL;
 	minishell->finalinp = NULL;
@@ -223,7 +188,7 @@ int	init_fd(int argc, char **argv, int fd)
 	fd = 0;
 	if (argc == 2)
 		fd = open(argv[1], O_RDONLY);
-	if (fd == -1)
+	if (fd == -1) // exitmsg(minishell, MERROR);
 	{
 		perror("Error");
 		exit(EXIT_FAILURE);
@@ -307,7 +272,7 @@ t_list  *init_env_lst(char **envp)
     return (env_lst);
 }
 
-t_env	*add_env_var(char *envp)
+t_env	*add_env_var(char *envp) // TD DELETE THIS FUNCTION
 {
 	t_env	*env_var;
     int i;
@@ -321,11 +286,9 @@ t_env	*add_env_var(char *envp)
     while (envp[i] != '=' && envp[i])
         i++;
 	env_var->key = ft_substr(envp, 0, i);
-    // TD manage SHLVH levels here
     if (envp[i])
 	    env_var->value = ft_strdup(envp + i + 1);
     else
         env_var->value = NULL;
-    // TD protect ft_strdup & ft_substr here
 	return (env_var);
 }

@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   quote_handling.c                                   :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: fcouserg <fcouserg@student.42.fr>          +#+  +:+       +#+        */
+/*   By: codespace <codespace@student.42.fr>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/31 15:31:44 by gbeaudoi          #+#    #+#             */
-/*   Updated: 2024/09/24 19:56:43 by fcouserg         ###   ########.fr       */
+/*   Updated: 2024/09/26 16:59:01 by codespace        ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -47,22 +47,18 @@ int	ft_parseur_quote(t_shell *minishell)
 	char	*copy;
 
 	copy = ft_strdup(minishell->clean_line);
-	// if (minishell->clean_line == NULL)
-	// {
-	// 	// clean the stuff
-	// }
+	if (copy == NULL)
+		exitmsg(minishell, MERROR);
 	ft_bzero(minishell->clean_line, ft_strlen(minishell->clean_line));
 	i = 0;
 	k = 0;
 	quote_count = ft_parseur_helper(i, k, copy, minishell);
+	free(copy);
 	if (quote_count == 1)
 	{
-		free(copy);
-		free(minishell->clean_line);
 		perror("Unclosed quotes");
-		// ft_reset(minishell, all);
+		exitmsg(minishell, MERROR);
 	}
-	free(copy);
 	return (1);
 }
 
@@ -73,11 +69,7 @@ void	ft_neg_inside_quote(t_shell *minishell)
 	i = 0;
 	minishell->clean_line = ft_calloc(ft_strlen(minishell->line) + 1, sizeof(char));
 	if (minishell->clean_line == NULL)
-	{
-		printf("malloc error\n");
-		return ;
-		// clean the stuff
-	}
+		exitmsg(minishell, MERROR);
 	while (minishell->line[i])
 	{
 		if (minishell->line[i] == '\"')

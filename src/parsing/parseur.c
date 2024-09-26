@@ -6,7 +6,7 @@
 /*   By: codespace <codespace@student.42.fr>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/20 15:42:08 by gbeaudoi          #+#    #+#             */
-/*   Updated: 2024/09/26 14:06:29 by codespace        ###   ########.fr       */
+/*   Updated: 2024/09/26 17:15:24 by codespace        ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,8 +22,7 @@ static int	ft_find_pipes(char **pipes)
 	return (i);
 }
 
-void	ft_init_command_group(t_cmd_table **command_table, char **pipes,
-		t_shell *minishell)
+void	ft_init_command_group(t_cmd_table **command_table, char **pipes, t_shell *minishell)
 {
 	int	i;
 
@@ -31,20 +30,13 @@ void	ft_init_command_group(t_cmd_table **command_table, char **pipes,
 	while (pipes[i])
 	{
 		command_table[i] = ft_calloc(1, sizeof(t_cmd_table));
-		// if (command_table[i] == NULL)
-		// {
-		// 	return ;
-		// 	// reset mini
-		// }
+		if (command_table[i] == NULL)
+			exitmsg(minishell, MERROR);
 		command_table[i]->group_command = ft_strdup(pipes[i]);
-		// if (command_table[i]->group_command == NULL)
-		// {
-		// 	return ;
-		// 	// reset mini
-		// }
-		
-		ft_init_node_list(&((command_table[i])->nodes), command_table[i]);
-		ft_tokenize_list(command_table[i]->nodes);
+		if (command_table[i]->group_command == NULL)
+			exitmsg(minishell, MERROR);
+		ft_init_node_list(&((command_table[i])->nodes), command_table[i], minishell);
+		ft_tokenize_list(command_table[i]->nodes, minishell);
 		ft_check_syntax(command_table[i]->nodes);
 		ft_redistribute_node(&command_table[i], command_table[i]->nodes);
 		command_table[i]->is_infile_tmp = 0;
@@ -82,31 +74,30 @@ static void	ft_split_pipe(t_shell *minishell)
 	if (!ft_check_pipes(minishell))
 	{
 		perror("PIPE ERROR"); // to confirme what to do
-		exit(2);
+		exitmsg(minishell, MERROR);
 	}
 	pipes = ft_split(minishell->clean_line, '|');
 	if (pipes == NULL)
-		free_minishell(minishell); // to check avec florence
+		exitmsg(minishell, MERROR);
 	minishell->count_pipes = ft_find_pipes(pipes);
 	minishell->cmd_table = ft_calloc(minishell->count_pipes, sizeof(t_cmd_table *));
-	// if (minishell->cmd_table == NULL)
-	// {
-	// 	ft_free_double_char(pipes);
-	// 	free_minishell(minishell); // to check avec florence
-	// }
+	if (minishell->cmd_table == NULL)
+	{
+		ft_free_double_char(pipes);
+		exitmsg(minishell, MERROR);
+	}
 	minishell->child_pids = ft_calloc(minishell->count_pipes, sizeof(pid_t));
-	// if (minishell->child_pids == NULL)
-	// {
-	// 	ft_free_double_char(pipes);
-	// 	free_minishell(minishell); // to check avec florence
-	// }
+	if (minishell->child_pids == NULL)
+	{
+		ft_free_double_char(pipes);
+		exitmsg(minishell, MERROR);
+	}
 	ft_init_command_group((minishell->cmd_table), pipes, minishell);
 	ft_free_double_char(pipes);
 }
 
 void	ft_parseur(t_shell *minishell)
 {
-	printf("line: %s\n", minishell->line);
 	ft_neg_inside_quote(minishell);
 	ft_expand_dollar(minishell);
 	ft_rev_neg_line(minishell);
