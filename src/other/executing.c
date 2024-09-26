@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   executing.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: fcouserg <fcouserg@student.42.fr>          +#+  +:+       +#+        */
+/*   By: codespace <codespace@student.42.fr>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/21 20:27:20 by fcouserg          #+#    #+#             */
-/*   Updated: 2024/09/25 17:39:51 by fcouserg         ###   ########.fr       */
+/*   Updated: 2024/09/25 23:57:41 by codespace        ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -88,20 +88,61 @@ static void	ft_wait_all_children(t_shell *minishell)
 	free(exit_codes);
 }
 
+
+char	**build_execve_path(t_list *env_lst)
+{
+	char	**execve_path_table;
+	int		i;
+	
+	i = 0;
+	execve_path_table = NULL;
+	while (env_lst)
+	{
+		if (ft_strncmp(((t_env *)(env_lst->content))->key, "PATH", 4) == 0)
+		{
+			execve_path_table = ft_split(((t_env *)(env_lst->content))->value, ':');
+			break;
+		}
+		env_lst = env_lst->next;
+	}
+	return (execve_path_table);
+}
+
+char	**get_execpath(t_shell *shell)
+{
+	t_env	*env;
+	char	**execve_path;
+
+	env = shell->env;
+	execve_path = NULL;
+	while (env)
+	{
+		if (safe_strcmp(env->key, "PATH") == 0)
+		{
+			execve_path = ft_split(env->value, ':');
+			break;
+		}
+		env = env->next;
+	}
+	return (execve_path);
+}
+
 void	prep_exec(t_shell *minishell, t_fds *fd)
 {
-	int		i;
-	int j;
+	t_cmd	*node;
+	t_cmd	*cmd;
 
-	i = 0;
 	fd->redir[0] = -42;
-	while (i < minishell->count_pipes)
+	node = minishell->cmd;
+	cmd = minishell->cmd;
+	while (cmd)
 	{
-		j = is_builtin(minishell->cmd_table[i]->cmd_args[0]);
-		i++;
+		// check_builtins(cmd);
+			// j = is_builtin(minishell->cmd_table[i]->cmd_args[0]);
+		cmd = cmd->next;
 	}
-	// minishell->tabpath = get_execpath(minishell);
-	// handle_withpath(minishell, node, -1, 0);
+	minishell->tabpath = get_execpath(minishell);
+	// handle_withpath(shell, node, -1, 0);
 }
 
 void	start_exec(t_shell *minishell)
@@ -111,30 +152,30 @@ void	start_exec(t_shell *minishell)
 
 	i = 0;
 	prep_exec(minishell, &fd);
-	while (i < minishell->count_pipes)
-	{
-		minishell->child_pids[i] = -2;
-		ft_init_fds(&fd);
-		if (i < minishell->count_pipes - 1)
-		{
-			if (pipe(fd.pipes) == -1)
-				perror("pipe");
-				// ft_printf("ERROR");
-		}
-		exec_redirs(minishell, &fd, i);
-		set_redirs(&fd);
-		if (is_builtin(minishell->cmd_table[i]->cmd_args[0]) && minishell->count_pipes == 1)
-			execute_builtin(minishell->cmd_table[i], minishell->env_lst, &fd);
-		else if (is_builtin(minishell->cmd_table[i]->cmd_args[0]) == 2)
-			execute_builtin(minishell->cmd_table[i], minishell->env_lst, &fd);
-		else
-			exec_in_child(minishell, i, &fd);
-		if (i + 1 == minishell->count_pipes)
-			close_fds_parent(&fd);
-		i++;
-	}
-	ft_wait_all_children(minishell);
-	close_fds(&fd);
+	// while (i < minishell->count_pipes)
+	// {
+	// 	minishell->child_pids[i] = -2;
+	// 	ft_init_fds(&fd);
+	// 	if (i < minishell->count_pipes - 1)
+	// 	{
+	// 		if (pipe(fd.pipes) == -1)
+	// 			perror("pipe");
+	// 			// ft_printf("ERROR");
+	// 	}
+	// 	exec_redirs(minishell, &fd, i);
+	// 	set_redirs(&fd);
+	// 	if (is_builtin(minishell->cmd_table[i]->cmd_args[0]) && minishell->count_pipes == 1)
+	// 		execute_builtin(minishell->cmd_table[i], minishell->env_lst, &fd);
+	// 	else if (is_builtin(minishell->cmd_table[i]->cmd_args[0]) == 2)
+	// 		execute_builtin(minishell->cmd_table[i], minishell->env_lst, &fd);
+	// 	else
+	// 		exec_in_child(minishell, i, &fd);
+	// 	if (i + 1 == minishell->count_pipes)
+	// 		close_fds_parent(&fd);
+	// 	i++;
+	// }
+	// ft_wait_all_children(minishell);
+	// close_fds(&fd);
 }
 
 // echo papa >file1 | cat < file1

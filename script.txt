@@ -1,2 +1,2 @@
-ls
 echo "echo papa >file1 | cat < file1"
+ls

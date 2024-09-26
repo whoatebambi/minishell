@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   minishell.h                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: fcouserg <fcouserg@student.42.fr>          +#+  +:+       +#+        */
+/*   By: codespace <codespace@student.42.fr>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/21 18:24:48 by gbeaudoi          #+#    #+#             */
-/*   Updated: 2024/09/25 18:46:21 by fcouserg         ###   ########.fr       */
+/*   Updated: 2024/09/25 23:56:18 by codespace        ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -90,7 +90,7 @@ typedef struct s_env
 	int				index;
 	bool			isunset;
 	bool			oldpwd;
-	struct s_env	*prev;
+	// struct s_env	*prev;
 	struct s_env	*next;
 }					t_env;
 
@@ -214,6 +214,8 @@ void				start_exec(t_shell *minishell);
 int					execute_builtin(t_cmd_table *cmd_table, t_list *env_lst,
 						t_fds *fd);
 void				exec_in_child(t_shell *minishell, int i, t_fds *fd);
+void	prep_exec(t_shell *minishell, t_fds *fd);
+char	**get_execpath(t_shell *shell);
 
 // exec_redirections.c
 void				exec_redirs(t_shell *minishell, t_fds *fd, int i);
@@ -239,9 +241,24 @@ int					is_builtin(char *cmd_arg);
 int					init_argc(int argc, char **argv, int fd);
 t_shell				*init_minishell(t_shell	*minishell, char **envp, int argc);
 int					init_fd(int argc, char **argv, int fd);
-t_list				*init_env_lst(char **envp);
+t_list				*init_env_lst(char **envp); // a supprimer
+void    ft_getenv(t_shell *minishell, char **envp);
 t_env				*add_env_var(char *envp);
 char				**add_oldpwd(char **envp);
+void	fill_envp(t_shell *minishell);
+int	env_size(t_shell *shell);
+char	*getpath(t_shell *minishell, char *key);
+
+// init_no_env.c
+void	set_pwd(t_shell *shell);
+void	set_shlvl(t_shell *shell);
+void	set_lastcmd(t_shell *shell);
+void	set_oldpwd(t_shell *shell);
+void	ft_no_env(t_shell *minishell);
+
+// init_env_nodes.c
+void	init_env_nodes(t_shell *minishell, t_env *new_node, char **envp, int i);
+void	set_shlvl_inception(t_shell *minishell, t_env *node);
 
 // utils.c
 t_shell				*get_minishell(t_shell *minishell);
@@ -260,7 +277,8 @@ void				ft_signals(void);
 int					ft_catchsignals(t_shell *minishell);
 
 // free_memory.c
-// void				free_env(t_env *content);
+void    free_env(t_env *env);
+void    free_path(t_path *path);
 void				free_env_lst(t_list *env_lst);
 // void	free_cmd_table(t_cmd_table **cmd_table, int count_pipes);
 void				free_minishell(t_shell *minishell);

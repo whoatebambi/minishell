@@ -1,12 +1,12 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   initializing.c                                     :+:      :+:    :+:   */
+/*   init.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: fcouserg <fcouserg@student.42.fr>          +#+  +:+       +#+        */
+/*   By: codespace <codespace@student.42.fr>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/21 20:27:20 by fcouserg          #+#    #+#             */
-/*   Updated: 2024/09/25 19:01:21 by fcouserg         ###   ########.fr       */
+/*   Updated: 2024/09/25 23:48:00 by codespace        ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,11 +21,8 @@ int	init_argc(int argc, char **argv, int fd)
 		perror("Error");
 		exit(E2BIG); // "E2BIG" macro from <errno.h> expands to "Argument list too long."
 	}
-		
 	if (argc == 2) // opens the file (we are in non-interactive mode)
-	{
 		fd = open(argv[1], O_RDONLY);
-	}
 	if (fd == -1)
 	{
 		// no need to set errno to a macro here, the system call open() automatically did it
@@ -35,56 +32,12 @@ int	init_argc(int argc, char **argv, int fd)
     return (fd);
 }
 
-
-	// char			*cwd;
-	// char			**envp;
-	// char			**tabpath;
-	// t_path			*path_char;
-	// t_env			*env;
-	// t_lex			*lex;
-	// t_cmd			*cmd;
-	// int				excode;
-	// int				tmpexcode;
-	// char			*inp;
-	// char			*newinp;
-	// char			*finalinp;
-	// int				inflagerr;
-	// int				outflagerr;
-
-	// t_mode			mode;
-	// char			**envp;
-	// char			**tabpath;
-	// t_path			*path;
-	// char			*path_char; //
-	// t_env			*env;
-	// t_list			*env_lst; //
-	// t_lex			*lex;
-	// t_cmd_table		**cmd_table; //
-	// t_cmd			*cmd;
-	// pid_t			*child_pids; //
-	// int				excode;	
-	// int				tmpexcode;
-	// char			*inp;
-	// char			*newinp;
-	// char			*finalinp;
-	// int				inflagerr;
-	// int				outflagerr;
-	// char			*line;
-	// char			*clean_line;
-	// int				count_pipes;
-
-
-
-char    **init_envp(t_shell *minishell, char **envp)
+void    ft_getenv(t_shell *minishell, char **envp)
 {
-    char    **envp_new;
-    t_env	*newnode;
+    t_env	*new_node;
 	int		i;
 
 	i = 0;
-	minishell->tmpexcode = 0;
-	minishell->inflagerr = 0;
-	minishell->outflagerr = 0;
 	if (!envp || !envp[i])
 	{
 		ft_no_env(minishell);
@@ -92,40 +45,133 @@ char    **init_envp(t_shell *minishell, char **envp)
 	}
 	while (envp && envp[i])
 	{
-		newnode = malloc(sizeof(t_env));
-		if (!newnode)
-			exitmsg(shell, MERROR);
-		init_env_nodes(shell, newnode, envp, i);
+		new_node = malloc(sizeof(t_env));
+		// if (!new_node)
+			// exitmsg(shell, MERROR);
+		init_env_nodes(minishell, new_node, envp, i);
 		i++;
 	}
-    return (envp_new);
+}
+
+char	**build_execve_envp(t_list *env_lst)
+{
+	char	**execve_envp;
+	int		count;
+	int 	i;
+	
+	count = ft_lstsize(env_lst);
+	i = 0;
+	execve_envp = (char **)malloc(sizeof(char *) * (count + 1));
+	while (env_lst)
+	{
+		execve_envp[i] = ft_strjoin_no_free(((t_env *)(env_lst->content))->key, "=");
+		execve_envp[i] = ft_strjoin(execve_envp[i], ((t_env *)(env_lst->content))->value);
+		env_lst = env_lst->next;
+		i++;
+	}
+	execve_envp[i] = NULL;
+	return (execve_envp);
+}
+
+int	env_size(t_shell *shell)
+{
+	t_env	*node;
+	int		len;
+
+	len = 0;
+	node = shell->env;
+	while (node)
+	{
+		if (node->key)
+			len++;
+		node = node->next;
+	}
+	return (len);
+}
+
+void	fill_envp(t_shell *minishell)
+{
+	int		len;
+	int		i;
+	t_env	*curr;
+
+	i = 0;
+	len = env_size(minishell);
+	curr = minishell->env;
+	minishell->envp = ft_calloc(len + 1, sizeof(char *));
+	// if (!minishell->envp)
+	// 	exitmsg(minishell, MERROR);
+	while (curr)
+	{
+		if (curr->key && !curr->isunset) // isunset????
+		{
+			minishell->envp[i] = ft_strjoin_no_free(curr->key, "=");
+			minishell->envp[i] = ft_strjoin(minishell->envp[i], curr->value);
+			// if (!minishell->envp[i])
+			// 	exitmsg(minishell, MERROR);
+			i++;
+		}
+		curr = curr->next;
+	}
+}
+
+char	*getpath(t_shell *minishell, char *key)
+{
+	t_env	*envnode;
+
+	envnode = minishell->env;
+	while (envnode)
+	{
+		if (safe_strcmp(envnode->key, key) == 0) // ou l'inverse ?
+			break ;
+		envnode = envnode->next;
+	}
+	if (!envnode)
+		return (NULL);
+	return (envnode->value);
 }
 
 t_shell	*init_minishell(t_shell	*minishell, char **envp, int argc)
 {
+	char *path;
+	
 	if (argc == 1)
 		minishell->mode = INTERACTIVE;
 	else
 		minishell->mode = NON_INTERACTIVE;
-        
-    // shell->path = ft_calloc(1, sizeof(t_path));
+	minishell->env = NULL;
+	ft_getenv(minishell, envp);
+	minishell->envp = NULL;
+	fill_envp(minishell);
+    minishell->env_lst = init_env_lst(envp);   // a supprimer 
+	minishell->path = ft_calloc(1, sizeof(t_path));
 	// if (!shell->path)
 	// 	exitmsg(shell, MERROR);
-        
-    minishell->envp = NULL;
-    minishell->envp = init_envp(minishell, envp);
-    
+	path = getpath(minishell, "PWD");
+	if (path)
+	{
+		minishell->path->pwd = ft_strdup(path);
+		// if (!shell->path->pwd)
+		// 	exitmsg(shell, MERROR);
+	}
+	path = getpath(minishell, "OLDPWD");
+	if (path)
+	{
+		minishell->path->oldpwd = ft_strdup(path);
+		// if (!shell->path->oldpwd)
+		// 	exitmsg(shell, MERROR);
+	}
 	minishell->lex = NULL;
     minishell->cmd = NULL;
-    minishell->env_lst = init_env_lst(envp);    
-    
-    minishell->tabpath = build_execve_path(minishell->env_lst);
+    // minishell->tabpath = build_execve_path(minishell->env_lst);
 	minishell->cmd_table = NULL;
     minishell->child_pids = NULL;
 	minishell->tmpexcode = 0;
 	minishell->excode = 0;
     minishell->line = NULL;
     minishell->clean_line = NULL;
+	minishell->inflagerr = 0;
+	minishell->outflagerr = 0;
 	return (minishell);
 }
 
