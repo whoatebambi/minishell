@@ -6,7 +6,7 @@
 /*   By: codespace <codespace@student.42.fr>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/21 18:24:48 by gbeaudoi          #+#    #+#             */
-/*   Updated: 2024/09/25 23:56:18 by codespace        ###   ########.fr       */
+/*   Updated: 2024/09/26 15:43:28 by codespace        ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -177,6 +177,7 @@ typedef struct s_cmd
 typedef struct s_shell
 {
 	t_mode			mode;
+	char			*cwd;
 	char			**envp;
 	char			**tabpath;
 	t_path			*path;
@@ -201,6 +202,7 @@ typedef struct s_shell
 
 // main.c
 char				*get_line(t_mode mode, int fd);
+char				*get_dir(t_shell *minishell);
 
 // exec_system.c
 void				exec_system(char **cmd_args, t_shell *minishell);
@@ -237,17 +239,26 @@ void	add_env_list(char *arg, t_list *env_lst, int fd_out);
 void	del_env_content(void *env_lst);
 int					is_builtin(char *cmd_arg);
 
+// signals.c
+void				ft_handle_sig(int s);
+void				ft_sig_heredoc(int s);
+void				ft_sig_heredoc_setting(void);
+void				ft_signals(void);
+int					ft_catchsignals(t_shell *minishell);
+
 // initializing.c
 int					init_argc(int argc, char **argv, int fd);
-t_shell				*init_minishell(t_shell	*minishell, char **envp, int argc);
+void				init_minishell(t_shell	*minishell, char **envp, int argc);
 int					init_fd(int argc, char **argv, int fd);
 t_list				*init_env_lst(char **envp); // a supprimer
 void    ft_getenv(t_shell *minishell, char **envp);
 t_env				*add_env_var(char *envp);
 char				**add_oldpwd(char **envp);
 void	fill_envp(t_shell *minishell);
+void	fill_path(t_shell *minishell);
 int	env_size(t_shell *shell);
 char	*getpath(t_shell *minishell, char *key);
+char	*safe_join_envp(char *key, char *symb, char *value);
 
 // init_no_env.c
 void	set_pwd(t_shell *shell);
@@ -267,22 +278,21 @@ int					safe_strcmp(char *s1, char *s2);
 void				swap_env(t_list *a, t_list *b);
 void				ft_exit_msg(t_shell *minishell, char *errmsg);
 
-// signals.c
-// void				set_signals(t_mode mode);
-// void				sig_handler(int signum);
-void				ft_handle_sig(int s);
-void				ft_sig_heredoc(int s);
-void				ft_sig_heredoc_setting(void);
-void				ft_signals(void);
-int					ft_catchsignals(t_shell *minishell);
-
 // free_memory.c
-void    free_env(t_env *env);
-void    free_path(t_path *path);
+void				free_env(t_env *env);
+void				free_path(t_path *path);
 void				free_env_lst(t_list *env_lst);
-// void	free_cmd_table(t_cmd_table **cmd_table, int count_pipes);
+void				free_cmd_table(t_shell *minishell);
 void				free_minishell(t_shell *minishell);
 void				reset_loop(t_shell *minishell);
+void				exitmsg(t_shell *minishell, char *errmsg);
+void				ft_free_cmd_table_loop(t_cmd_table **cmd_table, int count_pipes);
+void				ft_free_child(pid_t *i);
+void				ft_free_double_char(char **tab);
+void				safe_free(char *string);
+void				ft_free_redir(t_redir *redir_def);
+void				ft_free_node(t_node *node_def);
+void				ft_check_strdup(char *str, int i, char **dest, int flag);
 
 // Parseur expendeur llexeur
 void				ft_parseur(t_shell *minishell);
@@ -315,16 +325,5 @@ void				ft_ctrlc(t_shell *minishell, t_fds *fd, char *heredoc);
 // NODE INIT
 t_node				*ft_new_node(char *word, int flag);
 void				ft_stack_add_to_back(t_node **a, t_node *new_node);
-
-// free
-void				ft_free_cmd_table_loop(t_cmd_table **cmd_table,
-						int count_pipes);
-void	free_cmd_table(t_shell *minishell);
-void				ft_free_child(pid_t *i);
-void				ft_free_double_char(char **tab);
-void				safe_free(char *string);
-void				ft_free_redir(t_redir *redir_def);
-void				ft_free_node(t_node *node_def);
-void				ft_check_strdup(char *str, int i, char **dest, int flag);
 
 #endif

@@ -6,7 +6,7 @@
 /*   By: codespace <codespace@student.42.fr>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/21 20:27:20 by fcouserg          #+#    #+#             */
-/*   Updated: 2024/09/25 23:48:00 by codespace        ###   ########.fr       */
+/*   Updated: 2024/09/26 15:43:19 by codespace        ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -46,8 +46,8 @@ void    ft_getenv(t_shell *minishell, char **envp)
 	while (envp && envp[i])
 	{
 		new_node = malloc(sizeof(t_env));
-		// if (!new_node)
-			// exitmsg(shell, MERROR);
+		if (!new_node)
+			exitmsg(minishell, MERROR);
 		init_env_nodes(minishell, new_node, envp, i);
 		i++;
 	}
@@ -73,13 +73,13 @@ char	**build_execve_envp(t_list *env_lst)
 	return (execve_envp);
 }
 
-int	env_size(t_shell *shell)
+int	env_size(t_shell *minishell)
 {
 	t_env	*node;
 	int		len;
 
 	len = 0;
-	node = shell->env;
+	node = minishell->env;
 	while (node)
 	{
 		if (node->key)
@@ -88,6 +88,33 @@ int	env_size(t_shell *shell)
 	}
 	return (len);
 }
+
+char	*safe_join_envp(char *key, char *symb, char *value)
+{
+	char	*str;
+	int i;
+	int len;
+
+	i = 0;
+	if (!key || !symb)
+		return (NULL);
+	len = ft_strlen(key) + ft_strlen(symb) + ft_strlen(value) + 1;
+	str = ft_calloc(len, sizeof(char));
+	if (!str)
+		return (NULL);
+	while (*key)
+		str[i++] = *key++;
+	while (*symb)
+		str[i++] = *symb++;
+	if (value)
+	{
+		while (*value)
+		str[i++] = *value++;
+	}
+	str[i] = '\0';
+	return (str);
+}
+
 
 void	fill_envp(t_shell *minishell)
 {
@@ -99,16 +126,15 @@ void	fill_envp(t_shell *minishell)
 	len = env_size(minishell);
 	curr = minishell->env;
 	minishell->envp = ft_calloc(len + 1, sizeof(char *));
-	// if (!minishell->envp)
-	// 	exitmsg(minishell, MERROR);
+	if (!minishell->envp)
+		exitmsg(minishell, MERROR);
 	while (curr)
 	{
 		if (curr->key && !curr->isunset) // isunset????
 		{
-			minishell->envp[i] = ft_strjoin_no_free(curr->key, "=");
-			minishell->envp[i] = ft_strjoin(minishell->envp[i], curr->value);
-			// if (!minishell->envp[i])
-			// 	exitmsg(minishell, MERROR);
+			minishell->envp[i] = safe_join_envp(curr->key, "=", curr->value);
+			if (minishell->envp[i] == NULL)
+				exitmsg(minishell, MERROR);
 			i++;
 		}
 		curr = curr->next;
@@ -131,10 +157,38 @@ char	*getpath(t_shell *minishell, char *key)
 	return (envnode->value);
 }
 
-t_shell	*init_minishell(t_shell	*minishell, char **envp, int argc)
+void	fill_path(t_shell *minishell)
 {
 	char *path;
 	
+	minishell->path = ft_calloc(1, sizeof(t_path));
+	if (!minishell->path)
+		exitmsg(minishell, MERROR);
+	path = getpath(minishell, "PWD");
+	if (path)
+	{
+		minishell->path->pwd = ft_strdup(path);
+		if (!minishell->path->pwd)
+		{
+			free(path);
+			exitmsg(minishell, MERROR);
+		}	
+	}
+	path = getpath(minishell, "OLDPWD");
+	if (path)
+	{
+		minishell->path->oldpwd = ft_strdup(path);
+		if (!minishell->path->oldpwd)
+		{
+			free(path);
+			exitmsg(minishell, MERROR);
+		}
+	}
+}
+
+
+void	init_minishell(t_shell	*minishell, char **envp, int argc)
+{
 	if (argc == 1)
 		minishell->mode = INTERACTIVE;
 	else
@@ -144,23 +198,8 @@ t_shell	*init_minishell(t_shell	*minishell, char **envp, int argc)
 	minishell->envp = NULL;
 	fill_envp(minishell);
     minishell->env_lst = init_env_lst(envp);   // a supprimer 
-	minishell->path = ft_calloc(1, sizeof(t_path));
-	// if (!shell->path)
-	// 	exitmsg(shell, MERROR);
-	path = getpath(minishell, "PWD");
-	if (path)
-	{
-		minishell->path->pwd = ft_strdup(path);
-		// if (!shell->path->pwd)
-		// 	exitmsg(shell, MERROR);
-	}
-	path = getpath(minishell, "OLDPWD");
-	if (path)
-	{
-		minishell->path->oldpwd = ft_strdup(path);
-		// if (!shell->path->oldpwd)
-		// 	exitmsg(shell, MERROR);
-	}
+	minishell->path = NULL;
+	fill_path(minishell);
 	minishell->lex = NULL;
     minishell->cmd = NULL;
     // minishell->tabpath = build_execve_path(minishell->env_lst);
@@ -172,7 +211,11 @@ t_shell	*init_minishell(t_shell	*minishell, char **envp, int argc)
     minishell->clean_line = NULL;
 	minishell->inflagerr = 0;
 	minishell->outflagerr = 0;
-	return (minishell);
+	minishell->tabpath = NULL;
+	minishell->inp = NULL;
+	minishell->newinp = NULL;
+	minishell->finalinp = NULL;
+	minishell->cwd = NULL;
 }
 
 int	init_fd(int argc, char **argv, int fd)

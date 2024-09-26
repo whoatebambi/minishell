@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   free_parsing.c                                     :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: fcouserg <fcouserg@student.42.fr>          +#+  +:+       +#+        */
+/*   By: codespace <codespace@student.42.fr>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/10 15:59:26 by gbeaudoi          #+#    #+#             */
-/*   Updated: 2024/09/25 16:55:58 by fcouserg         ###   ########.fr       */
+/*   Updated: 2024/09/26 15:07:47 by codespace        ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -52,30 +52,7 @@ void	ft_free_cmd_table_loop(t_cmd_table **cmd_table, int count_pipes)
 // 	char			*infile_tmp;
 // }					t_cmd_table;
 
-void	free_cmd_table(t_shell *minishell)
-{
-	int i = 0;
-	
-	if (minishell->cmd_table == NULL)
-		return ;
-	while (i < minishell->count_pipes)
-	{
-		if (minishell->cmd_table[i] != NULL)
-		{
-			safe_free(minishell->cmd_table[i]->group_command);
-			ft_free_node(minishell->cmd_table[i]->nodes);
-			ft_free_double_char(minishell->cmd_table[i]->cmd_args);
-			ft_free_redir(minishell->cmd_table[i]->redirs_in);
-			ft_free_redir(minishell->cmd_table[i]->redirs_out);
-			safe_free(minishell->cmd_table[i]->infile_tmp);
-            free(minishell->cmd_table[i]);
-            minishell->cmd_table[i] = NULL;
-        }
-		i++;
-	}
-	free(minishell->cmd_table);
-	minishell->cmd_table = NULL;
-}
+
 
 void	ft_check_strdup(char *str, int i, char **dest, int flag)
 {

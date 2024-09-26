@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   parseur.c                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: fcouserg <fcouserg@student.42.fr>          +#+  +:+       +#+        */
+/*   By: codespace <codespace@student.42.fr>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/20 15:42:08 by gbeaudoi          #+#    #+#             */
-/*   Updated: 2024/09/25 16:20:28 by fcouserg         ###   ########.fr       */
+/*   Updated: 2024/09/26 14:06:29 by codespace        ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -106,6 +106,7 @@ static void	ft_split_pipe(t_shell *minishell)
 
 void	ft_parseur(t_shell *minishell)
 {
+	printf("line: %s\n", minishell->line);
 	ft_neg_inside_quote(minishell);
 	ft_expand_dollar(minishell);
 	ft_rev_neg_line(minishell);
