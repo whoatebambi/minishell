@@ -6,7 +6,7 @@
 /*   By: codespace <codespace@student.42.fr>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/21 20:27:20 by fcouserg          #+#    #+#             */
-/*   Updated: 2024/09/26 16:47:45 by codespace        ###   ########.fr       */
+/*   Updated: 2024/10/06 21:38:22 by codespace        ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -32,7 +32,7 @@ int	init_argc(int argc, char **argv, int fd)
     return (fd);
 }
 
-void    ft_getenv(t_shell *minishell, char **envp)
+void    fill_env(t_shell *minishell, char **envp)
 {
     t_env	*new_node;
 	int		i;
@@ -53,25 +53,6 @@ void    ft_getenv(t_shell *minishell, char **envp)
 	}
 }
 
-char	**build_execve_envp(t_list *env_lst)
-{
-	char	**execve_envp;
-	int		count;
-	int 	i;
-	
-	count = ft_lstsize(env_lst);
-	i = 0;
-	execve_envp = (char **)malloc(sizeof(char *) * (count + 1));
-	while (env_lst)
-	{
-		execve_envp[i] = ft_strjoin_no_free(((t_env *)(env_lst->content))->key, "=");
-		execve_envp[i] = ft_strjoin(execve_envp[i], ((t_env *)(env_lst->content))->value);
-		env_lst = env_lst->next;
-		i++;
-	}
-	execve_envp[i] = NULL;
-	return (execve_envp);
-}
 
 int	env_size(t_shell *minishell)
 {
@@ -116,39 +97,40 @@ void	fill_envp(t_shell *minishell)
 
 char	*getpath(t_shell *minishell, char *key)
 {
-	t_env	*envnode;
+	t_env	*env;
 
-	envnode = minishell->env;
-	while (envnode)
+	env = minishell->env;
+	while (env)
 	{
-		if (safe_strcmp(envnode->key, key) == 0) // ou l'inverse ?
+		if (safe_strcmp(env->key, key) == 0) // ou l'inverse ?
 			break ;
-		envnode = envnode->next;
+		env = env->next;
 	}
-	if (!envnode)
+	if (!env)
 		return (NULL);
-	return (envnode->value);
+	return (env->value);
 }
 
 void	fill_path(t_shell *minishell)
 {
-	char *path;
-	
 	minishell->path = ft_calloc(1, sizeof(t_path));
 	if (!minishell->path)
 		exitmsg(minishell, MERROR);
-	path = getpath(minishell, "PWD");
-	if (!path)
-		exitmsg(minishell, MERROR);
-	minishell->path->pwd = ft_strdup(path);
-	if (!minishell->path->pwd)
-		exitmsg(minishell, MERROR);
-	path = getpath(minishell, "OLDPWD");
-	if (!path)
-		exitmsg(minishell, MERROR);
-	minishell->path->oldpwd = ft_strdup(path);
-	if (!minishell->path->oldpwd)
-		exitmsg(minishell, MERROR);
+	char *str;
+	str = getpath(minishell, "PWD");
+	if (str)
+	{
+		minishell->path->pwd = ft_strdup(str);
+		if (!minishell->path->pwd)
+			exitmsg(minishell, MERROR);
+	}
+	str = getpath(minishell, "OLDPWD");
+	if (str)
+	{
+		minishell->path->oldpwd = ft_strdup(str);
+		if (!minishell->path->oldpwd)
+			exitmsg(minishell, MERROR);
+	}
 }
 
 
@@ -159,28 +141,26 @@ void	init_minishell(t_shell	*minishell, char **envp, int argc)
 	else
 		minishell->mode = NON_INTERACTIVE;
 	minishell->env = NULL;
-	ft_getenv(minishell, envp);
+	fill_env(minishell, envp);
 	minishell->envp = NULL;
 	fill_envp(minishell);
-    minishell->env_lst = init_env_lst(envp);   // a supprimer 
 	minishell->path = NULL;
 	fill_path(minishell);
 	minishell->lex = NULL;
-    minishell->cmd = NULL;
 	minishell->cmd_table = NULL;
     minishell->child_pids = NULL;
+	minishell->count_pipes = 0;
 	minishell->tmpexcode = 0;
 	minishell->excode = 0;
     minishell->line = NULL;
     minishell->clean_line = NULL;
+	minishell->execve_path = NULL;
 	minishell->inflagerr = 0;
 	minishell->outflagerr = 0;
 	minishell->tabpath = NULL;
-	// minishell->tabpath = build_execve_path(minishell->env_lst);
 	minishell->inp = NULL;
 	minishell->newinp = NULL;
 	minishell->finalinp = NULL;
-	minishell->cwd = NULL;
 }
 
 int	init_fd(int argc, char **argv, int fd)
@@ -194,101 +174,4 @@ int	init_fd(int argc, char **argv, int fd)
 		exit(EXIT_FAILURE);
 	}
     return (fd);
-}
-
-char    *find_oldpwd(char **envp)
-{
-    char *pwd_path;
-    int i;
-
-    i = 0;
-    pwd_path = NULL;
-    while (envp[i])
-    {
-        if (ft_strncmp(envp[i], "PWD=", 4) == 0)
-            pwd_path = ft_strdup(envp[i] + 4);
-        if (ft_strncmp(envp[i], "OLDPWD=", 7) == 0)
-        {
-            if (pwd_path)
-                free(pwd_path);
-            return (NULL);
-        }
-        i++;
-    }
-    return (pwd_path);
-}
-
-char    **add_oldpwd(char **envp)
-{
-    char **envp_new;
-    char *pwd_path;
-    int i;
-    int len;
-
-    i = 0;
-    len = 0;
-    pwd_path = find_oldpwd(envp);
-    if (pwd_path == NULL)
-        return (envp);
-    while (envp[len])
-        len++;
-    envp_new = (char **)ft_calloc(sizeof(char *), len + 2);
-    while (envp[i])
-    {
-        envp_new[i] = ft_strdup(envp[i]);
-        i++;
-    }
-    envp_new[i] = ft_strjoin_no_free("OLDPWD=", pwd_path);
-    envp_new[i + 1] = NULL;
-    free(pwd_path);
-    return (envp_new);
-}
-
-t_list  *init_env_lst(char **envp)
-{
-    t_list  *env_lst;
-    t_list  *new;
-    t_env   *env_var;
-    int     i;
-    char **envp_new;
-
-	i = 0;
-	env_lst = NULL;
-    env_var = NULL;
-    if (!envp)
-        return (NULL); // TD is this the right way to handle this?
-    envp_new = add_oldpwd(envp); // check to make sure OLDPWD exists or creates it
-	while (envp_new[i])
-	{
-		env_var = add_env_var(envp_new[i]);
-        if (!env_var)
-            return (NULL);
-        new = ft_lstnew((void *)env_var);
-        if (!new)
-            return (NULL);
-		ft_lstadd_back(&env_lst, new);
-		i++;
-	}
-    return (env_lst);
-}
-
-t_env	*add_env_var(char *envp) // TD DELETE THIS FUNCTION
-{
-	t_env	*env_var;
-    int i;
-
-    if (!envp)
-        return (NULL);
-    i = 0;
-    env_var = ft_calloc(sizeof(t_env), 1);
-    if (!env_var)
-        return (NULL);
-    while (envp[i] != '=' && envp[i])
-        i++;
-	env_var->key = ft_substr(envp, 0, i);
-    if (envp[i])
-	    env_var->value = ft_strdup(envp + i + 1);
-    else
-        env_var->value = NULL;
-	return (env_var);
 }

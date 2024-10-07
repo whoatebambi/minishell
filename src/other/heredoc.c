@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   heredoc.c                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: fcouserg <fcouserg@student.42.fr>          +#+  +:+       +#+        */
+/*   By: codespace <codespace@student.42.fr>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/20 17:31:47 by gbeaudoi          #+#    #+#             */
-/*   Updated: 2024/09/25 17:40:04 by fcouserg         ###   ########.fr       */
+/*   Updated: 2024/10/06 17:29:32 by codespace        ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,7 +25,7 @@ void	ft_ctrlc(t_shell *minishell, t_fds *fd, char *heredoc)
 	}
 }
 
-char*	ft_find_tmp_heredoc(t_shell *minishell, char* heredoc, t_redir *copy_in)
+char*	ft_find_tmp_heredoc(t_shell *minishell, char* heredoc)
 {
 	while (access(heredoc, F_OK) == 0)
 		heredoc = ft_strjoin(heredoc, "a");
@@ -43,7 +43,7 @@ int	ft_here_doc(t_shell *minishell, t_redir *copy_in, t_fds *fd)
 	heredoc = ft_strdup("/tmp/.tmp_heredoc");
 	if (!heredoc)
 		ft_exit_msg(minishell, MERROR);
-	heredoc = ft_find_tmp_heredoc(minishell, heredoc, copy_in);
+	heredoc = ft_find_tmp_heredoc(minishell, heredoc);
 	tmp = open(heredoc, O_WRONLY | O_CREAT | O_TRUNC, 0777);
 	fd->input = open(heredoc, O_RDONLY);
 	fd->in = dup(STDIN_FILENO);

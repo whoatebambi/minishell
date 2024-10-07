@@ -6,7 +6,7 @@
 /*   By: codespace <codespace@student.42.fr>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/05 16:11:15 by gbeaudoi          #+#    #+#             */
-/*   Updated: 2024/09/26 17:17:10 by codespace        ###   ########.fr       */
+/*   Updated: 2024/09/28 15:07:42 by codespace        ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -39,8 +39,8 @@ void	ft_fill_arg(t_node *nodes, t_cmd_table **command_table)
 	{
 		if (copy->token == 0 && copy->redir == 0)
 		{
-			(*command_table)->cmd_args[i] = ft_strdup(copy->string);
-			if ((*command_table)->cmd_args[i] == NULL)
+			(*command_table)->tab[i] = ft_strdup(copy->string);
+			if ((*command_table)->tab[i] == NULL)
 			{
 				// reset;
 			}
@@ -48,7 +48,7 @@ void	ft_fill_arg(t_node *nodes, t_cmd_table **command_table)
 		}
 		copy = copy->next;
 	}
-	(*command_table)->cmd_args[i] = NULL;
+	(*command_table)->tab[i] = NULL;
 	i = 0;
 }
 
@@ -57,8 +57,8 @@ void	ft_redistribute_node(t_cmd_table **command_table, t_node *nodes)
 	int	count_arg;
 
 	count_arg = ft_count_arg(nodes);
-	(*command_table)->cmd_args = malloc(sizeof(char *) * (count_arg + 1));
-	if ((*command_table)->cmd_args == NULL)
+	(*command_table)->tab = malloc(sizeof(char *) * (count_arg + 1));
+	if ((*command_table)->tab == NULL)
 	{
 		// reset;
 	}

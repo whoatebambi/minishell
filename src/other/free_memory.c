@@ -6,33 +6,11 @@
 /*   By: codespace <codespace@student.42.fr>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/21 20:27:20 by fcouserg          #+#    #+#             */
-/*   Updated: 2024/09/26 17:01:49 by codespace        ###   ########.fr       */
+/*   Updated: 2024/10/06 21:39:31 by codespace        ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
-
-void    free_env_lst(t_list *env_lst)
-{
-    t_list  *tmp;
-    t_env   *env_var;
-    
-    if (env_lst == NULL)
-        return ;
-    while (env_lst)
-    {
-        tmp = env_lst->next;
-        env_var = (t_env *)env_lst->content;
-        if (env_var)
-        {
-            free(env_var->key);
-            free(env_var->value);
-            free(env_var);
-        }
-        free(env_lst);
-        env_lst = tmp;
-    }
-}
 
 void	free_cmd_table(t_shell *minishell)
 {
@@ -44,9 +22,9 @@ void	free_cmd_table(t_shell *minishell)
 	{
 		if (minishell->cmd_table[i] != NULL)
 		{
-			// safe_free(minishell->cmd_table[i]->group_command);
-			// ft_free_node(minishell->cmd_table[i]->nodes);
-			// ft_free_double_char(minishell->cmd_table[i]->cmd_args);
+			safe_free(minishell->cmd_table[i]->group_command);
+			ft_free_node(minishell->cmd_table[i]->nodes);
+			ft_free_double_char(minishell->cmd_table[i]->tab);
 			// ft_free_redir(minishell->cmd_table[i]->redirs_in);
 			// ft_free_redir(minishell->cmd_table[i]->redirs_out);
 			// safe_free(minishell->cmd_table[i]->infile_tmp);
@@ -78,15 +56,10 @@ void	reset_loop(t_shell *minishell) // || reset_shell
         free(minishell->clean_line);
         minishell->clean_line = NULL;
     }
-    // if (minishell->tabpath)
-    // {
-    //     ft_free_double_char(minishell->tabpath);
-    //     minishell->tabpath = NULL;
-    // }
-    if (minishell->cwd)
+    if (minishell->tabpath)
     {
-        free(minishell->cwd);
-        minishell->cwd = NULL;
+        ft_free_double_char(minishell->tabpath);
+        minishell->tabpath = NULL;
     }
 	if (minishell->inp)
     {
@@ -106,7 +79,11 @@ void	reset_loop(t_shell *minishell) // || reset_shell
 	minishell->tmpexcode = minishell->excode;
 	minishell->excode = 0;
 	minishell->lex = NULL;
-	minishell->cmd = NULL;
+    if (minishell->execve_path)
+    {
+        free(minishell->execve_path);
+        minishell->execve_path = NULL;
+    }
 }
 
 void    free_env(t_env *env)
@@ -157,11 +134,6 @@ void	free_minishell(t_shell *minishell)
     reset_loop(minishell);
     free_env(minishell->env);
     free_path(minishell->path);
-    if (minishell->env_lst)
-    {
-        free_env_lst(minishell->env_lst);
-        minishell->env_lst = NULL;
-    }
     if (minishell->envp)
     {
         ft_free_double_char(minishell->envp);

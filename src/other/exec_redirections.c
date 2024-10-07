@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   exec_redirections.c                                :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: fcouserg <fcouserg@student.42.fr>          +#+  +:+       +#+        */
+/*   By: codespace <codespace@student.42.fr>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/21 20:27:20 by fcouserg          #+#    #+#             */
-/*   Updated: 2024/09/25 16:56:15 by fcouserg         ###   ########.fr       */
+/*   Updated: 2024/10/06 21:54:52 by codespace        ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -35,6 +35,7 @@ void	ft_init_fds(t_fds *fd)
 	fd->output = -42;
 	fd->pipes[0] = -42;
 	fd->pipes[1] = -42;
+	fd->redir[0] = -42; // Add this line
 	fd->redir[1] = -42;
 }
 

@@ -6,7 +6,7 @@
 /*   By: codespace <codespace@student.42.fr>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/31 15:31:44 by gbeaudoi          #+#    #+#             */
-/*   Updated: 2024/09/26 16:59:01 by codespace        ###   ########.fr       */
+/*   Updated: 2024/09/27 17:01:04 by codespace        ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -66,7 +66,7 @@ void	ft_neg_inside_quote(t_shell *minishell)
 {
 	int	i;
 	
-	i = 0;
+	i = 0;	
 	minishell->clean_line = ft_calloc(ft_strlen(minishell->line) + 1, sizeof(char));
 	if (minishell->clean_line == NULL)
 		exitmsg(minishell, MERROR);

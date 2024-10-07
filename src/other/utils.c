@@ -6,7 +6,7 @@
 /*   By: codespace <codespace@student.42.fr>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/21 20:27:20 by fcouserg          #+#    #+#             */
-/*   Updated: 2024/09/26 16:40:18 by codespace        ###   ########.fr       */
+/*   Updated: 2024/10/06 17:09:00 by codespace        ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -57,8 +57,8 @@ int	safe_strcmp(char *s1, char *s2)
 	int	i;
 
 	i = 0;
-    if (ft_strlen(s1) != ft_strlen(s2))
-        return (1);
+	if (ft_strlen(s1) != ft_strlen(s2))
+		return (1);
 	while (s1[i] != '\0' || s2[i] != '\0')
 	{
 		if (s1[i] != s2[i])

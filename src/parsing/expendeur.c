@@ -6,7 +6,7 @@
 /*   By: codespace <codespace@student.42.fr>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/31 15:31:03 by gbeaudoi          #+#    #+#             */
-/*   Updated: 2024/09/26 16:54:47 by codespace        ###   ########.fr       */
+/*   Updated: 2024/10/06 21:49:30 by codespace        ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,7 +16,7 @@ void	ft_find_value(char **to_join, t_shell *minishell, int i)
 {
 	int		j;
 	char	*key;
-	t_list	*list;
+	t_env	*list;
 	t_env	*cur_content;
 
 	j = 0;
@@ -24,14 +24,13 @@ void	ft_find_value(char **to_join, t_shell *minishell, int i)
 		+ j] == '_')
 		j++;
 	ft_check_strdup(minishell->clean_line + i, j, &key, 1);
-	list = minishell->env_lst;
+	list = minishell->env;
 	while (list)
 	{
-		cur_content = (t_env *)list->content;
+		cur_content = list;
 		if (!ft_strcmp(key, cur_content->key))
 		{
-			*to_join = ft_strjoin_no_free(cur_content->value,
-					minishell->clean_line + i + j);
+			*to_join = ft_strjoin_no_free(cur_content->value, minishell->clean_line + i + j);
 			break ;
 		}
 		else
@@ -41,15 +40,13 @@ void	ft_find_value(char **to_join, t_shell *minishell, int i)
 	free(key);
 }
 
-static void	ft_dollar_option(char *copy, t_shell *minishell, int i,
-		int flag_dbl)
+static void	ft_dollar_option(char *copy, t_shell *minishell, int i, int flag_dbl)
 {
 	char	*to_join;
-	char	*dup;
+	// char	*dup;
 
 	// dup = ft_strdup()
-	if (ft_isdigit(minishell->clean_line[i + 1]) && minishell->clean_line[i
-		+ 1] != '0')
+	if (ft_isdigit(minishell->clean_line[i + 1]) && minishell->clean_line[i + 1] != '0')
 	{
 		to_join = ft_strdup(minishell->clean_line + (i + 2));
 		// if (mini... == NULL)
@@ -62,13 +59,11 @@ static void	ft_dollar_option(char *copy, t_shell *minishell, int i,
 		// if (mini... == NULL)
 		// to be free;
 	}
-	else if (ft_isalpha(minishell->clean_line[i + 1]) || minishell->clean_line[i
-		+ 1] == '_')
+	else if (ft_isalpha(minishell->clean_line[i + 1]) || minishell->clean_line[i + 1] == '_')
 		ft_find_value(&to_join, minishell, i + 1);
 	else if (minishell->clean_line[i + 1] == '?')
 	{
-		to_join = ft_strjoin(ft_itoa(minishell->excode),
-				minishell->clean_line + i + 2);
+		to_join = ft_strjoin(ft_itoa(minishell->excode), minishell->clean_line + i + 2);
 		// if (mini... == NULL)
 		// to be free;
 	}

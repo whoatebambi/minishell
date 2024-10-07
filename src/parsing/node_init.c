@@ -6,7 +6,7 @@
 /*   By: codespace <codespace@student.42.fr>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/05 14:56:48 by gbeaudoi          #+#    #+#             */
-/*   Updated: 2024/09/26 17:10:49 by codespace        ###   ########.fr       */
+/*   Updated: 2024/10/02 17:01:17 by codespace        ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -84,4 +84,5 @@ void	ft_init_node_list(t_node **nodes, t_cmd_table *command_table, t_shell *mini
 		ft_stack_add_to_back(nodes, new_node);
 		free(word);
 	}
+	
 }

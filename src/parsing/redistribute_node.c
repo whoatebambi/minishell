@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   redistribute_node.c                                :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: gbeaudoi <gbeaudoi@student.42.fr>          +#+  +:+       +#+        */
+/*   By: codespace <codespace@student.42.fr>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/08 13:40:22 by gbeaudoi          #+#    #+#             */
-/*   Updated: 2024/06/17 15:39:07 by gbeaudoi         ###   ########.fr       */
+/*   Updated: 2024/10/06 17:31:35 by codespace        ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -78,16 +78,13 @@ static t_redir	*ft_new_redir(t_node *copy)
 	return (node);
 }
 
-void	ft_init_redir_list(t_redir **redir, t_node *nodes, char *token1,
-		char *token2)
+void	ft_init_redir_list(t_redir **redir, t_node *nodes, char *token1, char *token2)
 {
-	int		i;
 	t_node	*copy;
 	t_redir	*new_node;
 
 	*redir = NULL;
 	copy = nodes;
-	i = 0;
 	while (copy && copy->next)
 	{
 		if (copy->token == 1 && (!ft_strcmp(copy->string, token1)

@@ -6,7 +6,7 @@
 /*   By: codespace <codespace@student.42.fr>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/20 15:42:08 by gbeaudoi          #+#    #+#             */
-/*   Updated: 2024/09/26 17:15:24 by codespace        ###   ########.fr       */
+/*   Updated: 2024/10/06 17:31:00 by codespace        ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -68,9 +68,7 @@ int	ft_check_pipes(t_shell *minishell)
 static void	ft_split_pipe(t_shell *minishell)
 {
 	char	**pipes;
-	int		i;
 
-	i = 0;
 	if (!ft_check_pipes(minishell))
 	{
 		perror("PIPE ERROR"); // to confirme what to do
@@ -81,6 +79,7 @@ static void	ft_split_pipe(t_shell *minishell)
 		exitmsg(minishell, MERROR);
 	minishell->count_pipes = ft_find_pipes(pipes);
 	minishell->cmd_table = ft_calloc(minishell->count_pipes, sizeof(t_cmd_table *));
+	
 	if (minishell->cmd_table == NULL)
 	{
 		ft_free_double_char(pipes);
@@ -98,9 +97,10 @@ static void	ft_split_pipe(t_shell *minishell)
 
 void	ft_parseur(t_shell *minishell)
 {
-	ft_neg_inside_quote(minishell);
+	ft_neg_inside_quote(minishell); //ok
 	ft_expand_dollar(minishell);
 	ft_rev_neg_line(minishell);
-	ft_parseur_quote(minishell);
+	ft_parseur_quote(minishell); // check if int can become void
 	ft_split_pipe(minishell);
+	// updatelastcmd(shell);
 }

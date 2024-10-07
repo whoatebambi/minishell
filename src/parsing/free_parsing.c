@@ -6,7 +6,7 @@
 /*   By: codespace <codespace@student.42.fr>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/10 15:59:26 by gbeaudoi          #+#    #+#             */
-/*   Updated: 2024/09/26 15:07:47 by codespace        ###   ########.fr       */
+/*   Updated: 2024/09/28 15:07:42 by codespace        ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -31,7 +31,7 @@ void	ft_free_cmd_table_loop(t_cmd_table **cmd_table, int count_pipes)
 	{
 		safe_free(cmd_table[i]->group_command);
 		ft_free_node(cmd_table[i]->nodes);
-		ft_free_double_char(cmd_table[i]->cmd_args);
+		ft_free_double_char(cmd_table[i]->tab);
 		ft_free_redir(cmd_table[i]->redirs_in);
 		ft_free_redir(cmd_table[i]->redirs_out);
 		free(cmd_table[i]);
@@ -45,7 +45,7 @@ void	ft_free_cmd_table_loop(t_cmd_table **cmd_table, int count_pipes)
 // {
 // 	char			*group_command;
 // 	t_node			*nodes;
-// 	char			**cmd_args;
+// 	char			**tab;
 // 	t_redir			*redirs_in;
 // 	t_redir			*redirs_out;
 // 	int				is_infile_tmp;

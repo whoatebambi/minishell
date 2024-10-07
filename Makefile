@@ -6,7 +6,7 @@
 #    By: codespace <codespace@student.42.fr>        +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2024/01/08 14:30:03 by gbeaudoi          #+#    #+#              #
-#    Updated: 2024/09/25 23:29:59 by codespace        ###   ########.fr        #
+#    Updated: 2024/10/06 17:32:13 by codespace        ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -45,7 +45,7 @@ LIBFT = libft/
 
 CC		=	cc
 # CFLAGS =	-Wall -Wextra -Werror -I $(INC)
-CFLAGS	=	-I $(INC) 
+CFLAGS	=	-I $(INC)
 INC		=	include/
 LIBC	=	ar -rcs
 RM		=	rm -rf

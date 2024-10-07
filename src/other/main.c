@@ -6,7 +6,7 @@
 /*   By: codespace <codespace@student.42.fr>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/21 20:27:20 by fcouserg          #+#    #+#             */
-/*   Updated: 2024/09/26 16:35:29 by codespace        ###   ########.fr       */
+/*   Updated: 2024/10/06 16:56:41 by codespace        ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -37,53 +37,27 @@ char	*get_line(t_mode mode, int fd)
 	return (line);
 }
 
-char	*get_dir(t_shell *minishell)
-{
-	char	*buf;
-	char	*str;
-
-	buf = ft_calloc(PATH_MAX, sizeof(char *));
-	if (buf == NULL)
-	{
-		perror("malloc");
-		free_minishell(minishell);
-		exit(EXIT_FAILURE);
-	}
-	buf = getcwd(buf, PATH_MAX);
-	if (buf == NULL)
-	{
-		perror("getcwd");
-		free(buf);
-		free_minishell(minishell);
-		exit(ERANGE);
-	}
-	str = ft_strjoin(buf, "> ");
-	if (str == NULL)
-	{
-		perror("malloc");
-		free(buf);
-		free_minishell(minishell);
-		exit(EXIT_FAILURE);
-	}
-	return (str);
-}
-
 int	main(int argc, char **argv, char **envp)
 {
 	int		fd;
 	t_shell	minishell;
 
+	fd = 0;
 	fd = init_argc(argc, argv, fd);
 	init_minishell(&minishell, envp, argc);
-	ft_signals();   
+	ft_signals();
 	while (1)
 	{
-		minishell.cwd = get_dir(&minishell);
+		// minishell.cwd = get_dir(&minishell);
 		minishell.line = get_line(minishell.mode, fd);
 		if (minishell.line == NULL)
 			break ;
+		// catchsignals(&shell);
+		// lexer(&shell, line);
+		// if (shell.lex && shell.excode != 2)
+		// 	(parser(&shell), launch_exec(&shell))
 		ft_parseur(&minishell);
-		// start_exec(&minishell);
+		start_exec(&minishell);
 		reset_loop(&minishell);
 	}
 	close(fd);

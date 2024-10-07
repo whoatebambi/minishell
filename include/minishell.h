@@ -6,7 +6,7 @@
 /*   By: codespace <codespace@student.42.fr>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/21 18:24:48 by gbeaudoi          #+#    #+#             */
-/*   Updated: 2024/09/26 17:16:10 by codespace        ###   ########.fr       */
+/*   Updated: 2024/10/07 13:05:32 by codespace        ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -150,43 +150,25 @@ typedef struct s_node
 // permet d avoir toutes les info d une commande
 typedef struct s_cmd_table
 {
+	char			**tab;
 	char			*group_command;
 	t_node			*nodes;
-	char			**cmd_args;
 	t_redir			*redirs_in;
 	t_redir			*redirs_out;
 	int				is_infile_tmp;
 	char			*infile_tmp;
 }					t_cmd_table;
 
-typedef struct s_cmd
-{
-	char			**tab;
-	char			*path_char;
-	bool			pathnoaccess;
-	t_builtin		builtin;
-	int				num_redirections;
-	t_fds			*fds;
-	char			*heredoc;
-	t_lex			*redir;
-	pid_t			pid;
-	struct s_cmd	*next;
-	struct s_cmd	*prev;
-}					t_cmd;
-
 typedef struct s_shell
 {
 	t_mode			mode;
-	char			*cwd;
 	char			**envp;
 	char			**tabpath;
 	t_path			*path;
-	char			*path_char; //
+	char			*execve_path;
 	t_env			*env;
-	t_list			*env_lst; //
 	t_lex			*lex;
-	t_cmd_table		**cmd_table; //
-	t_cmd			*cmd;
+	t_cmd_table		**cmd_table;
 	pid_t			*child_pids; //
 	int				excode;	
 	int				tmpexcode;
@@ -202,22 +184,18 @@ typedef struct s_shell
 
 // main.c
 char				*get_line(t_mode mode, int fd);
-char				*get_dir(t_shell *minishell);
 
 // exec_system.c
-void				exec_system(char **cmd_args, t_shell *minishell);
-void	prep_exec(t_shell *minishell, t_fds *fd);
-char				**build_execve_envp(t_list *env_lst);
-char				**build_execve_path(t_list *env_lst);
-char				*find_relative_path(char *arg, char **execve_path_table);
+void				exec_system(char **tab, t_shell *minishell);
+void				prep_exec(t_shell *minishell, t_fds *fd);
+char				*find_relative_path(char *arg, char **envp);
 
 // executing.c
 void				start_exec(t_shell *minishell);
-int					execute_builtin(t_cmd_table *cmd_table, t_list *env_lst,
-						t_fds *fd);
+int					execute_builtin(t_cmd_table *cmd_table, t_shell *minishell);
 void				exec_in_child(t_shell *minishell, int i, t_fds *fd);
-void	prep_exec(t_shell *minishell, t_fds *fd);
-char	**get_execpath(t_shell *shell);
+void				prep_exec(t_shell *minishell, t_fds *fd);
+char				**get_execpath(t_shell *shell);
 
 // exec_redirections.c
 void				exec_redirs(t_shell *minishell, t_fds *fd, int i);
@@ -227,16 +205,16 @@ void				close_fds(t_fds *fd);
 void				close_fds_parent(t_fds *fd);
 
 // builtin.c
-void					pwd(int fd_out);
-void					cd(char **cmd_args, t_list *env_lst);
-void				replace_env_var(char *pwd, char *key, t_list *env_lst);
-void					echo(char **cmd_args, int fd_out);
-int	check_newline(char **cmd_args, int *flag);
-void					envp(t_list *env_lst, int fd_out);
-void	export(t_list *env_lst, char **cmd_args, int fd_out);
-void					print_export(t_list *env_lst, int fd_out);
-void	add_env_list(char *arg, t_list *env_lst, int fd_out);
-void	del_env_content(void *env_lst);
+void				pwd(int fd_out);
+void				cd(char **tab, t_env *env);
+void				replace_env_var(char *pwd, char *key, t_env *env);
+void				echo(char **tab, int fd_out);
+int					check_newline(char **tab, int *flag);
+void				envp(t_env *env, int fd_out);
+void				export(t_env *env, char **tab, int fd_out, t_shell *minishell);
+void				print_export(t_env *env, int fd_out);
+int				add_env_list(char *arg, t_env *env, int fd_out, t_shell *minishell);
+// void				del_env_content(void *env_lst);
 int					is_builtin(char *cmd_arg);
 
 // signals.c
@@ -250,13 +228,13 @@ int					ft_catchsignals(t_shell *minishell);
 int					init_argc(int argc, char **argv, int fd);
 void				init_minishell(t_shell	*minishell, char **envp, int argc);
 int					init_fd(int argc, char **argv, int fd);
-t_list				*init_env_lst(char **envp); // a supprimer
-void    ft_getenv(t_shell *minishell, char **envp);
+// t_list				*init_env_lst(char **envp); // a supprimer
+void    fill_env(t_shell *minishell, char **envp);
 t_env				*add_env_var(char *envp);
 char				**add_oldpwd(char **envp);
 void	fill_envp(t_shell *minishell);
 void	fill_path(t_shell *minishell);
-int	env_size(t_shell *shell);
+int		env_size(t_shell *shell);
 char	*getpath(t_shell *minishell, char *key);
 
 // init_no_env.c
@@ -281,7 +259,6 @@ char	*safe_join_envp(char *key, char *symb, char *value);
 // free_memory.c
 void				free_env(t_env *env);
 void				free_path(t_path *path);
-void				free_env_lst(t_list *env_lst);
 void				free_cmd_table(t_shell *minishell);
 void				free_minishell(t_shell *minishell);
 void				reset_loop(t_shell *minishell);
@@ -312,14 +289,15 @@ void				ft_redistribute_node(t_cmd_table **command_table,
 						t_node *nodes);
 void				ft_init_redir_list(t_redir **redir, t_node *nodes,
 						char *token1, char *token2);
+void	tokenizer(t_shell *minishell);
+void	link_lex_nodes(t_shell *shell, t_lex *new, int *i, int *j);
 
 // HEREDOC
 int					ft_here_doc_exp(t_shell *minishell, t_redir *copy_in,
 						t_fds *fd);
 int					ft_here_doc(t_shell *minishell, t_redir *copy_in,
 						t_fds *fd);
-char				*ft_find_tmp_heredoc(t_shell *minishell, char *heredoc,
-						t_redir *copy_in);
+char				*ft_find_tmp_heredoc(t_shell *minishell, char* heredoc);
 void				ft_ctrlc(t_shell *minishell, t_fds *fd, char *heredoc);
 
 // NODE INIT

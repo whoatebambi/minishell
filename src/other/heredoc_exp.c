@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   heredoc_exp.c                                      :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: fcouserg <fcouserg@student.42.fr>          +#+  +:+       +#+        */
+/*   By: codespace <codespace@student.42.fr>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/20 19:13:21 by gbeaudoi          #+#    #+#             */
-/*   Updated: 2024/09/25 17:41:24 by fcouserg         ###   ########.fr       */
+/*   Updated: 2024/10/06 21:49:23 by codespace        ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,17 +16,17 @@ void	ft_find_value_hd(char **to_join, char *str, t_shell *minishell, int i)
 {
 	int		j;
 	char	*key;
-	t_list	*list;
+	t_env	*env_lst;
 	t_env	*cur_content;
 
 	j = 0;
 	while (ft_isalnum(str[i + j]) || str[i + j] == '_')
 		j++;
 	ft_check_strdup((str + i), j, &key, 1);
-	list = minishell->env_lst;
-	while (list)
+	env_lst = minishell->env;
+	while (env_lst)
 	{
-		cur_content = (t_env *)list->content;
+		cur_content = env_lst;
 		if (!ft_strcmp(key, cur_content->key))
 		{
 			if (*(str + i + j) != '\n')
@@ -42,18 +42,17 @@ void	ft_find_value_hd(char **to_join, char *str, t_shell *minishell, int i)
 			else
 				*to_join = NULL;
 		}
-		list = list->next;
+		env_lst = env_lst->next;
 	}
 	free(key);
 }
 
-static char	*ft_dollar_option_hd(char *copy, char *str, int i,
-		t_shell *minishell)
+static char	*ft_dollar_option_hd(char *copy, char *str, int i, t_shell *minishell)
 {
 	char	*to_join;
-	char	*dup;
+	// char	*dup;
 
-	// dup = ft_strdup()
+	// dup = ft_strdup(str);
 	if (ft_isdigit(str[i + 1]) && str[i + 1] != '0')
 	{
 		to_join = ft_strdup(str + (i + 2));
@@ -115,7 +114,7 @@ char	*ft_expand_dollar_hd(char *str, t_shell *minishell)
 {
 	char	*copy;
 	int		i;
-	char	*tmp;
+	// char	*tmp;
 
 	i = 0;
 	copy = NULL;
@@ -153,7 +152,7 @@ int	ft_here_doc_exp(t_shell *minishell, t_redir *copy_in, t_fds *fd)
 	heredoc = ft_strdup("/tmp/.here_doc_a");
 	if (!heredoc)
 		ft_exit_msg(minishell, MERROR);
-	heredoc = ft_find_tmp_heredoc(minishell, heredoc, copy_in);
+	heredoc = ft_find_tmp_heredoc(minishell, heredoc);
 	tmp = open(heredoc, O_WRONLY | O_CREAT | O_TRUNC, 0777);
 	fd->input = open(heredoc, O_RDONLY);
 	fd->in = dup(STDIN_FILENO);
