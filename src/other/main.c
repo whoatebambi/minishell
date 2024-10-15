@@ -6,7 +6,7 @@
 /*   By: codespace <codespace@student.42.fr>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/21 20:27:20 by fcouserg          #+#    #+#             */
-/*   Updated: 2024/10/06 16:56:41 by codespace        ###   ########.fr       */
+/*   Updated: 2024/10/15 15:31:48 by codespace        ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,18 +24,25 @@ char	*get_line(t_mode mode, int fd)
 		if (line && ft_strlen(line) > 0)
 			add_history(line);
 	}
-	if (mode == NON_INTERACTIVE)
+	// if (mode == NON_INTERACTIVE)
+	// {
+	// 	line = get_next_line_bonus(fd);
+	// 	printf("line = %s\n", line);
+	// 	// TD close()
+	// }
+	else
 	{
 		line = get_next_line_bonus(fd);
-		// TD close()
+		// printf("line = %s\n", line);
 	}
-	// if (!line || mode == NON_INTERACTIVE)
+	// if (mode == NON_INTERACTIVE && line[0] == '\n')
 	// {
 	// 	free(line);
 	// 	return (NULL);
 	// }
 	return (line);
 }
+
 
 int	main(int argc, char **argv, char **envp)
 {
@@ -46,22 +53,17 @@ int	main(int argc, char **argv, char **envp)
 	fd = init_argc(argc, argv, fd);
 	init_minishell(&minishell, envp, argc);
 	ft_signals();
+	// set_signals(INIT, minishell->mode, minishell);
 	while (1)
 	{
-		// minishell.cwd = get_dir(&minishell);
 		minishell.line = get_line(minishell.mode, fd);
-		if (minishell.line == NULL)
+		if (minishell.line == NULL)// && minishell.mode == NON_INTERACTIVE)
 			break ;
-		// catchsignals(&shell);
-		// lexer(&shell, line);
-		// if (shell.lex && shell.excode != 2)
-		// 	(parser(&shell), launch_exec(&shell))
 		ft_parseur(&minishell);
 		start_exec(&minishell);
 		reset_loop(&minishell);
 	}
 	close(fd);
 	free_minishell(&minishell);
-	// printf("END\n");
-	return (0);
+	exit(minishell.tmpexcode);
 }

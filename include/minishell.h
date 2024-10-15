@@ -6,7 +6,7 @@
 /*   By: codespace <codespace@student.42.fr>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/21 18:24:48 by gbeaudoi          #+#    #+#             */
-/*   Updated: 2024/10/07 13:05:32 by codespace        ###   ########.fr       */
+/*   Updated: 2024/10/15 15:48:07 by codespace        ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -40,6 +40,22 @@
 # define CMDFAIL "command not found"
 # define NOTV "not a valid identifier"
 # define E "export"
+
+/* see
+ * https://www.cyberciti.biz/faq/linux-bash-exit-status-set-exit-statusin-bash/
+ */
+# define EXIT_NOT_FOUND 127
+# define EXIT_SIGINT 130
+# define EXIT_SIGQUIT 131
+# define EXIT_ERROR 255
+# define SYNTAX_ERROR 258
+
+typedef enum e_status
+{
+	INIT,
+	RESET,
+	CHILD_PROCESS,
+}			t_status;
 
 extern int			g_sig;
 
@@ -192,7 +208,7 @@ char				*find_relative_path(char *arg, char **envp);
 
 // executing.c
 void				start_exec(t_shell *minishell);
-int					execute_builtin(t_cmd_table *cmd_table, t_shell *minishell);
+int	execute_builtin(t_cmd_table *cmd_table, t_shell *minishell, t_fds *fd);
 void				exec_in_child(t_shell *minishell, int i, t_fds *fd);
 void				prep_exec(t_shell *minishell, t_fds *fd);
 char				**get_execpath(t_shell *shell);
@@ -205,17 +221,19 @@ void				close_fds(t_fds *fd);
 void				close_fds_parent(t_fds *fd);
 
 // builtin.c
-void				pwd(int fd_out);
-void				cd(char **tab, t_env *env);
+void				pwd(int fd_out, t_shell *minishell);
+void				cd(char **tab, t_env *env, t_shell *minishell);
 void				replace_env_var(char *pwd, char *key, t_env *env);
 void				echo(char **tab, int fd_out);
 int					check_newline(char **tab, int *flag);
 void				envp(t_env *env, int fd_out);
 void				export(t_env *env, char **tab, int fd_out, t_shell *minishell);
 void				print_export(t_env *env, int fd_out);
-int				add_env_list(char *arg, t_env *env, int fd_out, t_shell *minishell);
-// void				del_env_content(void *env_lst);
+int					add_env_list(char *arg, t_env *env, int fd_out, t_shell *minishell);
 int					is_builtin(char *cmd_arg);
+void	unset(char **tab, t_shell *minishell);
+void	update_envp(t_shell *shell);
+void	ft_exit(char **tab, t_shell *minishell, t_fds *fd);
 
 // signals.c
 void				ft_handle_sig(int s);
@@ -263,7 +281,6 @@ void				free_cmd_table(t_shell *minishell);
 void				free_minishell(t_shell *minishell);
 void				reset_loop(t_shell *minishell);
 void				exitmsg(t_shell *minishell, char *errmsg);
-void				ft_free_cmd_table_loop(t_cmd_table **cmd_table, int count_pipes);
 void				ft_free_child(pid_t *i);
 void				ft_free_double_char(char **tab);
 void				safe_free(char *string);

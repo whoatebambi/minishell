@@ -6,7 +6,7 @@
 /*   By: codespace <codespace@student.42.fr>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/21 20:27:20 by fcouserg          #+#    #+#             */
-/*   Updated: 2024/09/26 13:21:53 by codespace        ###   ########.fr       */
+/*   Updated: 2024/10/14 15:56:30 by codespace        ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -53,13 +53,13 @@ int	ft_catchsignals(t_shell *minishell)
 {
 	if (g_sig == SIGINT)
 	{
-		minishell->tmpexcode = 130;
+		minishell->excode = EXIT_SIGINT;
 		g_sig = 0;
 		return (1);
 	}
 	else if (g_sig == SIGQUIT)
 	{
-		minishell->tmpexcode = 131;
+		minishell->excode = EXIT_SIGQUIT;
 		g_sig = 0;
 		return (1);
 	}
@@ -78,3 +78,37 @@ void	ft_signals(void)
 	sigaction(SIGTERM, &sig, NULL);
 	sigaction(SIGQUIT, &sig, NULL);
 }
+
+// static void	sigint_handler(int sig_num)
+// {
+// 	t_minishell	*minishell;
+
+// 	minishell = get_minishell(NULL);
+// 	if (sig_num == SIGINT)
+// 	{
+// 		rl_replace_line("", 0);
+// 		write(STDIN_FILENO, "\n", 1);
+// 		rl_on_new_line();
+// 		rl_redisplay();
+// 		minishell->exit_code = 1;
+// 	}
+// 	return ;
+// }
+
+// void	set_signals(t_status status, t_mode	mode, t_shell *minishell)
+// {
+// 	if (status == CHILD_PROCESS && mode == INTERACTIVE)
+// 	{
+// 		if (signal(SIGINT, signal_handler_child) == SIG_ERR)
+// 			error_and_exit(SIGNAL_ERROR);
+// 		if (signal(SIGQUIT, signal_handler_child) == SIG_ERR)
+// 			error_and_exit(SIGNAL_ERROR);
+// 	}
+// 	else if (mode == INTERACTIVE)
+// 	{
+// 		if (signal(SIGINT, sigint_handler) == SIG_ERR)
+// 			error_and_exit(SIGNAL_ERROR);
+// 		if (signal(SIGQUIT, SIG_IGN) == SIG_ERR)
+// 			error_and_exit(SIGNAL_ERROR);
+// 	}
+// }

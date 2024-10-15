@@ -6,7 +6,7 @@
 /*   By: codespace <codespace@student.42.fr>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/21 20:27:20 by fcouserg          #+#    #+#             */
-/*   Updated: 2024/10/06 21:38:22 by codespace        ###   ########.fr       */
+/*   Updated: 2024/10/15 13:25:04 by codespace        ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -84,7 +84,7 @@ void	fill_envp(t_shell *minishell)
 		exitmsg(minishell, MERROR);
 	while (curr)
 	{
-		if (curr->key && !curr->isunset) // isunset????
+		if (curr->key && !curr->isunset)
 		{
 			minishell->envp[i] = safe_join_envp(curr->key, "=", curr->value);
 			if (minishell->envp[i] == NULL)

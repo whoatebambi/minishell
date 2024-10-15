@@ -6,24 +6,28 @@
 /*   By: codespace <codespace@student.42.fr>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/21 20:27:20 by fcouserg          #+#    #+#             */
-/*   Updated: 2024/10/07 12:46:28 by codespace        ###   ########.fr       */
+/*   Updated: 2024/10/15 15:37:24 by codespace        ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-int	execute_builtin(t_cmd_table *cmd_table, t_shell *minishell)
+int	execute_builtin(t_cmd_table *cmd_table, t_shell *minishell, t_fds *fd)
 {
 	if (safe_strcmp(cmd_table->tab[0], "pwd") == 0)
-		pwd(STDOUT_FILENO);
+		pwd(STDOUT_FILENO, minishell);
     else if (safe_strcmp(cmd_table->tab[0], "cd") == 0)
-		cd(cmd_table->tab, minishell->env);
+		cd(cmd_table->tab, minishell->env, minishell);
 	else if (safe_strcmp(cmd_table->tab[0], "echo") == 0)
 		echo(cmd_table->tab, STDOUT_FILENO);
 	else if (safe_strcmp(cmd_table->tab[0], "envp") == 0)
 		envp(minishell->env, STDOUT_FILENO);
 	else if (safe_strcmp(cmd_table->tab[0], "export") == 0)
 		export(minishell->env, cmd_table->tab, STDOUT_FILENO, minishell);
+	else if (safe_strcmp(cmd_table->tab[0], "unset") == 0)
+		unset(cmd_table->tab, minishell);
+	else if (safe_strcmp(cmd_table->tab[0], "exit") == 0)
+		ft_exit(cmd_table->tab, minishell, fd);
 	return (1);
 }
 
@@ -31,27 +35,25 @@ void	exec_in_child(t_shell *minishell, int i, t_fds *fd)
 {
 	minishell->child_pids[i] = fork();
 	if (minishell->child_pids[i] == -1)
-		perror("minishell->child_pids[i]");
+		exitmsg(minishell, "fork");
 	if (minishell->child_pids[i] == 0)
 	{
 		if (fd->pipes[0] != -42)
 			close(fd->pipes[0]);
 		if (fd->redir[0] != -42)
 			if (dup2(fd->redir[0], STDIN_FILENO) == -1)
-				exit(1);
+				exitmsg(minishell, "dup2");
 		if (fd->redir[1] != -42)		
 			if (dup2(fd->redir[1], STDOUT_FILENO) == -1)
-				exit(1);
+				exitmsg(minishell, "dup2");
 		close_fds(fd);		
 		if (is_builtin(minishell->cmd_table[i]->tab[0]))
 		{
-			// exit(execute_builtin(minishell->cmd_table[i], minishell->env, fd));
-			execute_builtin(minishell->cmd_table[i], minishell);
+			execute_builtin(minishell->cmd_table[i], minishell, fd);
+			// exit(EXIT_SUCCESS);
 		}
 		else
-		{
 			exec_system(minishell->cmd_table[i]->tab, minishell);
-		}
 	}
 	close_fds_parent(fd);
 	fd->redir[0] = fd->pipes[0];
@@ -65,29 +67,30 @@ void	close_fds_parent(t_fds *fd)
 		close(fd->redir[1]);
 }
 
-static void	ft_wait_all_children(t_shell *minishell)
-{
-	int		i;
-	// int		*exit_codes;
-	int		status;
-	// pid_t	pid_wait;
 
-	status = 0;
-	// exit_codes = ft_calloc(sizeof(int), minishell->count_pipes);
-	// if (exit_codes == NULL)
-	// 	exitmsg(minishell, MERROR);
-	i = 0;
+void	ft_wait_all_children(t_shell *minishell)
+{
+	int		status;
+	int i = 0;
+
+	status = -1;
+	
 	while (i < minishell->count_pipes)
 	{
-		waitpid(minishell->child_pids[i], &status, 0);
-		// pid_wait = waitpid(minishell->child_pids[i], &status, 0);
-		// if (WIFEXITED(status))
-		// 	exit_codes[i] = WEXITSTATUS(status);
+		// printf("//////////////////// 1\n");
+		if (minishell->child_pids[i] != -2 && minishell->child_pids[i] != -1)
+		{
+			waitpid(minishell->child_pids[i], &status, 0);
+			if (WIFEXITED(status))
+				minishell->excode = WEXITSTATUS(status);
+			if (errno == EACCES)
+				minishell->excode = 126;
+			if (minishell->child_pids[i] == -1)
+				minishell->excode = 127;
+		}
 		i++;
+		// printf("//////////////////// 2\n");
 	}
-	// if (minishell->excode != EXIT_SIGQUIT && minishell->excode != EXIT_SIGINT)
-	// 	minishell->excode = exit_codes[minishell->count_pipes - 1];
-	// free(exit_codes);
 }
 
 void	start_exec(t_shell *minishell)
@@ -96,6 +99,12 @@ void	start_exec(t_shell *minishell)
 	t_fds	fd;
 
 	i = 0;
+	if (minishell->cmd_table[0]->tab[0][0] == '\n')
+	{
+		// printf("minishell->cmd_table[0]->tab[0][0] == '\\n'\n");
+		return ;
+	}
+	fd.redir[0] = -42;
 	while (i < minishell->count_pipes)
 	{
 		minishell->child_pids[i] = -2;
@@ -103,17 +112,21 @@ void	start_exec(t_shell *minishell)
 		if (i < minishell->count_pipes - 1)
 		{
 			if (pipe(fd.pipes) == -1)
-				perror("pipe");
-				// ft_printf("ERROR");
+			{
+				// close_fds(&fd);
+				minishell->excode = EXIT_FAILURE;
+				exitmsg(minishell, "pipe");
+			}
 		}
 		exec_redirs(minishell, &fd, i);
 		set_redirs(&fd);
-		if (is_builtin(minishell->cmd_table[i]->tab[0]) && minishell->count_pipes == 1)
-			execute_builtin(minishell->cmd_table[i], minishell);
-		else if (is_builtin(minishell->cmd_table[i]->tab[0]) == 2)
-			execute_builtin(minishell->cmd_table[i], minishell);
-		else
-			exec_in_child(minishell, i, &fd);
+		// if (is_builtin(minishell->cmd_table[i]->tab[0]) && minishell->count_pipes == 1)
+		// 	execute_builtin(minishell->cmd_table[i], minishell, &fd);
+		// else if (is_builtin(minishell->cmd_table[i]->tab[0]) == 2)
+		// 	execute_builtin(minishell->cmd_table[i], minishell, &fd);
+		// else
+		// 	exec_in_child(minishell, i, &fd);
+		exec_in_child(minishell, i, &fd);
 		if (i + 1 == minishell->count_pipes)
 			close_fds_parent(&fd);
 		i++;

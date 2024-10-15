@@ -6,7 +6,7 @@
 /*   By: codespace <codespace@student.42.fr>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/20 15:42:08 by gbeaudoi          #+#    #+#             */
-/*   Updated: 2024/10/06 17:31:00 by codespace        ###   ########.fr       */
+/*   Updated: 2024/10/15 15:28:29 by codespace        ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -97,10 +97,9 @@ static void	ft_split_pipe(t_shell *minishell)
 
 void	ft_parseur(t_shell *minishell)
 {
-	ft_neg_inside_quote(minishell); //ok
+	ft_neg_inside_quote(minishell);
 	ft_expand_dollar(minishell);
 	ft_rev_neg_line(minishell);
 	ft_parseur_quote(minishell); // check if int can become void
 	ft_split_pipe(minishell);
-	// updatelastcmd(shell);
 }

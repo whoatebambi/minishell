@@ -6,7 +6,7 @@
 /*   By: codespace <codespace@student.42.fr>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/21 20:27:20 by fcouserg          #+#    #+#             */
-/*   Updated: 2024/10/07 13:11:42 by codespace        ###   ########.fr       */
+/*   Updated: 2024/10/15 14:47:01 by codespace        ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,13 +21,14 @@ int	is_builtin(char *cmd_arg)
 	else if (safe_strcmp(cmd_arg, "envp") == 0)
 		return (1);
 	else if (safe_strcmp(cmd_arg, "export") == 0)
-		return (2);
+		return (1);
     else if (safe_strcmp(cmd_arg, "cd") == 0)
 		return (1);
-	// unset
-	// exit
-	else
-		return (0);
+	else if (safe_strcmp(cmd_arg, "unset") == 0)
+		return (1);
+	else if (safe_strcmp(cmd_arg, "exit") == 0)
+		return (2);
+	return (0);
 }
 
 void	replace_env_var(char *pwd, char *key, t_env *env)
@@ -43,38 +44,56 @@ void	replace_env_var(char *pwd, char *key, t_env *env)
 	}
 }
 
-void    cd(char **tab, t_env *env)
+void    cd(char **tab, t_env *env, t_shell *minishell)
 {
 	char	old_pwd[1024];
     char	new_pwd[1024];
-    int		excode;
 
+	if (tab[2])
+	{
+		safe_write(2, "cd: too many arguments\n", NULL);
+		minishell->excode = 1;
+		exitmsg(minishell, NULL);
+	}
 	if (getcwd(old_pwd, sizeof(old_pwd)) == NULL)
-		return (perror("getcwd"));
+	{
+		minishell->excode = 1;
+		exitmsg(minishell, "getcwd");
+	}
     if (tab[1] == NULL)
-		excode = chdir(getenv("HOME"));
+		minishell->excode = chdir(getenv("HOME"));
 	else if (safe_strcmp(tab[1], "-") == 0)
-		excode = chdir(getenv("OLDPWD"));
+		minishell->excode = chdir(getenv("OLDPWD"));
 	else
-		excode = chdir(tab[1]);
-    if (excode == -1)
-		return (perror("chdir"));
+		minishell->excode = chdir(tab[1]);
+    if (minishell->excode == -1)
+	{
+		minishell->excode = 1;
+		safe_write(2, "cd: ", tab[1],": No such file or directory\n", NULL);
+		exitmsg(minishell, NULL);
+	}
 	if (getcwd(new_pwd, sizeof(new_pwd)) == NULL)
-		return (perror("getcwd"));
+	{
+		minishell->excode = 1;
+		exitmsg(minishell, "getcwd");
+	}
 	replace_env_var(old_pwd, "OLDPWD", env);
 	replace_env_var(new_pwd, "PWD", env);
 	if (tab[1] && safe_strcmp(tab[1], "-") == 0)
-		pwd(1);
+		pwd(1, minishell);
 }
 
-void	pwd(int fd_out)
+void	pwd(int fd_out, t_shell *minishell)
 {
 	char	*buffer;
 
 	buffer = NULL;
 	buffer = getcwd(buffer, 4096); // what value to choose ? 0?
 	if (buffer == NULL)
-		return (perror("getcwd"));
+	{
+		minishell->excode = 1;
+		exitmsg(minishell, "getcwd");
+	}
 	safe_write(fd_out, buffer, "\n", NULL);
 	free(buffer);
 }
@@ -125,7 +144,6 @@ void echo(char **tab, int fd_out)
 
 void	envp(t_env *env, int fd_out)
 {
-    // int     excode;
     char    *key;
     char    *value;
 
@@ -156,6 +174,63 @@ void	print_export(t_env *env, int fd_out)
 	}
 }
 
+t_env	*get_env_lst(char *name, t_env *env)
+{
+	t_env		*to_get;
+
+	to_get = NULL;
+	if (!name)
+		return (NULL);
+	if (!env)
+		to_get = env;
+	while (env)
+	{
+		if (safe_strcmp(env->key, name) == 0)
+		{
+			to_get = env;
+			break ;
+		}
+		env = env->next;
+	}
+	return (to_get);
+}
+
+void	set_env_value(char *name, char *value, t_env *env)
+{
+	t_env	*to_set;
+
+	if (!value)
+		return ;
+	to_set = get_env_lst(name, env);
+	if (!to_set)
+		return ;
+	if (to_set->value)
+		free(to_set->value);
+	to_set->value = NULL;
+	to_set->value = ft_strdup(value);
+}
+
+void	create_and_add_env_list(char *name, char *value, t_shell *minishell)
+{
+	t_env	*env_var;
+	t_env	*tmp;
+
+	env_var = ft_calloc(sizeof(t_env), 1);
+	//
+	env_var->key = name;
+	env_var->value = value;
+	env_var->next = NULL;
+	if (minishell->env == NULL)
+		minishell->env = env_var;
+	else
+	{
+		tmp = minishell->env;
+		while (tmp->next)
+			tmp = tmp->next;
+		tmp->next = env_var;
+	}
+}
+
 int	add_env_list(char *arg, t_env *env, int fd_out, t_shell *minishell)
 {
 	int		i;
@@ -179,20 +254,20 @@ int	add_env_list(char *arg, t_env *env, int fd_out, t_shell *minishell)
 	}
 	if (arg[i] != '=' || !arg[i + 1])
 	{
-		minishell->excode = 0;
+		// minishell->excode = 0;
 		return (0);
 	}
-		
 	key = ft_substr(arg, 0, i);
+	
 	value = ft_strdup(arg + i + 1);
-	// if (get_env_lst(key, env))
-	// {
-	// 	set_env_value(key, value);
-	// 	free(key);
-	// 	free(value);
-	// }
-	// else
-	// 	create_and_add_env_list(key, value, env_lst);
+	if (get_env_lst(key, minishell->env))
+	{
+		set_env_value(key, value, env);
+		free(key);
+		free(value);
+	}
+	else
+		create_and_add_env_list(key, value, minishell);
 	return (1);
 }
 
@@ -207,14 +282,66 @@ void	export(t_env *env, char **tab, int fd_out, t_shell *minishell)
 	{
 		if (add_env_list(tab[i], env, fd_out, minishell) == 0)
 		{
-			if (minishell->excode != 0)
+			if (minishell->excode == 1)
 				safe_write(2, "export: `", tab[i],"': not a valid identifier\n", NULL);
-			// safe_write(1, "export: `", arg,"': ", NULL);
-			// minishell->excode = EINVAL;
-			// errno = EINVAL;  // Set errno to a non-zero value
-			exitmsg(minishell, NULL);
 		}
-			
+		// printf("export () excode = %d\n", minishell->excode);
 		i++;
 	}
+	exit(minishell->excode);
+}
+
+void	unset(char **tab, t_shell *minishell)
+{
+	int		i;
+	t_env	*env;
+
+	i = 1;
+	if (!tab[1])
+		return ;
+	while (tab[i])
+	{
+		env = minishell->env;
+		while (env)
+		{
+			if (safe_strcmp(env->key, tab[i]) == 0)
+			{
+				if (env->value)
+					free(env->value);
+				env->value = NULL;
+				free(env->key);
+				env->key = NULL;
+				env->isunset = true;
+			}
+			env = env->next;
+		}
+		i++;
+	}
+	fill_envp(minishell);
+}
+
+void	ft_exit(char **tab, t_shell *minishell, t_fds *fd)
+{
+	int	ext;
+	int	flag;
+
+	flag = 0;
+	// if (tab[1])
+	// 	minishell->tmpexcode = exit_args(cmd, &flag);
+	// if (tab[1] && tab[2] && !flag)
+	// {
+	// 	safe_write(2, "minishell: `", tab[0],"': too many arguments\n", NULL);
+	// 	safe_write(1, "exit\n", NULL);
+	// 	minishell->excode = 1;
+	// 	minishell->tmpexcode = 1;
+	// 	return ;
+	// }
+	// if (cmd->next || cmd->prev)
+	// 	return ;
+	ext = minishell->excode;
+	free_minishell(minishell);
+	close_fds(fd);
+	safe_write(1, "exit\n", NULL);
+	// printf("ft_exit excode = %d\n", minishell->excode);
+	exit(ext);
 }

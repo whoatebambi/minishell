@@ -1,1 +1,1 @@
-export A- 
+echo "$PWD"

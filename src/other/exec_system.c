@@ -6,7 +6,7 @@
 /*   By: codespace <codespace@student.42.fr>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/21 20:27:20 by fcouserg          #+#    #+#             */
-/*   Updated: 2024/10/06 21:52:56 by codespace        ###   ########.fr       */
+/*   Updated: 2024/10/15 15:14:37 by codespace        ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -53,8 +53,11 @@ void	exec_system(char **tab, t_shell *minishell)
 		ft_free_double_char(execve_path_table);
 	}
 	if (minishell->execve_path == NULL)
+	{
+		// printf("TEST\n\n"); //////
 		exitmsg(minishell, MERROR);
 		// perror("access");
+	}
 	execve(minishell->execve_path, tab, minishell->envp);
 	perror("execve");
     exit(EXIT_FAILURE);
