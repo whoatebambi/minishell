@@ -6,7 +6,7 @@
 /*   By: codespace <codespace@student.42.fr>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/21 20:27:20 by fcouserg          #+#    #+#             */
-/*   Updated: 2024/10/15 15:37:24 by codespace        ###   ########.fr       */
+/*   Updated: 2024/10/16 12:41:48 by codespace        ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -77,7 +77,6 @@ void	ft_wait_all_children(t_shell *minishell)
 	
 	while (i < minishell->count_pipes)
 	{
-		// printf("//////////////////// 1\n");
 		if (minishell->child_pids[i] != -2 && minishell->child_pids[i] != -1)
 		{
 			waitpid(minishell->child_pids[i], &status, 0);
@@ -89,7 +88,6 @@ void	ft_wait_all_children(t_shell *minishell)
 				minishell->excode = 127;
 		}
 		i++;
-		// printf("//////////////////// 2\n");
 	}
 }
 
@@ -100,10 +98,7 @@ void	start_exec(t_shell *minishell)
 
 	i = 0;
 	if (minishell->cmd_table[0]->tab[0][0] == '\n')
-	{
-		// printf("minishell->cmd_table[0]->tab[0][0] == '\\n'\n");
 		return ;
-	}
 	fd.redir[0] = -42;
 	while (i < minishell->count_pipes)
 	{

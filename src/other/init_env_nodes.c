@@ -6,7 +6,7 @@
 /*   By: codespace <codespace@student.42.fr>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/21 20:27:20 by fcouserg          #+#    #+#             */
-/*   Updated: 2024/10/06 16:58:16 by codespace        ###   ########.fr       */
+/*   Updated: 2024/10/16 12:00:37 by codespace        ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,6 +17,7 @@ void	set_shlvl_inception(t_shell *minishell, t_env *node) // check if used
 	int		shlvl;
 	char	*byte;
 
+	
 	shlvl = ft_atoi(node->value);
 	free(node->value);
 	node->value = NULL;

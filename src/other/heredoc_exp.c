@@ -6,7 +6,7 @@
 /*   By: codespace <codespace@student.42.fr>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/20 19:13:21 by gbeaudoi          #+#    #+#             */
-/*   Updated: 2024/10/15 15:50:10 by codespace        ###   ########.fr       */
+/*   Updated: 2024/10/15 16:20:31 by codespace        ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,7 +22,7 @@ void	ft_find_value_hd(char **to_join, char *str, t_shell *minishell, int i)
 	j = 0;
 	while (ft_isalnum(str[i + j]) || str[i + j] == '_')
 		j++;
-	ft_check_strdup((str + i), j, &key, 1);
+	key = ft_strndup(str + i, j);
 	env_lst = minishell->env;
 	while (env_lst)
 	{
@@ -32,13 +32,13 @@ void	ft_find_value_hd(char **to_join, char *str, t_shell *minishell, int i)
 			if (*(str + i + j) != '\n')
 				*to_join = ft_strjoin_no_free(cur_content->value, (str + i + j));
 			else
-				ft_check_strdup(cur_content->value, 0, to_join, 0);
+				*to_join = ft_strdup(cur_content->value);
 			break ;
 		}
 		else
 		{
 			if (str + i + j)
-				ft_check_strdup((str + i + j), 0, to_join, 0);
+				*to_join = ft_strdup(str + i + j);
 			else
 				*to_join = NULL;
 		}
@@ -91,21 +91,14 @@ static char	*ft_dollar_option_hd(char *copy, char *str, int i, t_shell *minishel
 	}
 	if (to_join && copy)
 	{
-			// ft_printf("%s\n", to_join);
-			// 		ft_printf("%s\n", copy);
-
 		copy = ft_strjoin(copy, to_join);
 		// ft_printf("%s\n", copy);
 		// if (mini... == NULL)
 		// to be free;
 	}
 	else
-	{
-		ft_check_strdup(to_join, 0, &copy, 0);
-				// ft_printf("%s\n", copy);
-
-	}
-	// free(to_join);		
+		copy = ft_strdup(to_join);
+	free(to_join);	
 	free(str);
 	return (copy);
 }

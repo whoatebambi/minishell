@@ -6,7 +6,7 @@
 /*   By: codespace <codespace@student.42.fr>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/21 20:27:20 by fcouserg          #+#    #+#             */
-/*   Updated: 2024/10/15 13:25:04 by codespace        ###   ########.fr       */
+/*   Updated: 2024/10/21 15:34:08 by codespace        ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -53,7 +53,6 @@ void    fill_env(t_shell *minishell, char **envp)
 	}
 }
 
-
 int	env_size(t_shell *minishell)
 {
 	t_env	*node;
@@ -79,6 +78,8 @@ void	fill_envp(t_shell *minishell)
 	i = 0;
 	len = env_size(minishell);
 	curr = minishell->env;
+	if (minishell->envp)
+        ft_free_double_char(minishell->envp);
 	minishell->envp = ft_calloc(len + 1, sizeof(char *));
 	if (!minishell->envp)
 		exitmsg(minishell, MERROR);

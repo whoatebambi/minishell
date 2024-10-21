@@ -6,7 +6,7 @@
 /*   By: codespace <codespace@student.42.fr>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/10 15:59:26 by gbeaudoi          #+#    #+#             */
-/*   Updated: 2024/10/15 15:48:13 by codespace        ###   ########.fr       */
+/*   Updated: 2024/10/15 16:05:44 by codespace        ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,6 +27,7 @@ void	ft_check_strdup(char *str, int i, char **dest, int flag)
 		*dest = ft_strdup(str);
 	if (*dest == NULL)
 	{
-		// reset
+		// free(*dest);
+		// exitmsg(get_minishell(NULL), MERROR);
 	}
 }

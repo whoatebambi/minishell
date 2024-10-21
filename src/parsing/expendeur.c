@@ -6,37 +6,46 @@
 /*   By: codespace <codespace@student.42.fr>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/31 15:31:03 by gbeaudoi          #+#    #+#             */
-/*   Updated: 2024/10/15 16:00:53 by codespace        ###   ########.fr       */
+/*   Updated: 2024/10/15 21:22:24 by codespace        ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-void	ft_find_value(char **to_join, t_shell *minishell, int i)
+char	*ft_find_value(t_shell *minishell, int i)
 {
 	int		j;
 	char	*key;
 	t_env	*list;
 	t_env	*cur_content;
+	char	*to_join;
 
 	j = 0;
+	to_join = NULL; // Initialize to_join to NULL
 	while (ft_isalnum(minishell->clean_line[i + j]) || minishell->clean_line[i + j] == '_')
 		j++;
-	ft_check_strdup(minishell->clean_line + i, j, &key, 1);
+	key = ft_strndup(minishell->clean_line + i, j);
 	list = minishell->env;
 	while (list)
 	{
 		cur_content = list;
 		if (!ft_strcmp(key, cur_content->key))
 		{
-			*to_join = ft_strjoin_no_free(cur_content->value, minishell->clean_line + i + j);
-			break ;
+			if (to_join)
+				free(to_join);
+			to_join = ft_strjoin_no_free(cur_content->value, minishell->clean_line + i + j);
+			break;
 		}
 		else
-			ft_check_strdup(minishell->clean_line + i + j, 0, to_join, 0);
+		{
+			if (to_join)
+                free(to_join);
+			to_join = ft_strdup(minishell->clean_line + i + j); ///// LEAK IS HERE
+		}
 		list = list->next;
 	}
 	free(key);
+	return (to_join);
 }
 
 static void	ft_dollar_option(char *copy, t_shell *minishell, int i, int flag_dbl)
@@ -57,8 +66,8 @@ static void	ft_dollar_option(char *copy, t_shell *minishell, int i, int flag_dbl
 	}
 	else if (ft_isalpha(minishell->clean_line[i + 1]) || minishell->clean_line[i + 1] == '_')
 	{
-		printf("/////////////TEST\n");
-		ft_find_value(&to_join, minishell, i + 1);
+		// printf("/////////////TEST\n");
+		to_join = ft_find_value(minishell, i + 1);
 	}
 	else if (minishell->clean_line[i + 1] == '?')
 	{
@@ -84,10 +93,14 @@ static void	ft_dollar_option(char *copy, t_shell *minishell, int i, int flag_dbl
 	{
 		free(minishell->clean_line);
 		minishell->clean_line = ft_strjoin(copy, to_join);
+		// minishell->clean_line = ft_strjoin_no_free(copy, to_join);
+		// free(copy);
+		free(to_join);
+		to_join = NULL;
 		// if (mini... == NULL)
 		// to be free;
 	}
-	free(to_join);
+	// free(to_join);
 }
 static void	ft_define_flag(int *flag)
 {

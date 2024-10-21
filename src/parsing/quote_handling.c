@@ -6,7 +6,7 @@
 /*   By: codespace <codespace@student.42.fr>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/31 15:31:44 by gbeaudoi          #+#    #+#             */
-/*   Updated: 2024/09/27 17:01:04 by codespace        ###   ########.fr       */
+/*   Updated: 2024/10/15 21:37:35 by codespace        ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -76,7 +76,7 @@ void	ft_neg_inside_quote(t_shell *minishell)
 		{
 			minishell->clean_line[i] = minishell->line[i];
 			i++;
-			while (minishell->line[i] != '\"' && minishell->line[i])
+			while (minishell->line[i] && minishell->line[i] != '\"')
 			{
 				if (minishell->line[i] == '\'')
 					minishell->clean_line[i] = minishell->line[i] * -1;
@@ -84,9 +84,16 @@ void	ft_neg_inside_quote(t_shell *minishell)
 					minishell->clean_line[i] = minishell->line[i];
 				i++;
 			}
+			if (minishell->line[i] == '\"') // Ensure we don't read past the end
+            {
+                minishell->clean_line[i] = minishell->line[i];
+                i++;
+            }
 		}
-		if (minishell->line[i])
+		else
+		{
 			minishell->clean_line[i] = minishell->line[i];
-		i++;
+			i++;
+		}	
 	}
 }

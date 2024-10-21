@@ -6,7 +6,7 @@
 /*   By: codespace <codespace@student.42.fr>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/21 20:27:20 by fcouserg          #+#    #+#             */
-/*   Updated: 2024/10/15 14:47:01 by codespace        ###   ########.fr       */
+/*   Updated: 2024/10/16 13:02:26 by codespace        ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -162,35 +162,39 @@ void	print_export(t_env *env, int fd_out)
 {
     char    *key;
     char    *value;
+	t_env	*tmp;
 
 	if (env == NULL)
 		return ;
-	while (env)
+	tmp = env;
+	while (tmp)
 	{
-        key = env->key;
-        value = env->value;
+        key = tmp->key;
+        value = tmp->value;
         safe_write(fd_out, "export ", key, "=", value, "\n", NULL);
-		env = env->next;
+		tmp = tmp->next;
 	}
 }
 
 t_env	*get_env_lst(char *name, t_env *env)
 {
 	t_env		*to_get;
+	t_env		*tmp;
 
 	to_get = NULL;
 	if (!name)
 		return (NULL);
 	if (!env)
 		to_get = env;
-	while (env)
+	tmp = env;
+	while (tmp)
 	{
-		if (safe_strcmp(env->key, name) == 0)
+		if (safe_strcmp(tmp->key, name) == 0)
 		{
-			to_get = env;
+			to_get = tmp;
 			break ;
 		}
-		env = env->next;
+		tmp = tmp->next;
 	}
 	return (to_get);
 }

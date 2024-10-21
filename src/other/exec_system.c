@@ -6,7 +6,7 @@
 /*   By: codespace <codespace@student.42.fr>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/21 20:27:20 by fcouserg          #+#    #+#             */
-/*   Updated: 2024/10/15 15:14:37 by codespace        ###   ########.fr       */
+/*   Updated: 2024/10/16 12:51:40 by codespace        ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -34,6 +34,7 @@ char	**get_execpath(t_shell *shell)
 void	exec_system(char **tab, t_shell *minishell)
 {
 	char	**execve_path_table;
+	char *dup;
 	
 	if (ft_strncmp("/", tab[0], 1) == 0)
 	{
@@ -48,16 +49,23 @@ void	exec_system(char **tab, t_shell *minishell)
 	{
 		execve_path_table = get_execpath(minishell);
 		if (execve_path_table == NULL)
+		{
+			// printf("TEST\n\n"); //////
+			// change error type
 			exitmsg(minishell, MERROR);
+		}
 		minishell->execve_path = find_relative_path(tab[0], execve_path_table);
 		ft_free_double_char(execve_path_table);
 	}
 	if (minishell->execve_path == NULL)
 	{
-		// printf("TEST\n\n"); //////
-		exitmsg(minishell, MERROR);
-		// perror("access");
+		minishell->excode = 127;
+		dup = ft_strndup(tab[0], ft_strlen(tab[0]) - 1);
+		safe_write(2, dup, ": command not found\n", NULL);
+		free(dup);
+		exitmsg(minishell, NULL);
 	}
+	
 	execve(minishell->execve_path, tab, minishell->envp);
 	perror("execve");
     exit(EXIT_FAILURE);
