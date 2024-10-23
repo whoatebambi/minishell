@@ -6,7 +6,7 @@
 /*   By: codespace <codespace@student.42.fr>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/21 20:27:20 by fcouserg          #+#    #+#             */
-/*   Updated: 2024/10/16 13:02:26 by codespace        ###   ########.fr       */
+/*   Updated: 2024/10/23 13:39:50 by codespace        ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,19 +15,19 @@
 int	is_builtin(char *cmd_arg)
 {
 	if (safe_strcmp(cmd_arg, "pwd") == 0)
-		return (1);
+		return (2);
 	else if (safe_strcmp(cmd_arg, "echo") == 0)
-		return (1);
-	else if (safe_strcmp(cmd_arg, "envp") == 0)
-		return (1);
+		return (2);
+	else if (safe_strcmp(cmd_arg, "env") == 0)
+		return (2);
 	else if (safe_strcmp(cmd_arg, "export") == 0)
-		return (1);
+		return (2);
     else if (safe_strcmp(cmd_arg, "cd") == 0)
 		return (1);
 	else if (safe_strcmp(cmd_arg, "unset") == 0)
 		return (1);
 	else if (safe_strcmp(cmd_arg, "exit") == 0)
-		return (2);
+		return (1);
 	return (0);
 }
 
@@ -81,6 +81,7 @@ void    cd(char **tab, t_env *env, t_shell *minishell)
 	replace_env_var(new_pwd, "PWD", env);
 	if (tab[1] && safe_strcmp(tab[1], "-") == 0)
 		pwd(1, minishell);
+	// exit(0);
 }
 
 void	pwd(int fd_out, t_shell *minishell)
@@ -96,6 +97,7 @@ void	pwd(int fd_out, t_shell *minishell)
 	}
 	safe_write(fd_out, buffer, "\n", NULL);
 	free(buffer);
+	exit(0);
 }
 
 int	check_newline(char **tab, int *flag)
@@ -140,9 +142,10 @@ void echo(char **tab, int fd_out)
 	}
 	if (!flag)
         safe_write(fd_out, "\n", NULL);
+	exit(0);
 }
 
-void	envp(t_env *env, int fd_out)
+void	ft_env(t_env *env, int fd_out)
 {
     char    *key;
     char    *value;
@@ -156,6 +159,7 @@ void	envp(t_env *env, int fd_out)
         safe_write(fd_out, key, "=", value, "\n", NULL);
 		env = env->next;
 	}
+	exit(0);
 }
 
 void	print_export(t_env *env, int fd_out)
@@ -262,7 +266,6 @@ int	add_env_list(char *arg, t_env *env, int fd_out, t_shell *minishell)
 		return (0);
 	}
 	key = ft_substr(arg, 0, i);
-	
 	value = ft_strdup(arg + i + 1);
 	if (get_env_lst(key, minishell->env))
 	{
@@ -289,10 +292,9 @@ void	export(t_env *env, char **tab, int fd_out, t_shell *minishell)
 			if (minishell->excode == 1)
 				safe_write(2, "export: `", tab[i],"': not a valid identifier\n", NULL);
 		}
-		// printf("export () excode = %d\n", minishell->excode);
 		i++;
 	}
-	exit(minishell->excode);
+	// exit(minishell->excode);
 }
 
 void	unset(char **tab, t_shell *minishell)
@@ -324,25 +326,49 @@ void	unset(char **tab, t_shell *minishell)
 	fill_envp(minishell);
 }
 
+
+int	exit_args(char **tab, int *flag)
+{
+	int	i;
+
+	i = 0;
+	if (!ft_isdigit(tab[1][0]) && tab[1][0] != '+' && tab[1][0] != '-')
+	{
+		safe_write(2, "minishell: exit: ", tab[i],": numeric argument required\n", NULL);
+		(*flag) = 1;
+		return (2);
+	}
+	while (tab[1][++i])
+	{
+		if (!ft_isdigit(tab[1][i]) && !(*flag))
+		{
+			safe_write(2, "minishell: exit: ", tab[i],": numeric argument required\n", NULL);
+			(*flag) = 1;
+			return (2);
+		}
+	}
+	return (ft_atoi(tab[1]) % 256);
+}
+
 void	ft_exit(char **tab, t_shell *minishell, t_fds *fd)
 {
 	int	ext;
 	int	flag;
 
 	flag = 0;
-	// if (tab[1])
-	// 	minishell->tmpexcode = exit_args(cmd, &flag);
-	// if (tab[1] && tab[2] && !flag)
-	// {
-	// 	safe_write(2, "minishell: `", tab[0],"': too many arguments\n", NULL);
-	// 	safe_write(1, "exit\n", NULL);
-	// 	minishell->excode = 1;
-	// 	minishell->tmpexcode = 1;
-	// 	return ;
-	// }
+	if (tab[1])
+		minishell->tmpexcode = exit_args(tab, &flag);
+	if (tab[1] && tab[2] && !flag)
+	{
+		safe_write(2, "minishell: `", tab[0],"': too many arguments\n", NULL);
+		safe_write(1, "exit\n", NULL);
+		minishell->excode = 1;
+		minishell->tmpexcode = 1;
+		return ;
+	}
 	// if (cmd->next || cmd->prev)
 	// 	return ;
-	ext = minishell->excode;
+	ext = minishell->tmpexcode;
 	free_minishell(minishell);
 	close_fds(fd);
 	safe_write(1, "exit\n", NULL);

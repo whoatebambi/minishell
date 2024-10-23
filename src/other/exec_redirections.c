@@ -6,7 +6,7 @@
 /*   By: codespace <codespace@student.42.fr>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/21 20:27:20 by fcouserg          #+#    #+#             */
-/*   Updated: 2024/10/07 18:33:48 by codespace        ###   ########.fr       */
+/*   Updated: 2024/10/23 12:44:28 by codespace        ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -31,11 +31,11 @@ void	close_fds(t_fds *fd)
 void	ft_init_fds(t_fds *fd)
 {
 	fd->input = -42;
-	fd->in = -42;
 	fd->output = -42;
 	fd->pipes[0] = -42;
 	fd->pipes[1] = -42;
 	fd->redir[1] = -42;
+	fd->in = -42;
 }
 
 void	set_redirs(t_fds *fd)
@@ -90,7 +90,7 @@ static void	exec_redirs_out(t_redir *copy_out, t_fds *fd)
 	// checker message avec les free et tout le tralala
 }
 
-void	exec_redirs(t_shell *minishell, t_fds *fd, int i)
+void	handle_redirs(t_shell *minishell, t_fds *fd, int i)
 {
 	t_redir	*copy_in;
 	t_redir	*copy_out;
@@ -106,5 +106,19 @@ void	exec_redirs(t_shell *minishell, t_fds *fd, int i)
 	{
 		exec_redirs_out(copy_out, fd);
 		copy_out = copy_out->next;
+	}
+}
+
+
+void	ft_pipes(t_shell *minishell, t_fds *fd, int i)
+{		
+	if (i < minishell->count_pipes - 1)
+	{
+		if (pipe(fd->pipes) == -1)
+		{
+			// close_fds(&fd);
+			minishell->excode = EXIT_FAILURE;
+			exitmsg(minishell, "pipe");
+		}
 	}
 }

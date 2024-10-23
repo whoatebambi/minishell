@@ -6,7 +6,7 @@
 /*   By: codespace <codespace@student.42.fr>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/21 18:24:48 by gbeaudoi          #+#    #+#             */
-/*   Updated: 2024/10/15 15:48:07 by codespace        ###   ########.fr       */
+/*   Updated: 2024/10/23 13:25:00 by codespace        ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -209,16 +209,17 @@ char				*find_relative_path(char *arg, char **envp);
 // executing.c
 void				start_exec(t_shell *minishell);
 int	execute_builtin(t_cmd_table *cmd_table, t_shell *minishell, t_fds *fd);
-void				exec_in_child(t_shell *minishell, int i, t_fds *fd);
+void				ft_exec(t_shell *minishell, int i, t_fds *fd);
 void				prep_exec(t_shell *minishell, t_fds *fd);
 char				**get_execpath(t_shell *shell);
 
 // exec_redirections.c
-void				exec_redirs(t_shell *minishell, t_fds *fd, int i);
+void				handle_redirs(t_shell *minishell, t_fds *fd, int i);
 void				set_redirs(t_fds *fd);
 void				ft_init_fds(t_fds *fd);
 void				close_fds(t_fds *fd);
 void				close_fds_parent(t_fds *fd);
+void	ft_pipes(t_shell *minishell, t_fds *fd, int i);
 
 // builtin.c
 void				pwd(int fd_out, t_shell *minishell);
@@ -226,7 +227,7 @@ void				cd(char **tab, t_env *env, t_shell *minishell);
 void				replace_env_var(char *pwd, char *key, t_env *env);
 void				echo(char **tab, int fd_out);
 int					check_newline(char **tab, int *flag);
-void				envp(t_env *env, int fd_out);
+void				ft_env(t_env *env, int fd_out);
 void				export(t_env *env, char **tab, int fd_out, t_shell *minishell);
 void				print_export(t_env *env, int fd_out);
 int					add_env_list(char *arg, t_env *env, int fd_out, t_shell *minishell);

@@ -6,7 +6,7 @@
 /*   By: codespace <codespace@student.42.fr>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/05 16:11:15 by gbeaudoi          #+#    #+#             */
-/*   Updated: 2024/09/28 15:07:42 by codespace        ###   ########.fr       */
+/*   Updated: 2024/10/23 15:58:43 by codespace        ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -105,9 +105,9 @@ void	ft_tokenize_list(t_node *nodes, t_shell *minishell)
 			(copy)->token = 0;
 		if ((copy)->token == 0)
 		{
-			// if ((copy)->previous && (copy)->previous->token == 1)
-			// 	(copy)->redir = 1;
-			// else
+			if ((copy)->previous && (copy)->previous->token == 1)
+				(copy)->redir = 1;
+			else
 				(copy)->redir = 0;
 		}
 		copy = (copy)->next;

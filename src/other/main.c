@@ -6,7 +6,7 @@
 /*   By: codespace <codespace@student.42.fr>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/21 20:27:20 by fcouserg          #+#    #+#             */
-/*   Updated: 2024/10/16 11:53:13 by codespace        ###   ########.fr       */
+/*   Updated: 2024/10/22 13:30:44 by codespace        ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -57,13 +57,19 @@ int	main(int argc, char **argv, char **envp)
 	while (1)
 	{
 		minishell.line = get_line(minishell.mode, fd);
+		// printf("excode -> %d     tmpexcode-> %d\n", minishell.excode, minishell.tmpexcode);
 		if (minishell.line == NULL)// && minishell.mode == NON_INTERACTIVE)
 			break ;
 		ft_parseur(&minishell);
+		// printf("excode -> %d     tmpexcode-> %d\n", minishell.excode, minishell.tmpexcode);
 		start_exec(&minishell);
+		// printf("excode -> %d     tmpexcode-> %d\n", minishell.excode, minishell.tmpexcode);
 		reset_loop(&minishell);
+		// printf("excode -> %d     tmpexcode-> %d\n", minishell.excode, minishell.tmpexcode);
 	}
 	close(fd);
+	// printf("excode -> %d     tmpexcode-> %d\n", minishell.excode, minishell.tmpexcode);
 	free_minishell(&minishell);
+	// printf("excode -> %d     tmpexcode-> %d\n", minishell.excode, minishell.tmpexcode);
 	exit(minishell.tmpexcode);
 }

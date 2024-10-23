@@ -6,7 +6,7 @@
 /*   By: codespace <codespace@student.42.fr>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/20 15:42:08 by gbeaudoi          #+#    #+#             */
-/*   Updated: 2024/10/15 15:28:29 by codespace        ###   ########.fr       */
+/*   Updated: 2024/10/23 16:00:17 by codespace        ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -78,8 +78,12 @@ static void	ft_split_pipe(t_shell *minishell)
 	if (pipes == NULL)
 		exitmsg(minishell, MERROR);
 	minishell->count_pipes = ft_find_pipes(pipes);
+	if (minishell->count_pipes == 0)
+	{
+		ft_free_double_char(pipes);
+		return ;
+	}
 	minishell->cmd_table = ft_calloc(minishell->count_pipes, sizeof(t_cmd_table *));
-	
 	if (minishell->cmd_table == NULL)
 	{
 		ft_free_double_char(pipes);
@@ -97,9 +101,54 @@ static void	ft_split_pipe(t_shell *minishell)
 
 void	ft_parseur(t_shell *minishell)
 {
+// int        i;
+//     t_node    *copy;
+//     int        j;
+//     t_redir    *copie;
+
+//     i = 0;
 	ft_neg_inside_quote(minishell);
+	// printf("clean_line = %s\n", minishell->clean_line);
+	// printf("line = %s\n", minishell->line);	
 	ft_expand_dollar(minishell);
 	ft_rev_neg_line(minishell);
 	ft_parseur_quote(minishell); // check if int can become void
 	ft_split_pipe(minishell);
+	//     i = 0;
+    // while (i < minishell->count_pipes)
+    // {
+    //     ft_printf("[%d] GROUP COMMAND : %s\n", i,
+    //         minishell->cmd_table[i]->group_command);
+    //     copy = minishell->cmd_table[i]->nodes;
+    //     while (copy)
+    //     {
+    //         ft_printf("[string] : %s\n[token]  :% d | [redir] : % d | [quote] :% d\n ",
+    // copy->string, copy->token, copy->redir, copy->quote);
+    //         copy = copy->next;
+    //     }
+    //     j = 0;
+    //     while (minishell->cmd_table[i]->tab[j])
+    //     {
+    //         ft_printf("COMMAND ARG[%d] : %s\n", j,
+    //             minishell->cmd_table[i]->tab[j]);
+    //         j++;
+    //     }
+    //     copie = minishell->cmd_table[i]->redirs_in;
+    //     while (copie)
+    //     {
+    //         ft_printf("redir_in type %d\n", copie->type);
+    //         ft_printf("redir_in redir %s\n", copie->redir_name);
+    //         ft_printf("redir_in quote %d\n", copie->quote);
+    //         copie = copie->next;
+    //     }
+    //     copie = minishell->cmd_table[i]->redirs_out;
+    //     while (copie)
+    //     {
+    //         ft_printf("redir_out type %d\n", copie->type);
+    //         ft_printf("redir_out redir %s\n", copie->redir_name);
+    //         ft_printf("redir_out quote %d\n", copie->quote);
+    //         copie = copie->next;
+    //     }
+    //     i++;
+    // }
 }

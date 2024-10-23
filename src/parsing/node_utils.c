@@ -6,7 +6,7 @@
 /*   By: codespace <codespace@student.42.fr>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/17 15:56:28 by gbeaudoi          #+#    #+#             */
-/*   Updated: 2024/09/26 17:08:55 by codespace        ###   ########.fr       */
+/*   Updated: 2024/10/23 15:59:31 by codespace        ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,10 +30,14 @@ void	ft_stack_add_to_back(t_node **a, t_node *new_node)
 	if (*a)
 	{
 		last_node = ft_last_stack(*a);
+		new_node->previous = last_node;
 		last_node->next = new_node;
 	}
 	else
+	{
+		new_node->previous = *a;
 		*a = new_node;
+	}
 }
 
 t_node	*ft_new_node(char *word, int flag)
@@ -55,5 +59,6 @@ t_node	*ft_new_node(char *word, int flag)
 	else
 		node->quote = 0;
 	node->next = NULL;
+	node->previous = NULL;
 	return (node);
 }

@@ -6,7 +6,7 @@
 /*   By: codespace <codespace@student.42.fr>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/21 20:27:20 by fcouserg          #+#    #+#             */
-/*   Updated: 2024/10/16 12:51:40 by codespace        ###   ########.fr       */
+/*   Updated: 2024/10/23 15:35:38 by codespace        ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -31,46 +31,6 @@ char	**get_execpath(t_shell *shell)
 	return (execve_path);
 }
 
-void	exec_system(char **tab, t_shell *minishell)
-{
-	char	**execve_path_table;
-	char *dup;
-	
-	if (ft_strncmp("/", tab[0], 1) == 0)
-	{
-		if (access(tab[0], F_OK) == 0 && access(tab[0], X_OK) == 0)
-		{
-			minishell->execve_path = ft_strdup(tab[0]);
-			// return (0);
-		}
-		// return (FILE_NOT_FOUND);
-	}
-	else
-	{
-		execve_path_table = get_execpath(minishell);
-		if (execve_path_table == NULL)
-		{
-			// printf("TEST\n\n"); //////
-			// change error type
-			exitmsg(minishell, MERROR);
-		}
-		minishell->execve_path = find_relative_path(tab[0], execve_path_table);
-		ft_free_double_char(execve_path_table);
-	}
-	if (minishell->execve_path == NULL)
-	{
-		minishell->excode = 127;
-		dup = ft_strndup(tab[0], ft_strlen(tab[0]) - 1);
-		safe_write(2, dup, ": command not found\n", NULL);
-		free(dup);
-		exitmsg(minishell, NULL);
-	}
-	
-	execve(minishell->execve_path, tab, minishell->envp);
-	perror("execve");
-    exit(EXIT_FAILURE);
-}
-
 char	*find_relative_path(char *arg, char **envp)
 {
 	char	*execve_dup;
@@ -82,7 +42,7 @@ char	*find_relative_path(char *arg, char **envp)
 	while (envp[i])
 	{
 		execve_dup = ft_strjoin_no_free(envp[i], path_arg);
-		if (access(execve_dup, F_OK) == 0 && access(execve_dup, X_OK) == 0)
+		if (access(execve_dup, X_OK) == 0 && access(execve_dup, F_OK) == 0) 
 		{
 			free(path_arg);
 			return (execve_dup);
@@ -93,3 +53,60 @@ char	*find_relative_path(char *arg, char **envp)
 	free(path_arg);
 	return (NULL);
 }
+
+void	exec_system(char **tab, t_shell *minishell)
+{
+	char	**execve_path_table;
+	char *dup;
+	struct stat	info;
+
+	if (ft_strchr(tab[0], '/'))
+	{
+		if (access(tab[0], F_OK) == 0)// && access(tab[0], X_OK) == 0)
+		{
+			if (stat(tab[0], &info) == 0 && S_ISDIR(info.st_mode))
+			{
+				safe_write(2, "minishell: ", tab[0], ": Is a directory\n", NULL);
+				minishell->excode = 126;
+				return ;
+			}
+			minishell->execve_path = ft_strdup(tab[0]);
+		}
+		else
+		{
+			if (access(tab[0], F_OK) == 0 || access(tab[0], X_OK) == 0)
+			{
+				safe_write(2, "minishell: ", tab[0], ": Permission denied\n", NULL);
+				minishell->excode = 126;
+				return ;
+			}
+			safe_write(2, "minishell: ", tab[0], ": No such file or directory\n", NULL); //127
+			minishell->excode = 127;
+			return ;
+		}
+	}
+	else
+	{
+		execve_path_table = get_execpath(minishell);
+		if (execve_path_table == NULL)
+		{
+			// change error type
+			exitmsg(minishell, MERROR);
+		}
+		minishell->execve_path = find_relative_path(tab[0], execve_path_table);
+		ft_free_double_char(execve_path_table);
+	}
+	if (minishell->execve_path == NULL)
+	{
+		minishell->excode = 127;
+		dup = ft_strndup(tab[0], ft_strlen(tab[0]));
+		safe_write(2, dup, ": command not found\n", NULL);
+		free(dup);
+		exitmsg(minishell, NULL);
+	}
+	
+	execve(minishell->execve_path, tab, minishell->envp);
+	perror("execve");
+    exit(EXIT_FAILURE);
+}
+
