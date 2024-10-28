@@ -6,7 +6,7 @@
 /*   By: codespace <codespace@student.42.fr>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/05 14:56:48 by gbeaudoi          #+#    #+#             */
-/*   Updated: 2024/10/02 17:01:17 by codespace        ###   ########.fr       */
+/*   Updated: 2024/10/27 23:41:37 by codespace        ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -70,7 +70,7 @@ void	ft_init_node_list(t_node **nodes, t_cmd_table *command_table, t_shell *mini
 
 	*nodes = NULL;
 	i = 0;
-	while (command_table->group_command[i])
+	while (command_table->group_command &&command_table->group_command[i])
 	{
 		n = 0;
 		word = ft_fill_word(command_table, &i, n, minishell);
@@ -84,5 +84,4 @@ void	ft_init_node_list(t_node **nodes, t_cmd_table *command_table, t_shell *mini
 		ft_stack_add_to_back(nodes, new_node);
 		free(word);
 	}
-	
 }

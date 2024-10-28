@@ -6,7 +6,7 @@
 /*   By: codespace <codespace@student.42.fr>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/21 20:27:20 by fcouserg          #+#    #+#             */
-/*   Updated: 2024/10/23 15:35:38 by codespace        ###   ########.fr       */
+/*   Updated: 2024/10/25 15:56:48 by codespace        ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -62,7 +62,7 @@ void	exec_system(char **tab, t_shell *minishell)
 
 	if (ft_strchr(tab[0], '/'))
 	{
-		if (access(tab[0], F_OK) == 0)// && access(tab[0], X_OK) == 0)
+		if (access(tab[0], F_OK) == 0)
 		{
 			if (stat(tab[0], &info) == 0 && S_ISDIR(info.st_mode))
 			{
@@ -70,43 +70,49 @@ void	exec_system(char **tab, t_shell *minishell)
 				minishell->excode = 126;
 				return ;
 			}
-			minishell->execve_path = ft_strdup(tab[0]);
-		}
-		else
-		{
-			if (access(tab[0], F_OK) == 0 || access(tab[0], X_OK) == 0)
+			if (access(tab[0], X_OK) == -1)
 			{
 				safe_write(2, "minishell: ", tab[0], ": Permission denied\n", NULL);
 				minishell->excode = 126;
 				return ;
 			}
-			safe_write(2, "minishell: ", tab[0], ": No such file or directory\n", NULL); //127
-			minishell->excode = 127;
-			return ;
+			minishell->execve_path = ft_strdup(tab[0]);
+		}
+		else
+		{
+			if (access(tab[0], F_OK) == -1)
+			{
+				safe_write(2, "minishell: ", tab[0], ": No such file or directory TEEEEEEEEEST\n", NULL);
+				minishell->excode = 127;
+				return ;
+			}
 		}
 	}
 	else
 	{
 		execve_path_table = get_execpath(minishell);
 		if (execve_path_table == NULL)
-		{
-			// change error type
-			exitmsg(minishell, MERROR);
-		}
+			exitmsg(minishell, MERROR);// change error type
 		minishell->execve_path = find_relative_path(tab[0], execve_path_table);
 		ft_free_double_char(execve_path_table);
 	}
 	if (minishell->execve_path == NULL)
 	{
+		
+		if (access(tab[0], F_OK) == 0 && access(tab[0], X_OK) == -1)
+		{
+			safe_write(2, "minishell: ", tab[0], ": Permission denied\n", NULL);
+			minishell->excode = 126;
+			return ;
+		}		
 		minishell->excode = 127;
 		dup = ft_strndup(tab[0], ft_strlen(tab[0]));
 		safe_write(2, dup, ": command not found\n", NULL);
 		free(dup);
 		exitmsg(minishell, NULL);
 	}
-	
 	execve(minishell->execve_path, tab, minishell->envp);
-	perror("execve");
-    exit(EXIT_FAILURE);
+	// perror(tab[0]);
+	exit(EXIT_FAILURE);
 }
 

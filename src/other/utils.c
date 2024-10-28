@@ -6,7 +6,7 @@
 /*   By: codespace <codespace@student.42.fr>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/21 20:27:20 by fcouserg          #+#    #+#             */
-/*   Updated: 2024/10/06 17:09:00 by codespace        ###   ########.fr       */
+/*   Updated: 2024/10/28 12:50:00 by codespace        ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -112,4 +112,31 @@ char	*safe_join_envp(char *key, char *symb, char *value)
 	}
 	str[i] = '\0';
 	return (str);
+}
+
+void	ft_perror(t_shell *shell, char *word, char *msg, char *third)
+{
+	int	saved_stdout;
+
+	saved_stdout = dup(STDOUT_FILENO);
+	if (saved_stdout == -1)
+	{
+		shell->excode = 1;
+		(perror("dup"), exitmsg(shell, NULL));
+	}
+	if (dup2(STDERR_FILENO, STDOUT_FILENO) == -1)
+	{
+		shell->excode = 1;
+		(close(saved_stdout), perror("dup2"), exitmsg(shell, NULL));
+	}
+	if (third)
+		printf("minishell: %s: %s: %s\n", word, msg, third);
+	else
+		printf("minishell: %s: %s\n", word, msg);
+	if (dup2(STDERR_FILENO, STDOUT_FILENO) == -1)
+	{
+		shell->excode = 1;
+		(close(saved_stdout), perror("dup2"), exitmsg(shell, NULL));
+	}
+	close(saved_stdout);
 }

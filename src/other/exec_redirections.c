@@ -6,7 +6,7 @@
 /*   By: codespace <codespace@student.42.fr>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/21 20:27:20 by fcouserg          #+#    #+#             */
-/*   Updated: 2024/10/23 12:44:28 by codespace        ###   ########.fr       */
+/*   Updated: 2024/10/28 14:15:02 by codespace        ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,6 +26,8 @@ void	close_fds(t_fds *fd)
 		close(fd->pipes[0]);
 	if (!(fd->pipes[1] == -42) && fd->pipes[1] >= 0)
 		close(fd->pipes[1]);
+	if (!(fd->savedpipe == -42) && fd->savedpipe >= 0)
+		close(fd->savedpipe);
 }
 
 void	ft_init_fds(t_fds *fd)
@@ -36,6 +38,7 @@ void	ft_init_fds(t_fds *fd)
 	fd->pipes[1] = -42;
 	fd->redir[1] = -42;
 	fd->in = -42;
+	fd->savedpipe = -42;
 }
 
 void	set_redirs(t_fds *fd)
@@ -44,8 +47,10 @@ void	set_redirs(t_fds *fd)
 		fd->redir[1] = fd->pipes[1];
 	if (fd->input != -42)
 	{
-		if (fd->redir[0] != -42)
+		if (fd->redir[0] != -42 && !fd->prevpipe)
 			close(fd->redir[0]);
+		if (fd->prevpipe)
+			fd->savedpipe = fd->redir[0];
 		fd->redir[0] = fd->input;
 	}
 	if (fd->output != -42)
@@ -58,12 +63,18 @@ void	set_redirs(t_fds *fd)
 
 static void	exec_redirs_in(t_shell *minishell, t_redir *copy_in, t_fds *fd)
 {
-	if (fd->input != -42)
+	if (fd->input != -42  && fd->input != -1)
 		close(fd->input);
 	if (copy_in->type == REDIR_IN)
-		fd->input = open(copy_in->redir_name, O_RDWR, 00755);	
-	// if (fd->input == -1)
-	// checker message avec les free et tout le tralala
+	{
+		fd->input = open(copy_in->redir_name, O_RDONLY);	
+		if (fd->input == -1)
+		{
+			safe_write(2, "minishell: ", copy_in->redir_name, ": TEST A No such file or directory\n", NULL);
+			minishell->excode = 1;
+		}
+	// checker message avec les free et tout le tralala	
+	}
 	else if (copy_in->type == DELIMITER)
 	{
 		ft_sig_heredoc_setting();
@@ -73,20 +84,21 @@ static void	exec_redirs_in(t_shell *minishell, t_redir *copy_in, t_fds *fd)
 			ft_here_doc(minishell, copy_in, fd);
 		ft_signals();
 	}
-
 }
 
-static void	exec_redirs_out(t_redir *copy_out, t_fds *fd)
+static void	exec_redirs_out(t_shell *minishell, t_redir *copy_out, t_fds *fd)
 {
-	if (fd->output != -42)
+	if (fd->output != -42 && fd->output != -1)
 		close(fd->output);
 	if (copy_out->type == APPEND)
-		fd->output = open(copy_out->redir_name, O_RDWR | O_CREAT | O_APPEND,
-				00755);
+		fd->output = open(copy_out->redir_name, O_WRONLY | O_CREAT | O_TRUNC, 0644);
 	else if (copy_out->type == REDIR_OUT)
-		fd->output = open(copy_out->redir_name, O_RDWR | O_CREAT | O_TRUNC,
-				00755);
-	// if (cmd->fd_out == -1)
+		fd->output = open(copy_out->redir_name, O_WRONLY | O_CREAT | O_APPEND, 0644);
+	if (fd->output == -1)
+	{
+		safe_write(2, "minishell: ", copy_out->redir_name, ": Permission denied\n", NULL);
+		minishell->excode = 1;
+	}
 	// checker message avec les free et tout le tralala
 }
 
@@ -104,21 +116,20 @@ void	handle_redirs(t_shell *minishell, t_fds *fd, int i)
 	}
 	while (copy_out)
 	{
-		exec_redirs_out(copy_out, fd);
+		exec_redirs_out(minishell, copy_out, fd);
 		copy_out = copy_out->next;
 	}
 }
 
-
 void	ft_pipes(t_shell *minishell, t_fds *fd, int i)
 {		
+	if (i > 0 && minishell->cmd_table[i - 1] != NULL) // j'ai ajoute i > 0 
+		fd->prevpipe = true;
+	else
+		fd->prevpipe = false;
 	if (i < minishell->count_pipes - 1)
 	{
 		if (pipe(fd->pipes) == -1)
-		{
-			// close_fds(&fd);
-			minishell->excode = EXIT_FAILURE;
-			exitmsg(minishell, "pipe");
-		}
+			exitmsg(minishell, "pipe TEST FT_PIPES()");
 	}
 }

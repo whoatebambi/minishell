@@ -6,7 +6,7 @@
 #    By: codespace <codespace@student.42.fr>        +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2024/01/08 14:30:03 by gbeaudoi          #+#    #+#              #
-#    Updated: 2024/10/09 12:34:39 by codespace        ###   ########.fr        #
+#    Updated: 2024/10/28 15:47:18 by codespace        ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -45,7 +45,7 @@ LIBFT = libft/
 
 CC		=	cc
 # CFLAGS =	-Wall -Wextra -Werror -I $(INC)
-CFLAGS	=	-I $(INC)
+CFLAGS	=	-g3 -I $(INC)
 INC		=	include/
 LIBC	=	ar -rcs
 RM		=	rm -rf
@@ -57,9 +57,12 @@ PARSING_DIR 	= 	parsing/
 PARSING_FILES	= 	expendeur.c parseur.c parsing_utils.c quote_handling.c node_init.c node_utils.c redir_init.c redistribute_node.c \
 					free_parsing.c free_utils.c expendeur_helper.c
 
-OTHER_DIR 	= 	 other/
-OTHER_FILES	= 	 main.c init.c init_no_env.c init_env_nodes.c executing.c signals.c free_memory.c utils.c builtin.c exec_system.c exec_redirections.c \
-				 heredoc_exp.c heredoc.c
+BUILTIN_DIR 	= 	builtin/
+BUILTIN_FILES	= 	builtin.c cd.c echo.c env.c
+					
+OTHER_DIR 		= 	other/
+OTHER_FILES		= 	main.c init.c init_no_env.c init_env_nodes.c executing.c signals.c free_memory.c utils.c exec_system.c exec_redirections.c \
+				 	heredoc_exp.c heredoc.c
 
 
 ######################## COMBINE DIRECTORIES AND FILES ########################
@@ -68,6 +71,7 @@ SRC_DIR		= src/
 
 SRC_NAMES	= $(addprefix $(OTHER_DIR), $(OTHER_FILES)) \
 			$(addprefix $(PARSING_DIR), $(PARSING_FILES)) \
+			$(addprefix $(BUILTIN_DIR), $(BUILTIN_FILES)) \
 
 OBJ_DIR		= obj/
 
@@ -75,6 +79,7 @@ OBJ_NAMES	= $(SRC_NAMES:.c=.o)
 
 OBJ_FOLDERS	= $(addprefix $(OBJ_DIR), $(OTHER_DIR)) \
 			 $(addprefix $(OBJ_DIR), $(PARSING_DIR))	\
+			 $(addprefix $(OBJ_DIR), $(BUILTIN_DIR))	\
 
 OBJ		= $(addprefix $(OBJ_DIR), $(OBJ_NAMES))
 

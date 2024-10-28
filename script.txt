@@ -1,1 +1,1 @@
-echo <"./test_files/infile_big"
+echo hello world

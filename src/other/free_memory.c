@@ -6,7 +6,7 @@
 /*   By: codespace <codespace@student.42.fr>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/21 20:27:20 by fcouserg          #+#    #+#             */
-/*   Updated: 2024/10/06 21:39:31 by codespace        ###   ########.fr       */
+/*   Updated: 2024/10/28 15:55:37 by codespace        ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,11 +23,12 @@ void	free_cmd_table(t_shell *minishell)
 		if (minishell->cmd_table[i] != NULL)
 		{
 			safe_free(minishell->cmd_table[i]->group_command);
+            safe_free(minishell->cmd_table[i]->path);
 			ft_free_node(minishell->cmd_table[i]->nodes);
 			ft_free_double_char(minishell->cmd_table[i]->tab);
-			// ft_free_redir(minishell->cmd_table[i]->redirs_in);
-			// ft_free_redir(minishell->cmd_table[i]->redirs_out);
-			// safe_free(minishell->cmd_table[i]->infile_tmp);
+			ft_free_redir(minishell->cmd_table[i]->redirs_in);
+			ft_free_redir(minishell->cmd_table[i]->redirs_out);
+			safe_free(minishell->cmd_table[i]->infile_tmp);
             free(minishell->cmd_table[i]);
             minishell->cmd_table[i] = NULL;
         }
@@ -37,7 +38,7 @@ void	free_cmd_table(t_shell *minishell)
 	minishell->cmd_table = NULL;
 }
 
-void	reset_loop(t_shell *minishell) // || reset_shell
+void	reset_loop(t_shell *minishell)
 {
 	if (minishell->cmd_table)
 		free_cmd_table(minishell);

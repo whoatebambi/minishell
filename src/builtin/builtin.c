@@ -6,7 +6,7 @@
 /*   By: codespace <codespace@student.42.fr>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/21 20:27:20 by fcouserg          #+#    #+#             */
-/*   Updated: 2024/10/23 13:39:50 by codespace        ###   ########.fr       */
+/*   Updated: 2024/10/28 15:47:45 by codespace        ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -44,46 +44,6 @@ void	replace_env_var(char *pwd, char *key, t_env *env)
 	}
 }
 
-void    cd(char **tab, t_env *env, t_shell *minishell)
-{
-	char	old_pwd[1024];
-    char	new_pwd[1024];
-
-	if (tab[2])
-	{
-		safe_write(2, "cd: too many arguments\n", NULL);
-		minishell->excode = 1;
-		exitmsg(minishell, NULL);
-	}
-	if (getcwd(old_pwd, sizeof(old_pwd)) == NULL)
-	{
-		minishell->excode = 1;
-		exitmsg(minishell, "getcwd");
-	}
-    if (tab[1] == NULL)
-		minishell->excode = chdir(getenv("HOME"));
-	else if (safe_strcmp(tab[1], "-") == 0)
-		minishell->excode = chdir(getenv("OLDPWD"));
-	else
-		minishell->excode = chdir(tab[1]);
-    if (minishell->excode == -1)
-	{
-		minishell->excode = 1;
-		safe_write(2, "cd: ", tab[1],": No such file or directory\n", NULL);
-		exitmsg(minishell, NULL);
-	}
-	if (getcwd(new_pwd, sizeof(new_pwd)) == NULL)
-	{
-		minishell->excode = 1;
-		exitmsg(minishell, "getcwd");
-	}
-	replace_env_var(old_pwd, "OLDPWD", env);
-	replace_env_var(new_pwd, "PWD", env);
-	if (tab[1] && safe_strcmp(tab[1], "-") == 0)
-		pwd(1, minishell);
-	// exit(0);
-}
-
 void	pwd(int fd_out, t_shell *minishell)
 {
 	char	*buffer;
@@ -97,70 +57,11 @@ void	pwd(int fd_out, t_shell *minishell)
 	}
 	safe_write(fd_out, buffer, "\n", NULL);
 	free(buffer);
+	minishell->tmpexcode = minishell->excode;
+	minishell->excode = 0;
 	exit(0);
 }
 
-int	check_newline(char **tab, int *flag)
-{
-	int	n;
-	int	i;
-
-	n = 1;
-	while (tab[n] && tab[n][0] == '-' && tab[n][1] == 'n')
-	{
-		i = 1;
-		if (tab[n][0] == '-' && tab[n][1] == 'n')
-		{
-			while (tab[n][i] == 'n')
-				i++;
-			if (tab[n][i] != '\0')
-				return (n);
-		}
-		*flag = 1;
-		n++;
-	}
-	return (n);
-}
-
-void echo(char **tab, int fd_out)
-{
-    int i;
-	int	flag;
-
-	flag = 0;
-    i = check_newline(tab, &flag);
-	if (tab[1])
-	{
-		while (tab[i])
-		{
-			if (tab[i] && !tab[i + 1])
-				safe_write(fd_out, tab[i], NULL);	
-			else if (tab[i])
-				safe_write(fd_out, tab[i], " ", NULL);
-			i++;
-		}
-	}
-	if (!flag)
-        safe_write(fd_out, "\n", NULL);
-	exit(0);
-}
-
-void	ft_env(t_env *env, int fd_out)
-{
-    char    *key;
-    char    *value;
-
-	if (env == NULL)
-		return ;
-	while (env)
-	{
-        key = env->key;
-        value = env->value;
-        safe_write(fd_out, key, "=", value, "\n", NULL);
-		env = env->next;
-	}
-	exit(0);
-}
 
 void	print_export(t_env *env, int fd_out)
 {
