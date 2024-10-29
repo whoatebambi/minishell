@@ -6,7 +6,7 @@
 /*   By: codespace <codespace@student.42.fr>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/21 18:24:48 by gbeaudoi          #+#    #+#             */
-/*   Updated: 2024/10/28 15:48:23 by codespace        ###   ########.fr       */
+/*   Updated: 2024/10/29 00:11:24 by codespace        ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -169,6 +169,7 @@ typedef struct s_cmd_table
 	char			**tab;
 	char			*path;
 	bool			pathnoaccess;
+	t_builtin		builtin;
 	char			*group_command;
 	t_node			*nodes;
 	t_redir			*redirs_in;
@@ -211,9 +212,10 @@ char				*find_relative_path(char *arg, char **envp);
 // executing.c
 void				start_exec(t_shell *minishell);
 int	execute_builtin(t_cmd_table *cmd_table, t_shell *minishell, t_fds *fd, int i);
-void				ft_exec(t_shell *minishell, int i, t_fds *fd);
+void	ft_exec(t_shell *minishell, t_cmd_table *cmd, int i, t_fds *fd);
 void				prep_exec(t_shell *minishell, t_fds *fd);
 char				**get_execpath(t_shell *shell);
+void	check_builtins(t_cmd_table *cmd);
 
 void	ft_perror(t_shell *shell, char *word, char *msg, char *third);
 
@@ -226,19 +228,20 @@ void				close_fds_parent(t_fds *fd);
 void	ft_pipes(t_shell *minishell, t_fds *fd, int i);
 
 // builtin.c
-void				pwd(int fd_out, t_shell *minishell);
+void				builtin_pwd(int fd_out, t_shell *minishell);
 void				builtin_cd(char **tab, t_env *env, t_shell *minishell);
 void				replace_env_var(char *pwd, char *key, t_env *env);
-void 				builtin_echo(char **tab, int fd_out, t_shell *minishell, int i);
+void 				builtin_echo(char **tab, t_shell *minishell, int i);
 int					check_newline(char **tab, int *flag);
 void				builtin_env(t_env *env, int fd_out, t_shell *minishell);
-void				export(t_env *env, char **tab, int fd_out, t_shell *minishell);
+void				builtin_export(t_env *env, char **tab, int fd_out, t_shell *minishell);
 void				print_export(t_env *env, int fd_out);
 int					add_env_list(char *arg, t_env *env, int fd_out, t_shell *minishell);
 int					is_builtin(char *cmd_arg);
-void	unset(char **tab, t_shell *minishell);
+void	builtin_unset(char **tab, t_shell *minishell, int i);
 void	update_envp(t_shell *shell);
 void	ft_exit(char **tab, t_shell *minishell, t_fds *fd);
+t_env	*get_env_lst(char *name, t_env *env);
 
 // signals.c
 void				ft_handle_sig(int s);

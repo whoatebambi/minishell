@@ -6,11 +6,24 @@
 /*   By: codespace <codespace@student.42.fr>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/21 20:27:20 by fcouserg          #+#    #+#             */
-/*   Updated: 2024/10/28 14:56:46 by codespace        ###   ########.fr       */
+/*   Updated: 2024/10/29 13:46:08 by codespace        ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
+
+void	replace_env_var(char *pwd, char *key, t_env *env)
+{
+	while (env)
+	{
+		if (safe_strcmp(env->key, key) == 0)
+		{
+			free(env->value);
+			env->value = ft_strdup(pwd);
+		}
+		env = env->next;
+	}
+}
 
 void    builtin_cd(char **tab, t_env *env, t_shell *minishell)
 {
@@ -21,7 +34,8 @@ void    builtin_cd(char **tab, t_env *env, t_shell *minishell)
 	{
 		safe_write(2, "cd: too many arguments\n", NULL);
 		minishell->excode = 1;
-		exitmsg(minishell, NULL);
+		return ;
+		// exitmsg(minishell, NULL);
 	}
 	if (getcwd(old_pwd, sizeof(old_pwd)) == NULL)
 	{
@@ -48,7 +62,7 @@ void    builtin_cd(char **tab, t_env *env, t_shell *minishell)
 	replace_env_var(old_pwd, "OLDPWD", env);
 	replace_env_var(new_pwd, "PWD", env);
 	if (tab[1] && safe_strcmp(tab[1], "-") == 0)
-		pwd(1, minishell);
+		builtin_pwd(1, minishell);
 }
 
-// set home....
+// set home.... check yann stuff

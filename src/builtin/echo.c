@@ -6,7 +6,7 @@
 /*   By: codespace <codespace@student.42.fr>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/21 20:27:20 by fcouserg          #+#    #+#             */
-/*   Updated: 2024/10/28 14:59:31 by codespace        ###   ########.fr       */
+/*   Updated: 2024/10/29 13:44:01 by codespace        ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,6 +17,7 @@ int	check_newline(char **tab, int *flag)
 	int	n;
 	int	i;
 
+	// printf("echo()\n");
 	n = 1;
 	while (tab[n] && tab[n][0] == '-' && tab[n][1] == 'n')
 	{
@@ -34,28 +35,30 @@ int	check_newline(char **tab, int *flag)
 	return (n);
 }
 
-void builtin_echo(char **tab, int fd_out, t_shell *minishell, int i)
+void builtin_echo(char **tab, t_shell *minishell, int i)
 {
     int j;
 	int	flag;
 	int	ext;
 
 	flag = 0;
+	if (!tab || !tab[0])
+		return ;
     j = check_newline(tab, &flag);
 	if (tab[1])
 	{
 		while (tab[j])
 		{
-			if (tab[j] && !tab[j + 1])
-				safe_write(fd_out, tab[j], NULL);	
-			else if (tab[j])
-				safe_write(fd_out, tab[j], " ", NULL);
+			if (!tab[j + 1])
+				printf("%s", tab[j]); // safe_write(fd_out, tab[j], NULL);	
+			else
+				printf("%s ", tab[j]); // safe_write(fd_out, tab[j], " ", NULL);
 			j++;
 		}
 	}
 	if (!flag)
-        safe_write(fd_out, "\n", NULL);
-	if (minishell->cmd_table[i  + 1])
+		printf("\n"); // safe_write(fd_out, "\n", NULL);
+    if (i + 1 < minishell->count_pipes)// && minishell->cmd_table[i + 1])
 		ext = minishell->excode;
 	else
 		ext = minishell->tmpexcode;

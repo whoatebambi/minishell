@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   exec_redirections.c                                :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: codespace <codespace@student.42.fr>        +#+  +:+       +#+        */
+/*   By: fcouserg <fcouserg@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/21 20:27:20 by fcouserg          #+#    #+#             */
-/*   Updated: 2024/10/28 14:15:02 by codespace        ###   ########.fr       */
+/*   Updated: 2024/10/29 15:52:14 by fcouserg         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -70,7 +70,7 @@ static void	exec_redirs_in(t_shell *minishell, t_redir *copy_in, t_fds *fd)
 		fd->input = open(copy_in->redir_name, O_RDONLY);	
 		if (fd->input == -1)
 		{
-			safe_write(2, "minishell: ", copy_in->redir_name, ": TEST A No such file or directory\n", NULL);
+			safe_write(2, "minishell: ", copy_in->redir_name, ": No such file or directory\n", NULL);
 			minishell->excode = 1;
 		}
 	// checker message avec les free et tout le tralala	
@@ -91,15 +91,14 @@ static void	exec_redirs_out(t_shell *minishell, t_redir *copy_out, t_fds *fd)
 	if (fd->output != -42 && fd->output != -1)
 		close(fd->output);
 	if (copy_out->type == APPEND)
-		fd->output = open(copy_out->redir_name, O_WRONLY | O_CREAT | O_TRUNC, 0644);
-	else if (copy_out->type == REDIR_OUT)
 		fd->output = open(copy_out->redir_name, O_WRONLY | O_CREAT | O_APPEND, 0644);
+	else if (copy_out->type == REDIR_OUT)
+		fd->output = open(copy_out->redir_name, O_WRONLY | O_CREAT | O_TRUNC, 0644);
 	if (fd->output == -1)
 	{
 		safe_write(2, "minishell: ", copy_out->redir_name, ": Permission denied\n", NULL);
 		minishell->excode = 1;
 	}
-	// checker message avec les free et tout le tralala
 }
 
 void	handle_redirs(t_shell *minishell, t_fds *fd, int i)
@@ -130,6 +129,6 @@ void	ft_pipes(t_shell *minishell, t_fds *fd, int i)
 	if (i < minishell->count_pipes - 1)
 	{
 		if (pipe(fd->pipes) == -1)
-			exitmsg(minishell, "pipe TEST FT_PIPES()");
+			exitmsg(minishell, "pipe");
 	}
 }

@@ -1,44 +1,30 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   env.c                                              :+:      :+:    :+:   */
+/*   pwd.c                                              :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: codespace <codespace@student.42.fr>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/21 20:27:20 by fcouserg          #+#    #+#             */
-/*   Updated: 2024/10/29 00:26:14 by codespace        ###   ########.fr       */
+/*   Updated: 2024/10/29 00:00:37 by codespace        ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-void	builtin_env(t_env *env, int fd_out, t_shell *minishell)
+void	builtin_pwd(int fd_out, t_shell *minishell)
 {
-    char    *key;
-    char    *value;
+	char	*pwd;
 
-	if (env == NULL)
-		return ;
-	while (env)
+	// pwd = getcwd(pwd, 4096); // what value to choose ? 0?
+    pwd = getcwd(NULL, 0);
+	if (pwd == NULL)
 	{
-        key = env->key;
-        value = env->value;
-        safe_write(fd_out, key, "=", value, "\n", NULL);
-		env = env->next;
+		minishell->excode = 1;
+		exitmsg(minishell, "getcwd");
 	}
+	safe_write(fd_out, pwd, "\n", NULL);
+	free(pwd);
 	free_minishell(minishell);
 	exit(0);
-	// int	i;
-
-	// if (cmd->tab[1])
-	// {
-	// 	ft_perror(shell, cmd->tab[1], NOSUCH, NULL);
-	// 	ft_freeshell(shell);
-	// 	exit(127);
-	// }
-	// i = 0;
-	// while (shell->envp[i])
-	// 	fd_printf(1, "%s\n", shell->envp[i++]);
-	// ft_freeshell(shell);
-	// exit(0);
 }

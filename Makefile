@@ -6,7 +6,7 @@
 #    By: codespace <codespace@student.42.fr>        +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2024/01/08 14:30:03 by gbeaudoi          #+#    #+#              #
-#    Updated: 2024/10/28 15:47:18 by codespace        ###   ########.fr        #
+#    Updated: 2024/10/28 21:07:27 by codespace        ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -58,7 +58,7 @@ PARSING_FILES	= 	expendeur.c parseur.c parsing_utils.c quote_handling.c node_ini
 					free_parsing.c free_utils.c expendeur_helper.c
 
 BUILTIN_DIR 	= 	builtin/
-BUILTIN_FILES	= 	builtin.c cd.c echo.c env.c
+BUILTIN_FILES	= 	builtin.c cd.c echo.c env.c pwd.c export.c
 					
 OTHER_DIR 		= 	other/
 OTHER_FILES		= 	main.c init.c init_no_env.c init_env_nodes.c executing.c signals.c free_memory.c utils.c exec_system.c exec_redirections.c \
