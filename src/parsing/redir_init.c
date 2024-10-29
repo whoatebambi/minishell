@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   redir_init.c                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: codespace <codespace@student.42.fr>        +#+  +:+       +#+        */
+/*   By: fcouserg <fcouserg@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/05 16:11:15 by gbeaudoi          #+#    #+#             */
-/*   Updated: 2024/10/23 15:58:43 by codespace        ###   ########.fr       */
+/*   Updated: 2024/10/29 16:39:02 by fcouserg         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -97,9 +97,9 @@ void	ft_tokenize_list(t_node *nodes, t_shell *minishell)
 	copy = nodes;
 	while (copy)
 	{
-		if (!ft_strcmp((copy)->string, ">") || !ft_strcmp((copy)->string, ">>")
-			|| !ft_strcmp((copy)->string, "<") || !ft_strcmp((copy)->string,
-				"<<"))
+		if ((!ft_strcmp((copy)->string, ">") || !ft_strcmp((copy)->string, ">>")
+            || !ft_strcmp((copy)->string, "<") || !ft_strcmp((copy)->string,
+                "<<")) && (copy)->quote != 1)
 			(copy)->token = 1;
 		else
 			(copy)->token = 0;

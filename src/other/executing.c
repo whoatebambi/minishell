@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   executing.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: codespace <codespace@student.42.fr>        +#+  +:+       +#+        */
+/*   By: fcouserg <fcouserg@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/21 20:27:20 by fcouserg          #+#    #+#             */
-/*   Updated: 2024/10/29 14:28:25 by codespace        ###   ########.fr       */
+/*   Updated: 2024/10/29 18:10:06 by fcouserg         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -79,8 +79,7 @@ void	ft_exec(t_shell *minishell, t_cmd_table *cmd, int i, t_fds *fd)
 			exitmsg(minishell, "fork");
 		if (minishell->child_pids[i] == 0)
 		{
-			// printf("cmd->builtin: %d\n", cmd->builtin);
-			if (cmd->builtin != NOT) // if (is_builtin(cmd->tab[0]) == 2)
+			if (cmd->builtin != NOT)
 				child_builtin(minishell, cmd, fd, i);
 			else
 				children(minishell, cmd, fd);
@@ -147,7 +146,6 @@ int	withpath(t_shell *shell, int *i)
 {
 	struct stat	info;
 	
-	//printf("test test %s\n", shell->cmd_table[*i]->tab[0]);
 	if (ft_strchr(shell->cmd_table[*i]->tab[0], '/') && access(shell->cmd_table[*i]->tab[0], F_OK | X_OK) != 0)
 	{
 		shell->excode = 127;
@@ -186,10 +184,8 @@ void	handle_withpath(t_shell *shell, int flag)
 		j = -1;
 		if (shell->cmd_table[i]->tab[0])
 		{
-			// printf("1 c->tab[0]: %s\n", shell->cmd_table[i]->tab[0]);
 			if (withpath(shell, &(i)))
 				continue;
-			// printf("2 c->tab[0]: %s\n", shell->cmd_table[i]->tab[0]);
 			flag = 0;
 			while (shell->tabpath && shell->tabpath[++j])
 			{
@@ -203,12 +199,8 @@ void	handle_withpath(t_shell *shell, int flag)
 					set_cmd_path(shell, shell->cmd_table[i], tmp2, &flag);
 				(free(tmp2), tmp2 = NULL);
 			}
-			// printf("3 c->tab[0]: %s\n", shell->cmd_table[i]->tab[0]);
 			if (!flag && shell->cmd_table[i]->builtin == NOT)
-			{
 				set_path_anyway(shell, shell->cmd_table[i]);
-				// printf("4 c->tab[0]: %s\n", shell->cmd_table[i]->tab[0]);
-			}
 		}
 		i++;
 	}
@@ -265,6 +257,24 @@ void	start_exec(t_shell *minishell)
 	t_fds	fd;
 
 	i = 0;
+	// if (minishell->cmd_table)
+	// {
+	// 	printf("minishell->cmd_table EXISTS\n");
+	// 	if (minishell->cmd_table[0])
+	// 	{
+	// 		printf("minishell->cmd_table[0] EXISTS\n");
+	// 		if (minishell->cmd_table[0]->tab)
+	// 		{
+	// 			printf("minishell->cmd_table[0]->tab EXISTS\n");
+	// 			if (minishell->cmd_table[0]->tab[0])
+	// 			{
+	// 				printf("minishell->cmd_table[0]->tab[0] EXISTS\n");
+	// 				printf("tab[0] = %s\n", minishell->cmd_table[0]->tab[0]);
+	// 			}
+	// 		}
+	// 	}
+	// }
+		
 	prep_exec(minishell, &fd);
 	while (i < minishell->count_pipes)
 	{
@@ -279,7 +289,7 @@ void	start_exec(t_shell *minishell)
 			close_fds(&fd);
 		if (minishell->cmd_table[i]->tab[0])
 			ft_exec(minishell, minishell->cmd_table[i], i, &fd);
-		if (i + 1 == minishell->count_pipes) // if (!cmd->next) // if i == count_pipes
+		if (i + 1 == minishell->count_pipes)
 			close_fds_parent(&fd);
 		i++;
 	}

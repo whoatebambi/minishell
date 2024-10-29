@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   echo.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: codespace <codespace@student.42.fr>        +#+  +:+       +#+        */
+/*   By: fcouserg <fcouserg@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/21 20:27:20 by fcouserg          #+#    #+#             */
-/*   Updated: 2024/10/29 13:44:01 by codespace        ###   ########.fr       */
+/*   Updated: 2024/10/29 17:12:50 by fcouserg         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,7 +17,6 @@ int	check_newline(char **tab, int *flag)
 	int	n;
 	int	i;
 
-	// printf("echo()\n");
 	n = 1;
 	while (tab[n] && tab[n][0] == '-' && tab[n][1] == 'n')
 	{
@@ -50,14 +49,14 @@ void builtin_echo(char **tab, t_shell *minishell, int i)
 		while (tab[j])
 		{
 			if (!tab[j + 1])
-				printf("%s", tab[j]); // safe_write(fd_out, tab[j], NULL);	
+				printf("%s", tab[j]);
 			else
-				printf("%s ", tab[j]); // safe_write(fd_out, tab[j], " ", NULL);
+				printf("%s ", tab[j]);
 			j++;
 		}
 	}
 	if (!flag)
-		printf("\n"); // safe_write(fd_out, "\n", NULL);
+		printf("\n");
     if (i + 1 < minishell->count_pipes)// && minishell->cmd_table[i + 1])
 		ext = minishell->excode;
 	else

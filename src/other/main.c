@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   main.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: codespace <codespace@student.42.fr>        +#+  +:+       +#+        */
+/*   By: fcouserg <fcouserg@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/21 20:27:20 by fcouserg          #+#    #+#             */
-/*   Updated: 2024/10/28 13:09:52 by codespace        ###   ########.fr       */
+/*   Updated: 2024/10/29 18:10:59 by fcouserg         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,25 +24,26 @@ char	*get_line(t_mode mode, int fd)
 		if (line && ft_strlen(line) > 0)
 			add_history(line);
 	}
-	// if (mode == NON_INTERACTIVE)
-	// {
-	// 	line = get_next_line_bonus(fd);
-	// 	printf("line = %s\n", line);
-	// 	// TD close()
-	// }
 	else
-	{
 		line = get_next_line_bonus(fd);
-		// printf("line = %s\n", line);
-	}
-	// if (mode == NON_INTERACTIVE && line[0] == '\n')
-	// {
-	// 	free(line);
-	// 	return (NULL);
-	// }
 	return (line);
 }
 
+#include <ctype.h>
+
+int ft_check_emptyline(char *line)
+{
+    if (line == NULL)
+        return 1;
+
+    while (*line)
+    {
+        if (*line != ' ')
+            return 0;
+        line++;
+    }
+    return 1;
+}
 
 int	main(int argc, char **argv, char **envp)
 {
@@ -56,14 +57,16 @@ int	main(int argc, char **argv, char **envp)
 	while (1)
 	{
 		minishell.line = get_line(minishell.mode, fd);
-		if (minishell.line == NULL)// && minishell.mode == NON_INTERACTIVE)
+		if (minishell.line == NULL)
 			break ;
-		ft_parseur(&minishell);
-		start_exec(&minishell);
+		if (ft_check_emptyline(minishell.clean_line) == 0)
+		{
+			ft_parseur(&minishell);
+			start_exec(&minishell);
+		}
 		reset_loop(&minishell);
 	}
 	close(fd);
 	free_minishell(&minishell);
-	// printf("excode final = %d\n", minishell.tmpexcode);
 	exit(minishell.tmpexcode);
 }

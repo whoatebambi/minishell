@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   minishell.h                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: codespace <codespace@student.42.fr>        +#+  +:+       +#+        */
+/*   By: fcouserg <fcouserg@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/21 18:24:48 by gbeaudoi          #+#    #+#             */
-/*   Updated: 2024/10/29 00:11:24 by codespace        ###   ########.fr       */
+/*   Updated: 2024/10/29 17:13:15 by fcouserg         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -188,7 +188,7 @@ typedef struct s_shell
 	t_env			*env;
 	t_lex			*lex;
 	t_cmd_table		**cmd_table;
-	pid_t			*child_pids; //
+	pid_t			*child_pids;
 	int				excode;	
 	int				tmpexcode;
 	char			*inp;
