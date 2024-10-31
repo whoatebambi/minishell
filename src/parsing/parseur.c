@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   parseur.c                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: codespace <codespace@student.42.fr>        +#+  +:+       +#+        */
+/*   By: fcouserg <fcouserg@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/20 15:42:08 by gbeaudoi          #+#    #+#             */
-/*   Updated: 2024/10/27 23:41:00 by codespace        ###   ########.fr       */
+/*   Updated: 2024/10/31 17:51:30 by fcouserg         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -38,7 +38,7 @@ void	ft_init_command_group(t_cmd_table **command_table, char **pipes, t_shell *m
 		ft_init_node_list(&((command_table[i])->nodes), command_table[i], minishell);
 		ft_tokenize_list(command_table[i]->nodes, minishell);
 		ft_check_syntax(command_table[i]->nodes);
-		ft_redistribute_node(&command_table[i], command_table[i]->nodes);
+		ft_redistribute_node(&command_table[i], command_table[i]->nodes, minishell);
 		command_table[i]->is_infile_tmp = 0;
 		command_table[i]->infile_tmp = NULL;
 		i++;
@@ -71,7 +71,7 @@ static void	ft_split_pipe(t_shell *minishell)
 
 	if (!ft_check_pipes(minishell))
 	{
-		perror("PIPE ERROR"); // to confirme what to do
+		perror("Pipe");
 		exitmsg(minishell, MERROR);
 	}
 	pipes = ft_split(minishell->clean_line, '|');

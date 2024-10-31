@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   init_env_nodes.c                                   :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: codespace <codespace@student.42.fr>        +#+  +:+       +#+        */
+/*   By: fcouserg <fcouserg@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/21 20:27:20 by fcouserg          #+#    #+#             */
-/*   Updated: 2024/10/16 12:00:37 by codespace        ###   ########.fr       */
+/*   Updated: 2024/10/31 17:50:55 by fcouserg         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,6 +26,7 @@ void	set_shlvl_inception(t_shell *minishell, t_env *node) // check if used
 		exitmsg(minishell, MERROR);
 	node->value = ft_strdup(byte);
 	free(byte);
+	byte = NULL;
 	if (!node->value)
 		exitmsg(minishell, MERROR);
 }
@@ -57,7 +58,13 @@ void	init_env_nodes(t_shell *minishell, t_env *node, char **envp, int i)
 		exitmsg(minishell, MERROR);
 	node->value = ft_strdup(str);
 	if (!node->value)
+	{
+		free(node->key); //
+		node->key = NULL;//
+		free(node);//
+		free(str);	//
 		exitmsg(minishell, MERROR);
+	}
 	if (safe_strcmp(node->key, "SHLVL") == 0)
 		set_shlvl_inception(minishell, node);
 	node->isunset = false;

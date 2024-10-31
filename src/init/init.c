@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   init.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: codespace <codespace@student.42.fr>        +#+  +:+       +#+        */
+/*   By: fcouserg <fcouserg@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/21 20:27:20 by fcouserg          #+#    #+#             */
-/*   Updated: 2024/10/24 14:23:16 by codespace        ###   ########.fr       */
+/*   Updated: 2024/10/31 17:41:25 by fcouserg         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,17 +15,16 @@
 int	init_argc(int argc, char **argv, int fd)
 {
 	fd = 0;
-	if (argc > 2) // usage is either "./minishell" or "./minishell <file>"
+	if (argc > 2)
 	{
-		errno = E2BIG; // the int errno is set to the macro "E2BIG"
+		errno = E2BIG;
 		perror("Error");
-		exit(E2BIG); // "E2BIG" macro from <errno.h> expands to "Argument list too long."
+		exit(E2BIG);
 	}
-	if (argc == 2) // opens the file (we are in non-interactive mode)
+	if (argc == 2)
 		fd = open(argv[1], O_RDONLY);
 	if (fd == -1)
 	{
-		// no need to set errno to a macro here, the system call open() automatically did it
 		perror("Error");
 		exit(EXIT_FAILURE);
 	}
@@ -114,23 +113,30 @@ char	*getpath(t_shell *minishell, char *key)
 
 void	fill_path(t_shell *minishell)
 {
+	char *str;
+	
 	minishell->path = ft_calloc(1, sizeof(t_path));
 	if (!minishell->path)
 		exitmsg(minishell, MERROR);
-	char *str;
 	str = getpath(minishell, "PWD");
 	if (str)
 	{
 		minishell->path->pwd = ft_strdup(str);
 		if (!minishell->path->pwd)
+		{
+			free(str);
 			exitmsg(minishell, MERROR);
+		}
 	}
 	str = getpath(minishell, "OLDPWD");
 	if (str)
 	{
 		minishell->path->oldpwd = ft_strdup(str);
 		if (!minishell->path->oldpwd)
+		{
+			free(str);
 			exitmsg(minishell, MERROR);
+		}
 	}
 }
 
@@ -162,17 +168,4 @@ void	init_minishell(t_shell	*minishell, char **envp, int argc)
 	minishell->inp = NULL;
 	minishell->newinp = NULL;
 	minishell->finalinp = NULL;
-}
-
-int	init_fd(int argc, char **argv, int fd)
-{
-	fd = 0;
-	if (argc == 2)
-		fd = open(argv[1], O_RDONLY);
-	if (fd == -1) // exitmsg(minishell, MERROR);
-	{
-		perror("Error");
-		exit(EXIT_FAILURE);
-	}
-    return (fd);
 }

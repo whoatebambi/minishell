@@ -6,7 +6,7 @@
 /*   By: fcouserg <fcouserg@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/21 20:27:20 by fcouserg          #+#    #+#             */
-/*   Updated: 2024/10/29 17:12:50 by fcouserg         ###   ########.fr       */
+/*   Updated: 2024/10/31 16:28:09 by fcouserg         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -34,16 +34,24 @@ int	check_newline(char **tab, int *flag)
 	return (n);
 }
 
-void builtin_echo(char **tab, t_shell *minishell, int i)
+void	echo_excode(t_shell *minishell, int i, int *ext)
 {
-    int j;
+	if (i + 1 < minishell->count_pipes)
+		*ext = minishell->excode;
+	else
+		*ext = minishell->tmpexcode;
+}
+
+void	builtin_echo(char **tab, t_shell *minishell, int i)
+{
+	int	j;
 	int	flag;
 	int	ext;
 
 	flag = 0;
 	if (!tab || !tab[0])
 		return ;
-    j = check_newline(tab, &flag);
+	j = check_newline(tab, &flag);
 	if (tab[1])
 	{
 		while (tab[j])
@@ -57,10 +65,12 @@ void builtin_echo(char **tab, t_shell *minishell, int i)
 	}
 	if (!flag)
 		printf("\n");
-    if (i + 1 < minishell->count_pipes)// && minishell->cmd_table[i + 1])
-		ext = minishell->excode;
-	else
-		ext = minishell->tmpexcode;
+	echo_excode(minishell, i, &ext);
 	free_minishell(minishell);
 	exit(ext);
 }
+
+// if (i + 1 < minishell->count_pipes)
+// 	minishell->excode = minishell->tmpexcode;
+// else
+// 	minishell->tmpexcode = minishell->excode;

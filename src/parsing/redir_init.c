@@ -6,7 +6,7 @@
 /*   By: fcouserg <fcouserg@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/05 16:11:15 by gbeaudoi          #+#    #+#             */
-/*   Updated: 2024/10/29 16:39:02 by fcouserg         ###   ########.fr       */
+/*   Updated: 2024/10/31 17:55:17 by fcouserg         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,7 +28,7 @@ int	ft_count_arg(t_node *nodes)
 	return (count);
 }
 
-void	ft_fill_arg(t_node *nodes, t_cmd_table **command_table)
+void	ft_fill_arg(t_node *nodes, t_cmd_table **command_table, t_shell *minishell)
 {
 	t_node	*copy;
 	int		i;
@@ -41,9 +41,7 @@ void	ft_fill_arg(t_node *nodes, t_cmd_table **command_table)
 		{
 			(*command_table)->tab[i] = ft_strdup(copy->string);
 			if ((*command_table)->tab[i] == NULL)
-			{
-				// reset;
-			}
+				exitmsg(minishell, MERROR);
 			i++;
 		}
 		copy = copy->next;
@@ -52,22 +50,20 @@ void	ft_fill_arg(t_node *nodes, t_cmd_table **command_table)
 	i = 0;
 }
 
-void	ft_redistribute_node(t_cmd_table **command_table, t_node *nodes)
+void	ft_redistribute_node(t_cmd_table **command_table, t_node *nodes, t_shell *minishell)
 {
 	int	count_arg;
 
 	count_arg = ft_count_arg(nodes);
 	(*command_table)->tab = malloc(sizeof(char *) * (count_arg + 1));
 	if ((*command_table)->tab == NULL)
-	{
-		// reset;
-	}
-	ft_fill_arg(nodes, command_table);
+		exitmsg(minishell, MERROR);
+	ft_fill_arg(nodes, command_table, minishell);
 	ft_init_redir_list(&((*command_table)->redirs_in), nodes, "<", "<<");
 	ft_init_redir_list(&((*command_table)->redirs_out), nodes, ">", ">>");
 }
 
-void	ft_check_syntax(t_node *nodes)
+void	ft_check_syntax(t_node *nodes, t_shell *minishell)
 {
 	t_node	*copy;
 
@@ -76,13 +72,13 @@ void	ft_check_syntax(t_node *nodes)
 	{
 		if (copy->token == 1 && copy->next && copy->next->token == 1)
 		{
-			perror("Syntax ERROR");
-			exit(3);
+			minishell->excode = 3;
+			exitmsg(minishell, "Syntax error");
 		}
 		if (copy->token == 1 && !copy->next)
 		{
-			perror("Syntax ERROR");
-			exit(3);
+			minishell->excode = 3;
+			exitmsg(minishell, "Syntax error");
 		}
 		copy = copy->next;
 	}

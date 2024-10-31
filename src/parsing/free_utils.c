@@ -6,7 +6,7 @@
 /*   By: fcouserg <fcouserg@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/10 17:25:33 by gbeaudoi          #+#    #+#             */
-/*   Updated: 2024/09/24 17:33:55 by fcouserg         ###   ########.fr       */
+/*   Updated: 2024/10/31 17:44:37 by fcouserg         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -59,7 +59,7 @@ void	ft_free_double_char(char **tab)
 {
 	int	i;
 
-	if (!tab)// || !tab[0])
+	if (!tab)
 		return ;
 	i = 0;
 	while (tab[i])
@@ -70,10 +70,3 @@ void	ft_free_double_char(char **tab)
 	free(tab);
 	tab = NULL;
 }
-
-// void	ft_free_int(int i)
-// {
-// 	if (!i)
-// 		return ;
-// 	free((void *)i);
-// }

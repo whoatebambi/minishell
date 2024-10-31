@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   free_memory.c                                      :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: codespace <codespace@student.42.fr>        +#+  +:+       +#+        */
+/*   By: fcouserg <fcouserg@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/21 20:27:20 by fcouserg          #+#    #+#             */
-/*   Updated: 2024/10/28 15:55:37 by codespace        ###   ########.fr       */
+/*   Updated: 2024/10/31 17:48:39 by fcouserg         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,7 +20,7 @@ void	free_cmd_table(t_shell *minishell)
 		return ;
 	while (i < minishell->count_pipes)
 	{
-		if (minishell->cmd_table[i] != NULL)
+		if (minishell->cmd_table[i])
 		{
 			safe_free(minishell->cmd_table[i]->group_command);
             safe_free(minishell->cmd_table[i]->path);
@@ -40,13 +40,6 @@ void	free_cmd_table(t_shell *minishell)
 
 void	reset_loop(t_shell *minishell)
 {
-	if (minishell->cmd_table)
-		free_cmd_table(minishell);
-    if (minishell->child_pids)
-    {
-        free(minishell->child_pids);
-        minishell->child_pids = NULL;
-    }
     if (minishell->line)
     {
         free(minishell->line);
@@ -56,6 +49,13 @@ void	reset_loop(t_shell *minishell)
     {
         free(minishell->clean_line);
         minishell->clean_line = NULL;
+    }
+	if (minishell->cmd_table)
+		free_cmd_table(minishell);
+    if (minishell->child_pids)
+    {
+        free(minishell->child_pids);
+        minishell->child_pids = NULL;
     }
     if (minishell->tabpath)
     {

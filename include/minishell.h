@@ -6,7 +6,7 @@
 /*   By: fcouserg <fcouserg@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/21 18:24:48 by gbeaudoi          #+#    #+#             */
-/*   Updated: 2024/10/29 17:13:15 by fcouserg         ###   ########.fr       */
+/*   Updated: 2024/10/31 17:54:51 by fcouserg         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,6 +24,7 @@
 # include <readline/readline.h>
 # include <signal.h>
 # include <stdarg.h>
+# include <stdbool.h>
 # include <stdio.h>
 # include <stdlib.h>
 # include <string.h>
@@ -31,7 +32,6 @@
 # include <sys/types.h>
 # include <sys/wait.h>
 # include <unistd.h>
-# include <stdbool.h>
 
 # define ERRARG "No args allowed"
 # define MERROR "Malloc error"
@@ -55,7 +55,7 @@ typedef enum e_status
 	INIT,
 	RESET,
 	CHILD_PROCESS,
-}			t_status;
+}					t_status;
 
 extern int			g_sig;
 
@@ -137,7 +137,7 @@ typedef struct s_fds
 	int				pipes[2];
 	int				redir[2];
 	int				input;
-	int				output;	
+	int				output;
 	int				in;
 	int				savedpipe;
 	bool			prevpipe;
@@ -189,7 +189,7 @@ typedef struct s_shell
 	t_lex			*lex;
 	t_cmd_table		**cmd_table;
 	pid_t			*child_pids;
-	int				excode;	
+	int				excode;
 	int				tmpexcode;
 	char			*inp;
 	char			*newinp;
@@ -211,13 +211,16 @@ char				*find_relative_path(char *arg, char **envp);
 
 // executing.c
 void				start_exec(t_shell *minishell);
-int	execute_builtin(t_cmd_table *cmd_table, t_shell *minishell, t_fds *fd, int i);
-void	ft_exec(t_shell *minishell, t_cmd_table *cmd, int i, t_fds *fd);
+int					execute_builtin(t_cmd_table *cmd_table, t_shell *minishell,
+						t_fds *fd, int i);
+void				ft_exec(t_shell *minishell, t_cmd_table *cmd, int i,
+						t_fds *fd);
 void				prep_exec(t_shell *minishell, t_fds *fd);
 char				**get_execpath(t_shell *shell);
-void	check_builtins(t_cmd_table *cmd);
+void				check_builtins(t_cmd_table *cmd);
 
-void	ft_perror(t_shell *shell, char *word, char *msg, char *third);
+void				ft_perror(t_shell *shell, char *word, char *msg,
+						char *third);
 
 // exec_redirections.c
 void				handle_redirs(t_shell *minishell, t_fds *fd, int i);
@@ -225,23 +228,37 @@ void				set_redirs(t_fds *fd);
 void				ft_init_fds(t_fds *fd);
 void				close_fds(t_fds *fd);
 void				close_fds_parent(t_fds *fd);
-void	ft_pipes(t_shell *minishell, t_fds *fd, int i);
+void				ft_pipes(t_shell *minishell, t_fds *fd, int i);
 
-// builtin.c
-void				builtin_pwd(int fd_out, t_shell *minishell);
+/////////////////// BUILTIN
+// cd.c
 void				builtin_cd(char **tab, t_env *env, t_shell *minishell);
+void				chdir_getenv(char **tab, t_shell *minishell);
+int					cd_multiple_args(char **tab, t_shell *minishell);
 void				replace_env_var(char *pwd, char *key, t_env *env);
-void 				builtin_echo(char **tab, t_shell *minishell, int i);
+// echo.c
+void				builtin_echo(char **tab, t_shell *minishell, int i);
+void				echo_excode(t_shell *minishell, int i, int *ext);
 int					check_newline(char **tab, int *flag);
-void				builtin_env(t_env *env, int fd_out, t_shell *minishell);
-void				builtin_export(t_env *env, char **tab, int fd_out, t_shell *minishell);
-void				print_export(t_env *env, int fd_out);
-int					add_env_list(char *arg, t_env *env, int fd_out, t_shell *minishell);
-int					is_builtin(char *cmd_arg);
-void	builtin_unset(char **tab, t_shell *minishell, int i);
-void	update_envp(t_shell *shell);
-void	ft_exit(char **tab, t_shell *minishell, t_fds *fd);
-t_env	*get_env_lst(char *name, t_env *env);
+// env.c
+void				builtin_env(t_env *env, t_shell *minishell);
+// exit.c
+void				builtin_exit(char **tab, t_shell *minishell, t_fds *fd);
+int					exit_args(char **tab, int *flag);
+// export.c
+void				builtin_export(t_env *env, char **tab, t_shell *minishell);
+int					add_env_list(char *arg, t_env *env, t_shell *minishell);
+int					export_check_syntax(int *i, char *arg, t_shell *minishell);
+t_env				*get_env_lst(char *name, t_env *env);
+void				print_export(t_env *env);
+// export_utils.c
+void				set_env_value(char *name, char *value, t_env *env);
+void				create_env_list(char *name, char *value,
+						t_shell *minishell);
+// pwd.c
+void				builtin_pwd(int fd_out, t_shell *minishell);
+// unset.c
+void				builtin_unset(char **tab, t_shell *minishell);
 
 // signals.c
 void				ft_handle_sig(int s);
@@ -252,35 +269,34 @@ int					ft_catchsignals(t_shell *minishell);
 
 // initializing.c
 int					init_argc(int argc, char **argv, int fd);
-void				init_minishell(t_shell	*minishell, char **envp, int argc);
-int					init_fd(int argc, char **argv, int fd);
-// t_list				*init_env_lst(char **envp); // a supprimer
-void    fill_env(t_shell *minishell, char **envp);
+void				init_minishell(t_shell *minishell, char **envp, int argc);
+void				fill_env(t_shell *minishell, char **envp);
 t_env				*add_env_var(char *envp);
 char				**add_oldpwd(char **envp);
-void	fill_envp(t_shell *minishell);
-void	fill_path(t_shell *minishell);
-int		env_size(t_shell *shell);
-char	*getpath(t_shell *minishell, char *key);
+void				fill_envp(t_shell *minishell);
+void				fill_path(t_shell *minishell);
+int					env_size(t_shell *shell);
+char				*getpath(t_shell *minishell, char *key);
 
 // init_no_env.c
-void	set_pwd(t_shell *shell);
-void	set_shlvl(t_shell *shell);
-void	set_lastcmd(t_shell *shell);
-void	set_oldpwd(t_shell *shell);
-void	ft_no_env(t_shell *minishell);
+void				set_pwd(t_shell *shell);
+void				set_shlvl(t_shell *shell);
+void				set_lastcmd(t_shell *shell);
+void				set_oldpwd(t_shell *shell);
+void				ft_no_env(t_shell *minishell);
 
 // init_env_nodes.c
-void	init_env_nodes(t_shell *minishell, t_env *new_node, char **envp, int i);
-void	set_shlvl_inception(t_shell *minishell, t_env *node);
+void				init_env_nodes(t_shell *minishell, t_env *new_node,
+						char **envp, int i);
+void				set_shlvl_inception(t_shell *minishell, t_env *node);
 
 // utils.c
 t_shell				*get_minishell(t_shell *minishell);
-void					safe_write(int fd, const char *str, ...);
+void				safe_write(int fd, const char *str, ...);
 int					safe_strcmp(char *s1, char *s2);
 void				swap_env(t_list *a, t_list *b);
 void				ft_exit_msg(t_shell *minishell, char *errmsg);
-char	*safe_join_envp(char *key, char *symb, char *value);
+char				*safe_join_envp(char *key, char *symb, char *value);
 
 // free_memory.c
 void				free_env(t_env *env);
@@ -309,20 +325,20 @@ void				ft_init_node_list(t_node **nodes,
 						t_cmd_table *command_table, t_shell *minishell);
 int					ft_rev_neg_words(char *line);
 void				ft_tokenize_list(t_node *nodes, t_shell *minishell);
-void				ft_check_syntax(t_node *nodes);
+void				ft_check_syntax(t_node *nodes, t_shell *minishell);
 void				ft_redistribute_node(t_cmd_table **command_table,
-						t_node *nodes);
+						t_node *nodes, t_shell *minishell);
 void				ft_init_redir_list(t_redir **redir, t_node *nodes,
 						char *token1, char *token2);
-void	tokenizer(t_shell *minishell);
-void	link_lex_nodes(t_shell *shell, t_lex *new, int *i, int *j);
+void				tokenizer(t_shell *minishell);
+void				link_lex_nodes(t_shell *shell, t_lex *new, int *i, int *j);
 
 // HEREDOC
 int					ft_here_doc_exp(t_shell *minishell, t_redir *copy_in,
 						t_fds *fd);
 int					ft_here_doc(t_shell *minishell, t_redir *copy_in,
 						t_fds *fd);
-char				*ft_find_tmp_heredoc(t_shell *minishell, char* heredoc);
+char				*ft_find_tmp_heredoc(t_shell *minishell, char *heredoc);
 void				ft_ctrlc(t_shell *minishell, t_fds *fd, char *heredoc);
 
 // NODE INIT
