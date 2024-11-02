@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   exit.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: fcouserg <fcouserg@student.42.fr>          +#+  +:+       +#+        */
+/*   By: codespace <codespace@student.42.fr>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/21 20:27:20 by fcouserg          #+#    #+#             */
-/*   Updated: 2024/10/31 16:10:06 by fcouserg         ###   ########.fr       */
+/*   Updated: 2024/11/02 15:57:49 by codespace        ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -53,12 +53,14 @@ void	builtin_exit(char **tab, t_shell *minishell, t_fds *fd)
 		minishell->tmpexcode = 1;
 		return ;
 	}
-	// if (cmd->next || cmd->prev)
-	// 	return ;
+	if (minishell->count_pipes > 1)
+	{
+		minishell->excode = 2;
+		return;
+	}
 	ext = minishell->tmpexcode;
 	free_minishell(minishell);
 	close_fds(fd);
 	safe_write(1, "exit\n", NULL);
-	// printf("builtin_exit excode = %d\n", minishell->excode);
 	exit(ext);
 }

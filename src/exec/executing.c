@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   executing.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: fcouserg <fcouserg@student.42.fr>          +#+  +:+       +#+        */
+/*   By: codespace <codespace@student.42.fr>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/21 20:27:20 by fcouserg          #+#    #+#             */
-/*   Updated: 2024/10/31 16:06:50 by fcouserg         ###   ########.fr       */
+/*   Updated: 2024/11/02 15:56:03 by codespace        ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -59,7 +59,11 @@ void	children(t_shell *shell, t_cmd_table *cmd, t_fds *fd)
 	}
 	close_fds(fd);
 	if (execve(cmd->path, cmd->tab, shell->envp) == -1)
+	{
+		printf("ERROOOOOOOOOR: %d\n", errno);
 		(ft_perror(shell, cmd->path, CMDFAIL, NULL), exitmsg(shell, NULL));
+	}
+		
 }
 
 void	ft_exec(t_shell *minishell, t_cmd_table *cmd, int i, t_fds *fd)
