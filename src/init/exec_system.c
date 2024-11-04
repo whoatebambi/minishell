@@ -38,10 +38,10 @@
 // 	int		i;
 
 // 	i = 0;
-// 	path_arg = ft_strjoin_no_free("/", arg);
+// 	path_arg = ft_jnf("/", arg);
 // 	while (envp[i])
 // 	{
-// 		execve_dup = ft_strjoin_no_free(envp[i], path_arg);
+// 		execve_dup = ft_jnf(envp[i], path_arg);
 // 		if (access(execve_dup, X_OK) == 0 && access(execve_dup, F_OK) == 0) 
 // 		{
 // 			free(path_arg);

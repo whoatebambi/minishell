@@ -6,7 +6,7 @@
 /*   By: gbeaudoi <gbeaudoi@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/31 15:46:35 by gbeaudoi          #+#    #+#             */
-/*   Updated: 2024/11/04 15:03:09 by gbeaudoi         ###   ########.fr       */
+/*   Updated: 2024/11/04 20:15:37 by gbeaudoi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -78,18 +78,29 @@ char	*ft_strndup(char *str, int n)
 	return (dest);
 }
 
-char	*ft_strjoin_no_free(char *s1, char *s2)
+char	*ft_jnf(char *s1, char *s2)
 {
-	char	*join;
-	size_t	len_join;
+	char	*str;
+	size_t	i;
+	size_t	j;
 
-	if (!s1)
+	if (!s1 || !s2)
 		return (NULL);
-	len_join = ft_strlen(s1) + ft_strlen(s2) + 1;
-	join = malloc(sizeof(char) * len_join);
-	if (!join)
+	str = malloc(sizeof(char) * (ft_strlen(s1) + ft_strlen(s2) + 1));
+	if (!str)
 		return (NULL);
-	ft_strlcpy(join, s1, len_join);
-	ft_strlcat(join, s2, len_join);
-	return (join);
+	i = 0;
+	while (s1[i])
+	{
+		str[i] = s1[i];
+		i++;
+	}
+	j = 0;
+	while (s2[j])
+	{
+		str[i + j] = s2[j];
+		j++;
+	}
+	str[i + j] = '\0';
+	return (str);
 }

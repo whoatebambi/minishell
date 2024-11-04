@@ -6,7 +6,7 @@
 /*   By: gbeaudoi <gbeaudoi@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/21 20:27:20 by fcouserg          #+#    #+#             */
-/*   Updated: 2024/11/04 12:30:39 by gbeaudoi         ###   ########.fr       */
+/*   Updated: 2024/11/04 20:01:42 by gbeaudoi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -189,8 +189,8 @@ void	handle_withpath(t_shell *shell, int flag)
 			flag = 0;
 			while (shell->tabpath && shell->tabpath[++j])
 			{
-				tmp1 = ft_strjoin_no_free("/", shell->cmd_table[i]->tab[0]);
-				tmp2 = ft_strjoin_no_free(shell->tabpath[j], tmp1);
+				tmp1 = ft_jnf("/", shell->cmd_table[i]->tab[0]);
+				tmp2 = ft_jnf(shell->tabpath[j], tmp1);
 				free(tmp1);
 				tmp1 = NULL;
 				if (!tmp2)

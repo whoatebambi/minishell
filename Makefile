@@ -3,10 +3,10 @@
 #                                                         :::      ::::::::    #
 #    Makefile                                           :+:      :+:    :+:    #
 #                                                     +:+ +:+         +:+      #
-#    By: fcouserg <fcouserg@student.42.fr>          +#+  +:+       +#+         #
+#    By: gbeaudoi <gbeaudoi@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2024/01/08 14:30:03 by gbeaudoi          #+#    #+#              #
-#    Updated: 2024/10/31 16:33:02 by fcouserg         ###   ########.fr        #
+#    Updated: 2024/11/04 16:49:34 by gbeaudoi         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -62,7 +62,7 @@ BUILTIN_FILES	= 	cd.c echo.c env.c pwd.c export.c export_utils.c exit.c unset.c
 					
 INIT_DIR 		= 	init/
 INIT_FILES		= 	main.c init.c init_no_env.c init_env_nodes.c signals.c free_memory.c utils.c exec_system.c exec_redirections.c \
-				 	heredoc_exp.c heredoc.c
+				 	heredoc_exp.c heredoc.c heredoc_exp_helpeur.c
 
 EXEC_DIR 		= 	exec/
 EXEC_FILES		= 	executing.c

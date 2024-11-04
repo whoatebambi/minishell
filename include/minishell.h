@@ -6,7 +6,7 @@
 /*   By: gbeaudoi <gbeaudoi@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/21 18:24:48 by gbeaudoi          #+#    #+#             */
-/*   Updated: 2024/11/04 15:17:15 by gbeaudoi         ###   ########.fr       */
+/*   Updated: 2024/11/04 20:01:42 by gbeaudoi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -297,6 +297,9 @@ int					safe_strcmp(char *s1, char *s2);
 void				swap_env(t_list *a, t_list *b);
 void				ft_exit_msg(t_shell *minishell, char *errmsg);
 char				*safe_join_envp(char *key, char *symb, char *value);
+char				*ft_joinfree(char *s1, char *s2);
+char				*ft_strdupfree(char *s);
+char	*ft_quote_neg(char *str);
 
 // free_memory.c
 void				free_env(t_env *env);
@@ -313,16 +316,16 @@ void				ft_free_node(t_node *node_def);
 void				ft_check_strdup(char *str, int i, char **dest, int flag);
 
 // Parseur expendeur llexeur
-int				ft_parseur(t_shell *minishell);
+int					ft_parseur(t_shell *minishell);
 void				ft_dollar_option(char *copy, t_shell *minishell, int i,
 						int flag_dbl);
-void				ft_expand_dollar(t_shell *minishell, int delim,
-						int flag_sgl, int flag_dbl);
+void				ft_expand_dollar(t_shell *minishell, int flag_sgl,
+						int flag_dbl);
 void				ft_rev_neg_line(t_shell *minishell);
 char				*ft_strndup(char *str, int n);
 void				ft_neg_inside_quote(t_shell *minishell);
 int					ft_parseur_quote(t_shell *minishell);
-char				*ft_strjoin_no_free(char *s1, char *s2);
+char				*ft_jnf(char *s1, char *s2);
 int					ft_strcmp(const char *s1, const char *s2);
 void				ft_init_node_list(t_node **nodes,
 						t_cmd_table *command_table, t_shell *minishell);
@@ -345,6 +348,8 @@ int					ft_here_doc(t_shell *minishell, t_redir *copy_in,
 						t_fds *fd);
 char				*ft_find_tmp_heredoc(t_shell *minishell, char *heredoc);
 void				ft_ctrlc(t_shell *minishell, t_fds *fd, char *heredoc);
+void				ft_find_value_hd(char **to_join, char *str,
+						t_shell *minishell, int i);
 
 // NODE INIT
 t_node				*ft_new_node(char *word, int flag, t_shell *minishell);

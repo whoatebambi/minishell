@@ -6,7 +6,7 @@
 /*   By: gbeaudoi <gbeaudoi@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/20 15:42:08 by gbeaudoi          #+#    #+#             */
-/*   Updated: 2024/11/04 15:42:55 by gbeaudoi         ###   ########.fr       */
+/*   Updated: 2024/11/04 19:36:52 by gbeaudoi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -100,10 +100,10 @@ static int	ft_split_pipe(t_shell *minishell)
 
 int	ft_parseur(t_shell *minishell)
 {
-	int	i;
+	int	k;
 
 	ft_neg_inside_quote(minishell);
-	ft_expand_dollar(minishell, 0, 0, 0);
+	ft_expand_dollar(minishell, 0, 0);
 	ft_rev_neg_line(minishell);
 	ft_parseur_quote(minishell);
 	if (!ft_check_pipes(minishell))
@@ -112,6 +112,6 @@ int	ft_parseur(t_shell *minishell)
 		minishell->excode = 2;
 		return (0);
 	}
-	i = ft_split_pipe(minishell);
-	return (i);
+	k = ft_split_pipe(minishell);
+	return (k);
 }

@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   exec_redirections.c                                :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: fcouserg <fcouserg@student.42.fr>          +#+  +:+       +#+        */
+/*   By: gbeaudoi <gbeaudoi@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/21 20:27:20 by fcouserg          #+#    #+#             */
-/*   Updated: 2024/10/29 15:52:14 by fcouserg         ###   ########.fr       */
+/*   Updated: 2024/11/04 15:59:35 by gbeaudoi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -72,8 +72,7 @@ static void	exec_redirs_in(t_shell *minishell, t_redir *copy_in, t_fds *fd)
 		{
 			safe_write(2, "minishell: ", copy_in->redir_name, ": No such file or directory\n", NULL);
 			minishell->excode = 1;
-		}
-	// checker message avec les free et tout le tralala	
+		}	
 	}
 	else if (copy_in->type == DELIMITER)
 	{
@@ -122,7 +121,7 @@ void	handle_redirs(t_shell *minishell, t_fds *fd, int i)
 
 void	ft_pipes(t_shell *minishell, t_fds *fd, int i)
 {		
-	if (i > 0 && minishell->cmd_table[i - 1] != NULL) // j'ai ajoute i > 0 
+	if (i > 0 && minishell->cmd_table[i - 1] != NULL)
 		fd->prevpipe = true;
 	else
 		fd->prevpipe = false;

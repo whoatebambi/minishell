@@ -6,7 +6,7 @@
 /*   By: gbeaudoi <gbeaudoi@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/17 16:02:51 by gbeaudoi          #+#    #+#             */
-/*   Updated: 2024/11/04 15:54:29 by gbeaudoi         ###   ########.fr       */
+/*   Updated: 2024/11/04 20:10:52 by gbeaudoi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,7 +30,7 @@ void	ft_find_value(t_shell *minishell, char **to_join, int i, int j)
 			free(*to_join);
 		if (!ft_strcmp(key, list->key))
 		{
-			*to_join = ft_strjoin_no_free(list->value, minishell->clean_line + i
+			*to_join = ft_jnf(list->value, minishell->clean_line + i
 					+ j);
 			break ;
 		}
@@ -46,7 +46,7 @@ static void	ft_join_clean_line(t_shell *minishell, char *copy, char *to_join)
 	if (to_join)
 	{
 		free(minishell->clean_line);
-		minishell->clean_line = ft_strjoin(copy, to_join);
+		minishell->clean_line = ft_jnf(copy, to_join);
 		if (!minishell->clean_line)
 		{
 			free(copy);
@@ -58,8 +58,6 @@ static void	ft_join_clean_line(t_shell *minishell, char *copy, char *to_join)
 	}
 	else
 	{
-		free(to_join);
-		free(copy);
 		to_join = NULL;
 	}
 }
@@ -73,7 +71,7 @@ void	ft_dollar_option(char *copy, t_shell *minishell, int i, int flag_dbl)
 			+ 1] != '0')
 		to_join = ft_strdup(minishell->clean_line + (i + 2));
 	else if (minishell->clean_line[i + 1] == '0')
-		to_join = ft_strjoin_no_free("miniminishell_Flo_&_G",
+		to_join = ft_jnf("miniminishell_Flo_&_G",
 				minishell->clean_line + i + 2);
 	else if (ft_isalpha(minishell->clean_line[i + 1]) || minishell->clean_line[i
 			+ 1] == '_')

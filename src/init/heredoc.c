@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   heredoc.c                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: codespace <codespace@student.42.fr>        +#+  +:+       +#+        */
+/*   By: gbeaudoi <gbeaudoi@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/20 17:31:47 by gbeaudoi          #+#    #+#             */
-/*   Updated: 2024/10/06 17:29:32 by codespace        ###   ########.fr       */
+/*   Updated: 2024/11/04 20:04:16 by gbeaudoi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,20 +25,20 @@ void	ft_ctrlc(t_shell *minishell, t_fds *fd, char *heredoc)
 	}
 }
 
-char*	ft_find_tmp_heredoc(t_shell *minishell, char* heredoc)
+char	*ft_find_tmp_heredoc(t_shell *minishell, char *heredoc)
 {
 	while (access(heredoc, F_OK) == 0)
 		heredoc = ft_strjoin(heredoc, "a");
 	if (!heredoc)
 		ft_exit_msg(minishell, MERROR);
-	return(heredoc);
+	return (heredoc);
 }
 
 int	ft_here_doc(t_shell *minishell, t_redir *copy_in, t_fds *fd)
 {
 	int		tmp;
 	char	*str;
-	char *heredoc;
+	char	*heredoc;
 
 	heredoc = ft_strdup("/tmp/.tmp_heredoc");
 	if (!heredoc)
