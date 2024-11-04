@@ -6,7 +6,7 @@
 /*   By: gbeaudoi <gbeaudoi@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/20 15:42:08 by gbeaudoi          #+#    #+#             */
-/*   Updated: 2024/11/04 13:25:01 by gbeaudoi         ###   ########.fr       */
+/*   Updated: 2024/11/04 15:42:55 by gbeaudoi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -53,6 +53,8 @@ int	ft_check_pipes(t_shell *minishell)
 	int	i;
 
 	i = 0;
+	if (minishell->clean_line[i] == '|')
+		return (0);
 	while (minishell->clean_line[i])
 	{
 		if (minishell->clean_line[i] == '|')
@@ -68,18 +70,16 @@ int	ft_check_pipes(t_shell *minishell)
 	return (1);
 }
 
-static void	ft_split_pipe(t_shell *minishell)
+static int	ft_split_pipe(t_shell *minishell)
 {
 	char	**pipes;
 
-	if (!ft_check_pipes(minishell))
-		exitmsg(minishell, "Syntax error");
 	pipes = ft_split(minishell->clean_line, '|');
 	if (pipes == NULL)
 		exitmsg(minishell, MERROR);
 	minishell->count_pipes = ft_find_pipes(pipes);
 	if (minishell->count_pipes == 0)
-		return (ft_free_double_char(pipes));
+		return (ft_free_double_char(pipes), 0);
 	minishell->cmd_table = ft_calloc(minishell->count_pipes,
 			sizeof(t_cmd_table *));
 	if (minishell->cmd_table == NULL)
@@ -95,13 +95,23 @@ static void	ft_split_pipe(t_shell *minishell)
 	}
 	ft_init_command_group((minishell->cmd_table), pipes, minishell);
 	ft_free_double_char(pipes);
+	return (1);
 }
 
-void	ft_parseur(t_shell *minishell)
+int	ft_parseur(t_shell *minishell)
 {
+	int	i;
+
 	ft_neg_inside_quote(minishell);
 	ft_expand_dollar(minishell, 0, 0, 0);
 	ft_rev_neg_line(minishell);
 	ft_parseur_quote(minishell);
-	ft_split_pipe(minishell);
+	if (!ft_check_pipes(minishell))
+	{
+		printf("syntax error near unexpected token `|'\n");
+		minishell->excode = 2;
+		return (0);
+	}
+	i = ft_split_pipe(minishell);
+	return (i);
 }

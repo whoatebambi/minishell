@@ -6,7 +6,7 @@
 /*   By: gbeaudoi <gbeaudoi@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/31 15:31:03 by gbeaudoi          #+#    #+#             */
-/*   Updated: 2024/11/04 13:19:02 by gbeaudoi         ###   ########.fr       */
+/*   Updated: 2024/11/04 14:05:19 by gbeaudoi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -73,13 +73,14 @@ void	ft_expand_dollar(t_shell *minishell, int delim, int flag_sgl,
 			if (copy == NULL)
 				exitmsg(minishell, MERROR);
 			ft_dollar_option(copy, minishell, i, flag_dbl);
-			free(copy);
 			i = 0;
 			flag_sgl = 0;
 			flag_dbl = 0;
 		}
 		else
+		{
 			delim = ft_helper_expand_dollar(minishell, &flag_sgl, &flag_dbl,
 					&i);
+		}
 	}
 }

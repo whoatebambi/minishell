@@ -6,7 +6,7 @@
 /*   By: gbeaudoi <gbeaudoi@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/31 15:46:35 by gbeaudoi          #+#    #+#             */
-/*   Updated: 2024/08/21 18:41:40 by gbeaudoi         ###   ########.fr       */
+/*   Updated: 2024/11/04 15:03:09 by gbeaudoi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -48,6 +48,8 @@ int	ft_strcmp(const char *s1, const char *s2)
 {
 	size_t	i;
 
+	if ((s1 == NULL || s2 == NULL))
+		return (1);
 	i = 0;
 	while ((s1[i] != '\0' || s2[i] != '\0'))
 	{

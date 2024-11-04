@@ -6,7 +6,7 @@
 /*   By: gbeaudoi <gbeaudoi@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/21 20:27:20 by fcouserg          #+#    #+#             */
-/*   Updated: 2024/11/04 13:25:51 by gbeaudoi         ###   ########.fr       */
+/*   Updated: 2024/11/04 13:32:51 by gbeaudoi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -36,7 +36,7 @@ void safe_write(int fd, const char *str, ...)
     while (current_str)
     {
         i = 0;
-        while (i < strlen(current_str))
+        while (i < ft_strlen(current_str))
         {
             bytes_written = write(fd, &current_str[i], 1);
             if (bytes_written == -1)

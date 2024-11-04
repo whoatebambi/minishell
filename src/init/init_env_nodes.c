@@ -3,16 +3,16 @@
 /*                                                        :::      ::::::::   */
 /*   init_env_nodes.c                                   :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: fcouserg <fcouserg@student.42.fr>          +#+  +:+       +#+        */
+/*   By: gbeaudoi <gbeaudoi@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/21 20:27:20 by fcouserg          #+#    #+#             */
-/*   Updated: 2024/10/31 17:50:55 by fcouserg         ###   ########.fr       */
+/*   Updated: 2024/11/04 13:35:11 by gbeaudoi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-void	set_shlvl_inception(t_shell *minishell, t_env *node) // check if used
+void	set_shlvl_inception(t_shell *minishell, t_env *node)
 {
 	int		shlvl;
 	char	*byte;

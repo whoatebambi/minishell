@@ -6,7 +6,7 @@
 /*   By: gbeaudoi <gbeaudoi@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/21 18:24:48 by gbeaudoi          #+#    #+#             */
-/*   Updated: 2024/11/04 13:03:01 by gbeaudoi         ###   ########.fr       */
+/*   Updated: 2024/11/04 15:17:15 by gbeaudoi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -313,7 +313,7 @@ void				ft_free_node(t_node *node_def);
 void				ft_check_strdup(char *str, int i, char **dest, int flag);
 
 // Parseur expendeur llexeur
-void				ft_parseur(t_shell *minishell);
+int				ft_parseur(t_shell *minishell);
 void				ft_dollar_option(char *copy, t_shell *minishell, int i,
 						int flag_dbl);
 void				ft_expand_dollar(t_shell *minishell, int delim,
