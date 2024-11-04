@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   minishell.h                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: codespace <codespace@student.42.fr>        +#+  +:+       +#+        */
+/*   By: gbeaudoi <gbeaudoi@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/21 18:24:48 by gbeaudoi          #+#    #+#             */
-/*   Updated: 2024/11/02 15:56:14 by codespace        ###   ########.fr       */
+/*   Updated: 2024/11/04 13:03:01 by gbeaudoi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -271,8 +271,8 @@ int					ft_catchsignals(t_shell *minishell);
 int					init_argc(int argc, char **argv, int fd);
 void				init_minishell(t_shell *minishell, char **envp, int argc);
 void				fill_env(t_shell *minishell, char **envp);
-t_env				*add_env_var(char *envp);
-char				**add_oldpwd(char **envp);
+// t_env				*add_env_var(char *envp);
+// char				**add_oldpwd(char **envp);
 void				fill_envp(t_shell *minishell);
 void				fill_path(t_shell *minishell);
 int					env_size(t_shell *shell);
@@ -314,7 +314,10 @@ void				ft_check_strdup(char *str, int i, char **dest, int flag);
 
 // Parseur expendeur llexeur
 void				ft_parseur(t_shell *minishell);
-void				ft_expand_dollar(t_shell *minishell);
+void				ft_dollar_option(char *copy, t_shell *minishell, int i,
+						int flag_dbl);
+void				ft_expand_dollar(t_shell *minishell, int delim,
+						int flag_sgl, int flag_dbl);
 void				ft_rev_neg_line(t_shell *minishell);
 char				*ft_strndup(char *str, int n);
 void				ft_neg_inside_quote(t_shell *minishell);
@@ -328,10 +331,12 @@ void				ft_tokenize_list(t_node *nodes, t_shell *minishell);
 void				ft_check_syntax(t_node *nodes, t_shell *minishell);
 void				ft_redistribute_node(t_cmd_table **command_table,
 						t_node *nodes, t_shell *minishell);
-void				ft_init_redir_list(t_redir **redir, t_node *nodes,
-						char *token1, char *token2);
-void				tokenizer(t_shell *minishell);
-void				link_lex_nodes(t_shell *shell, t_lex *new, int *i, int *j);
+void				ft_init_redir_list_in(t_redir **redir, t_node *nodes,
+						t_shell *minishell);
+void				ft_init_redir_list_out(t_redir **redir, t_node *nodes,
+						t_shell *minishell);
+// void				tokenizer(t_shell *minishell);
+// void				link_lex_nodes(t_shell *shell, t_lex *new, int *i, int *j);
 
 // HEREDOC
 int					ft_here_doc_exp(t_shell *minishell, t_redir *copy_in,
@@ -342,7 +347,8 @@ char				*ft_find_tmp_heredoc(t_shell *minishell, char *heredoc);
 void				ft_ctrlc(t_shell *minishell, t_fds *fd, char *heredoc);
 
 // NODE INIT
-t_node				*ft_new_node(char *word, int flag);
+t_node				*ft_new_node(char *word, int flag, t_shell *minishell);
+t_redir				*ft_last_stack_redir(t_redir *a);
 void				ft_stack_add_to_back(t_node **a, t_node *new_node);
 
 #endif

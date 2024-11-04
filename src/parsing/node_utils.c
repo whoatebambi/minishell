@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   node_utils.c                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: codespace <codespace@student.42.fr>        +#+  +:+       +#+        */
+/*   By: gbeaudoi <gbeaudoi@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/17 15:56:28 by gbeaudoi          #+#    #+#             */
-/*   Updated: 2024/10/23 15:59:31 by codespace        ###   ########.fr       */
+/*   Updated: 2024/11/04 13:24:34 by gbeaudoi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -40,7 +40,7 @@ void	ft_stack_add_to_back(t_node **a, t_node *new_node)
 	}
 }
 
-t_node	*ft_new_node(char *word, int flag)
+t_node	*ft_new_node(char *word, int flag, t_shell *minishell)
 {
 	t_node	*node;
 
@@ -49,12 +49,10 @@ t_node	*ft_new_node(char *word, int flag)
 		return (NULL);
 	node->string = ft_strdup(word);
 	if (node->string == NULL)
-	{
-		// reset mini
-	}
+		exitmsg(minishell, MERROR);
 	node->token = 0;
 	node->redir = 0;
-	if(flag)
+	if (flag)
 		node->quote = 1;
 	else
 		node->quote = 0;

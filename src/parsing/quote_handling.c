@@ -3,14 +3,35 @@
 /*                                                        :::      ::::::::   */
 /*   quote_handling.c                                   :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: codespace <codespace@student.42.fr>        +#+  +:+       +#+        */
+/*   By: gbeaudoi <gbeaudoi@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/31 15:31:44 by gbeaudoi          #+#    #+#             */
-/*   Updated: 2024/10/15 21:37:35 by codespace        ###   ########.fr       */
+/*   Updated: 2024/11/04 11:50:49 by gbeaudoi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
+
+void	ft_check_syntax(t_node *nodes, t_shell *minishell)
+{
+	t_node	*copy;
+
+	copy = nodes;
+	while (copy)
+	{
+		if (copy->token == 1 && copy->next && copy->next->token == 1)
+		{
+			minishell->excode = 3;
+			exitmsg(minishell, "Syntax error");
+		}
+		if (copy->token == 1 && !copy->next)
+		{
+			minishell->excode = 3;
+			exitmsg(minishell, "Syntax error");
+		}
+		copy = copy->next;
+	}
+}
 
 int	ft_parseur_helper(int i, int k, char *copy, t_shell *minishell)
 {
@@ -55,45 +76,48 @@ int	ft_parseur_quote(t_shell *minishell)
 	quote_count = ft_parseur_helper(i, k, copy, minishell);
 	free(copy);
 	if (quote_count == 1)
-	{
-		perror("Unclosed quotes");
-		exitmsg(minishell, MERROR);
-	}
+		exitmsg(minishell, "Unclosed quotes");
 	return (1);
+}
+
+static void	ft_helper_neg_inside_quote(t_shell *minishell, int *i)
+{
+	minishell->clean_line[*i] = minishell->line[*i];
+	(*i)++;
+	while (minishell->line[*i] && minishell->line[*i] != '\"')
+	{
+		if (minishell->line[*i] == '\'')
+			minishell->clean_line[*i] = minishell->line[*i] * -1;
+		else
+			minishell->clean_line[*i] = minishell->line[*i];
+		(*i)++;
+	}
+	if (minishell->line[*i] == '\"')
+	{
+		minishell->clean_line[*i] = minishell->line[*i];
+		(*i)++;
+	}
 }
 
 void	ft_neg_inside_quote(t_shell *minishell)
 {
 	int	i;
-	
-	i = 0;	
-	minishell->clean_line = ft_calloc(ft_strlen(minishell->line) + 1, sizeof(char));
+
+	i = 0;
+	minishell->clean_line = ft_calloc(ft_strlen(minishell->line) + 1,
+			sizeof(char));
 	if (minishell->clean_line == NULL)
 		exitmsg(minishell, MERROR);
 	while (minishell->line[i])
 	{
 		if (minishell->line[i] == '\"')
 		{
-			minishell->clean_line[i] = minishell->line[i];
-			i++;
-			while (minishell->line[i] && minishell->line[i] != '\"')
-			{
-				if (minishell->line[i] == '\'')
-					minishell->clean_line[i] = minishell->line[i] * -1;
-				else
-					minishell->clean_line[i] = minishell->line[i];
-				i++;
-			}
-			if (minishell->line[i] == '\"') // Ensure we don't read past the end
-            {
-                minishell->clean_line[i] = minishell->line[i];
-                i++;
-            }
+			ft_helper_neg_inside_quote(minishell, &i);
 		}
 		else
 		{
 			minishell->clean_line[i] = minishell->line[i];
 			i++;
-		}	
+		}
 	}
 }

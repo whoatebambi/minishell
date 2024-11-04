@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   utils.c                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: codespace <codespace@student.42.fr>        +#+  +:+       +#+        */
+/*   By: gbeaudoi <gbeaudoi@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/21 20:27:20 by fcouserg          #+#    #+#             */
-/*   Updated: 2024/10/28 23:42:10 by codespace        ###   ########.fr       */
+/*   Updated: 2024/11/04 13:25:51 by gbeaudoi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -54,18 +54,6 @@ void safe_write(int fd, const char *str, ...)
 
 int	safe_strcmp(char *s1, char *s2)
 {
-	// int	i;
-
-	// i = 0;
-	// if (ft_strlen(s1) != ft_strlen(s2))
-	// 	return (1);
-	// while (s1[i] != '\0' || s2[i] != '\0')
-	// {
-	// 	if (s1[i] != s2[i])
-	// 		return (1);
-	// 	i++;
-	// }
-	// return (0);
 	if (!s1 || !s2)
 		return (1);
 	while (*s1 && *s2)

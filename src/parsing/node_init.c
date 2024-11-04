@@ -3,16 +3,17 @@
 /*                                                        :::      ::::::::   */
 /*   node_init.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: codespace <codespace@student.42.fr>        +#+  +:+       +#+        */
+/*   By: gbeaudoi <gbeaudoi@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/05 14:56:48 by gbeaudoi          #+#    #+#             */
-/*   Updated: 2024/10/27 23:41:37 by codespace        ###   ########.fr       */
+/*   Updated: 2024/11/04 13:22:49 by gbeaudoi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-static char	*ft_check_token(t_cmd_table *command_table, int *i, char token, t_shell *minishell)
+static char	*ft_check_token(t_cmd_table *command_table, int *i, char token,
+		t_shell *minishell)
 {
 	char	*dup;
 
@@ -33,7 +34,8 @@ static char	*ft_check_token(t_cmd_table *command_table, int *i, char token, t_sh
 	return (dup);
 }
 
-static char	*ft_fill_word(t_cmd_table *command_table, int *i, int n, t_shell *minishell)
+static char	*ft_fill_word(t_cmd_table *command_table, int *i, int n,
+		t_shell *minishell)
 {
 	char	*dup;
 
@@ -60,22 +62,23 @@ static char	*ft_fill_word(t_cmd_table *command_table, int *i, int n, t_shell *mi
 	return (dup);
 }
 
-void	ft_init_node_list(t_node **nodes, t_cmd_table *command_table, t_shell *minishell)
+void	ft_init_node_list(t_node **nodes, t_cmd_table *command_table,
+		t_shell *minishell)
 {
 	int		i;
 	int		n;
 	t_node	*new_node;
 	char	*word;
-	int flag;
+	int		flag;
 
 	*nodes = NULL;
 	i = 0;
-	while (command_table->group_command &&command_table->group_command[i])
+	while (command_table->group_command && command_table->group_command[i])
 	{
 		n = 0;
 		word = ft_fill_word(command_table, &i, n, minishell);
 		flag = ft_rev_neg_words(word);
-		new_node = ft_new_node(word, flag);
+		new_node = ft_new_node(word, flag, minishell);
 		if (new_node == NULL)
 		{
 			free(word);

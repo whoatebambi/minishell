@@ -3,23 +3,14 @@
 /*                                                        :::      ::::::::   */
 /*   redistribute_node.c                                :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: codespace <codespace@student.42.fr>        +#+  +:+       +#+        */
+/*   By: gbeaudoi <gbeaudoi@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/08 13:40:22 by gbeaudoi          #+#    #+#             */
-/*   Updated: 2024/10/06 17:31:35 by codespace        ###   ########.fr       */
+/*   Updated: 2024/11/04 11:51:53 by gbeaudoi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
-
-static t_redir	*ft_last_stack_redir(t_redir *a)
-{
-	if (!a)
-		return (NULL);
-	while (a->next)
-		a = a->next;
-	return (a);
-}
 
 static void	ft_stack_add_to_back_redir(t_redir **a, t_redir *new_node)
 {
@@ -39,15 +30,14 @@ static void	ft_stack_add_to_back_redir(t_redir **a, t_redir *new_node)
 		*a = new_node;
 	}
 }
-static void	ft_help_redir(t_redir *node, t_node *copy)
+
+static void	ft_help_redir(t_redir *node, t_node *copy, t_shell *minishell)
 {
 	if (copy->next)
 	{
 		node->redir_name = ft_strdup(copy->next->string);
 		if (node->redir_name == NULL)
-		{
-			// make necessary exit
-		}
+			exitmsg(minishell, MERROR);
 		if (copy->next->quote)
 			node->quote = 1;
 		else
@@ -57,7 +47,7 @@ static void	ft_help_redir(t_redir *node, t_node *copy)
 		node->redir_name = NULL;
 }
 
-static t_redir	*ft_new_redir(t_node *copy)
+static t_redir	*ft_new_redir(t_node *copy, t_shell *minishell)
 {
 	t_redir	*node;
 
@@ -72,13 +62,14 @@ static t_redir	*ft_new_redir(t_node *copy)
 		node->type = REDIR_IN;
 	else
 		node->type = DELIMITER;
-	ft_help_redir(node, copy);
+	ft_help_redir(node, copy, minishell);
 	node->next = NULL;
 	node->previous = NULL;
 	return (node);
 }
 
-void	ft_init_redir_list(t_redir **redir, t_node *nodes, char *token1, char *token2)
+void	ft_init_redir_list_in(t_redir **redir, t_node *nodes,
+		t_shell *minishell)
 {
 	t_node	*copy;
 	t_redir	*new_node;
@@ -87,14 +78,36 @@ void	ft_init_redir_list(t_redir **redir, t_node *nodes, char *token1, char *toke
 	copy = nodes;
 	while (copy && copy->next)
 	{
-		if (copy->token == 1 && (!ft_strcmp(copy->string, token1)
-				|| !ft_strcmp(copy->string, token2)) && copy->next->redir == 1)
+		if (copy->token == 1 && (!ft_strcmp(copy->string, "<")
+				|| !ft_strcmp(copy->string, "<<")) && copy->next->redir == 1)
 		{
-			new_node = ft_new_redir(copy);
+			new_node = ft_new_redir(copy, minishell);
 			if (new_node == NULL)
-			{
-				// reset mini
-			}
+				exitmsg(minishell, MERROR);
+			ft_stack_add_to_back_redir(redir, new_node);
+		}
+		else
+			new_node = NULL;
+		copy = copy->next;
+	}
+}
+
+void	ft_init_redir_list_out(t_redir **redir, t_node *nodes,
+		t_shell *minishell)
+{
+	t_node	*copy;
+	t_redir	*new_node;
+
+	*redir = NULL;
+	copy = nodes;
+	while (copy && copy->next)
+	{
+		if (copy->token == 1 && (!ft_strcmp(copy->string, ">")
+				|| !ft_strcmp(copy->string, ">>")) && copy->next->redir == 1)
+		{
+			new_node = ft_new_redir(copy, minishell);
+			if (new_node == NULL)
+				exitmsg(minishell, MERROR);
 			ft_stack_add_to_back_redir(redir, new_node);
 		}
 		else

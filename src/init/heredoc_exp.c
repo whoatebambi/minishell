@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   heredoc_exp.c                                      :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: codespace <codespace@student.42.fr>        +#+  +:+       +#+        */
+/*   By: gbeaudoi <gbeaudoi@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/20 19:13:21 by gbeaudoi          #+#    #+#             */
-/*   Updated: 2024/10/15 16:20:31 by codespace        ###   ########.fr       */
+/*   Updated: 2024/11/04 12:40:41 by gbeaudoi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -153,7 +153,6 @@ int	ft_here_doc_exp(t_shell *minishell, t_redir *copy_in, t_fds *fd)
 	while (str && safe_strcmp(copy_in->redir_name, str) == 1)
 	{
 		exp = ft_expand_dollar_hd(str, minishell);
-		// ft_printf("%s\n", exp);
 		if (!exp)
 			(free(str), free(heredoc), close(tmp));
 		write(tmp, exp, ft_strlen(exp));
