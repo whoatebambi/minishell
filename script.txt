@@ -1,1 +1,2 @@
-echo 
+exit 7 | exit 2
+echo $?

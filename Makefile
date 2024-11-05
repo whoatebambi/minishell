@@ -3,10 +3,10 @@
 #                                                         :::      ::::::::    #
 #    Makefile                                           :+:      :+:    :+:    #
 #                                                     +:+ +:+         +:+      #
-#    By: codespace <codespace@student.42.fr>        +#+  +:+       +#+         #
+#    By: gbeaudoi <gbeaudoi@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2024/01/08 14:30:03 by gbeaudoi          #+#    #+#              #
-#    Updated: 2024/11/05 02:15:14 by codespace        ###   ########.fr        #
+#    Updated: 2024/11/05 13:14:54 by gbeaudoi         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -45,7 +45,7 @@ LIBFT = libft/
 
 CC		=	cc
 CFLAGS =	-Wall -Wextra -Werror -I $(INC)
-# CFLAGS	=	-g3 -I $(INC)
+DEP_FLAGS	=	-MMD -MP
 INC		=	include/
 LIBC	=	ar -rcs
 RM		=	rm -rf
@@ -95,13 +95,13 @@ OBJ		= $(addprefix $(OBJ_DIR), $(OBJ_NAMES))
 $(OBJ_DIR)%.o: $(SRC_DIR)%.c
 			@mkdir -p $(dir $@)
 			@printf "$(ITAL)$(GREEN)Compiling: $(RESET)$(ITAL)$<\n"
-			@$(CC) $(CFLAGS) -c $< -o $@
+			@$(CC) $(DEP_FLAGS) $(CFLAGS) -c $< -o $@
 
 
 $(MINISHELL): $(OBJ)
 	@make -C $(LIBFT)
 	@cp $(LIBFT)/libft.a .
-	$(CC) $(CFLAGS) $^ -o $@ -L$(LIBFT) -lft -lreadline
+	$(CC) $(DEP_FLAGS) $(CFLAGS)  $^ -o $@ -L$(LIBFT) -lft -lreadline
 
 all:		$(MINISHELL) 
 

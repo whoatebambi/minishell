@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   exit.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: codespace <codespace@student.42.fr>        +#+  +:+       +#+        */
+/*   By: gbeaudoi <gbeaudoi@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/21 20:27:20 by fcouserg          #+#    #+#             */
-/*   Updated: 2024/11/04 23:48:39 by codespace        ###   ########.fr       */
+/*   Updated: 2024/11/05 14:09:08 by gbeaudoi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,15 +24,17 @@ int	exit_args(char **tab, int *flag)
 		(*flag) = 1;
 		return (2);
 	}
-	while (tab[1][++i])
+	i = 1;
+	while (tab[1][i] && tab[1][i] != '\n')
 	{
-		if (!ft_isdigit(tab[1][i]) && !(*flag))
+		if (!ft_isdigit(tab[1][i]))
 		{
 			safe_write(2, "minishell: exit: ", tab[i],
 				": numeric argument required\n", NULL);
 			(*flag) = 1;
 			return (2);
 		}
+		i++;
 	}
 	return (ft_atoi(tab[1]) % 256);
 }
@@ -53,8 +55,6 @@ void	builtin_exit(char **tab, t_shell *minishell, t_fds *fd)
 		minishell->tmpexcode = 1;
 		return ;
 	}
-	if (minishell->count_pipes > 1)
-		return ;
 	ext = minishell->tmpexcode;
 	free_minishell(minishell);
 	close_fds(fd);

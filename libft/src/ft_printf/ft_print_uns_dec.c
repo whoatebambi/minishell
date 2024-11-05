@@ -6,7 +6,7 @@
 /*   By: gbeaudoi <gbeaudoi@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/23 17:45:12 by gbeaudoi          #+#    #+#             */
-/*   Updated: 2023/12/23 14:58:06 by gbeaudoi         ###   ########.fr       */
+/*   Updated: 2024/11/05 13:08:40 by gbeaudoi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,8 +19,6 @@ int	ft_get_u_len(unsigned int i)
 	len = 0;
 	if (i == 0)
 		return (1);
-	// if (i < 0)
-	// 	len = 1;
 	while (i != 0)
 	{
 		i /= 10;
@@ -34,7 +32,7 @@ void	ft_putnbr_u(t_print *format, unsigned int n)
 	unsigned int	i;
 
 	i = n;
-	if (i < 10) // if (i >= 0 && i < 10)
+	if (i < 10)
 		ft_putchar(format, i + 48);
 	else
 	{

@@ -6,7 +6,7 @@
 #    By: gbeaudoi <gbeaudoi@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2023/12/23 17:08:22 by gbeaudoi          #+#    #+#              #
-#    Updated: 2024/06/03 15:04:35 by gbeaudoi         ###   ########.fr        #
+#    Updated: 2024/11/05 13:14:00 by gbeaudoi         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -42,6 +42,7 @@ BRIGHT_CYAN	:=	\e[96m
 NAME		=	libft.a
 CC		=	cc
 CFLAGS		=	-Wall -Wextra -Werror -I
+
 INC		=	include/
 LIBC		=	ar -rcs
 RM		=	rm -rf

@@ -6,7 +6,7 @@
 /*   By: gbeaudoi <gbeaudoi@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/22 19:30:27 by gbeaudoi          #+#    #+#             */
-/*   Updated: 2023/12/02 18:17:10 by gbeaudoi         ###   ########.fr       */
+/*   Updated: 2024/11/05 13:08:25 by gbeaudoi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -37,7 +37,7 @@ void	ft_putnbr(t_print *format, int n)
 		i = n * -1;
 	else
 		i = n;
-	if (i < 10) // if (i >= 0 && i < 10)
+	if (i < 10)
 		ft_putchar(format, i + 48);
 	else
 	{

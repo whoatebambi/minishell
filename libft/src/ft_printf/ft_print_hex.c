@@ -6,7 +6,7 @@
 /*   By: gbeaudoi <gbeaudoi@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/24 17:12:48 by gbeaudoi          #+#    #+#             */
-/*   Updated: 2023/12/02 18:04:29 by gbeaudoi         ###   ########.fr       */
+/*   Updated: 2024/11/05 13:08:18 by gbeaudoi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,8 +20,6 @@ int	ft_get_hex_len(unsigned int i)
 	len = 0;
 	if (i == 0)
 		return (1);
-	// if (i < 0)
-	// 	len = 1;
 	while (i != 0)
 	{
 		i /= 16;

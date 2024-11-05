@@ -6,7 +6,7 @@
 /*   By: gbeaudoi <gbeaudoi@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/21 18:24:48 by gbeaudoi          #+#    #+#             */
-/*   Updated: 2024/11/05 12:04:35 by gbeaudoi         ###   ########.fr       */
+/*   Updated: 2024/11/05 14:08:42 by gbeaudoi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -33,11 +33,8 @@
 # include <sys/wait.h>
 # include <unistd.h>
 
-# define EXIT_NOT_FOUND 127
 # define EXIT_SIGINT 130
 # define EXIT_SIGQUIT 131
-# define EXIT_ERROR 255
-# define SYNTAX_ERROR 258
 
 extern int			g_sig;
 
@@ -154,6 +151,7 @@ typedef struct s_shell
 	char			*line;
 	char			*clean_line;
 	int				count_pipes;
+	int				flag_ext;
 }					t_shell;
 
 /////////////////// EXEC
@@ -311,7 +309,7 @@ void				ft_init_node_list(t_node **nodes,
 						t_cmd_table *command_table, t_shell *minishell);
 int					ft_rev_neg_words(char *line);
 void				ft_tokenize_list(t_node *nodes, t_shell *minishell);
-int				ft_check_syntax(t_node *nodes, t_shell *minishell);
+int					ft_check_syntax(t_node *nodes, t_shell *minishell);
 void				ft_redistribute_node(t_cmd_table **command_table,
 						t_node *nodes, t_shell *minishell);
 void				ft_init_redir_list_in(t_redir **redir, t_node *nodes,

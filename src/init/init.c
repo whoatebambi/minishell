@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   init.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: codespace <codespace@student.42.fr>        +#+  +:+       +#+        */
+/*   By: gbeaudoi <gbeaudoi@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/21 20:27:20 by fcouserg          #+#    #+#             */
-/*   Updated: 2024/11/05 01:59:06 by codespace        ###   ########.fr       */
+/*   Updated: 2024/11/05 13:51:00 by gbeaudoi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -131,4 +131,5 @@ void	init_minishell(t_shell	*minishell, char **envp, int argc)
 	minishell->inp = NULL;
 	minishell->newinp = NULL;
 	minishell->finalinp = NULL;
+	minishell->flag_ext = 0;
 }
