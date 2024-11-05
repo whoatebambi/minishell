@@ -3,17 +3,19 @@
 /*                                                        :::      ::::::::   */
 /*   prep_path.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: codespace <codespace@student.42.fr>        +#+  +:+       +#+        */
+/*   By: gbeaudoi <gbeaudoi@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/21 20:27:20 by fcouserg          #+#    #+#             */
-/*   Updated: 2024/11/05 01:04:11 by codespace        ###   ########.fr       */
+/*   Updated: 2024/11/05 11:07:13 by gbeaudoi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-void	path_true_access(t_shell *mns, int *i, struct stat info)
+void	path_true_access(t_shell *mns, int *i)
 {
+	struct stat	info;
+	
 	if (stat(mns->cmd_table[*i]->tab[0], &info) == 0 && S_ISDIR(info.st_mode))
 	{
 		ft_perror(mns, mns->cmd_table[*i]->tab[0], "Is a directory", NULL);
@@ -28,8 +30,6 @@ void	path_true_access(t_shell *mns, int *i, struct stat info)
 
 int	path_true(t_shell *minishell, int *i)
 {
-	struct stat	info;
-
 	if (ft_strchr(minishell->cmd_table[*i]->tab[0], '/')
 		&& access(minishell->cmd_table[*i]->tab[0], F_OK | X_OK) != 0)
 	{
@@ -41,7 +41,7 @@ int	path_true(t_shell *minishell, int *i)
 	else if (ft_strchr(minishell->cmd_table[*i]->tab[0], '/')
 		&& access(minishell->cmd_table[*i]->tab[0], F_OK | X_OK) == 0)
 	{
-		path_true_access(minishell, i, info);
+		path_true_access(minishell, i);
 		return (1);
 	}
 	return (0);

@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   main.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: codespace <codespace@student.42.fr>        +#+  +:+       +#+        */
+/*   By: gbeaudoi <gbeaudoi@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/21 20:27:20 by fcouserg          #+#    #+#             */
-/*   Updated: 2024/11/05 02:20:46 by codespace        ###   ########.fr       */
+/*   Updated: 2024/11/05 11:05:04 by gbeaudoi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,7 +18,7 @@ int	main(int argc, char **argv, char **envp)
 {
 	int		fd;
 	t_shell	minishell;
-	// int		flag;
+	int		flag;
 
 	fd = 0;
 	fd = init_argc(argc, argv, fd);
@@ -29,9 +29,9 @@ int	main(int argc, char **argv, char **envp)
 		minishell.line = get_line(minishell.mode, fd);
 		if (minishell.line == NULL)
 			break ;
-		// flag = ft_parseur(&minishell);
-		// if (ft_check_emptyline(minishell.clean_line) == 0 && flag == 1)
-		// 	launch_exec(&minishell);
+		flag = ft_parseur(&minishell);
+		if (ft_check_emptyline(minishell.clean_line) == 0 && flag == 1)
+			launch_exec(&minishell);
 		reset_loop(&minishell);
 	}
 	close(fd);

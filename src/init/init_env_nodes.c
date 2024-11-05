@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   init_env_nodes.c                                   :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: codespace <codespace@student.42.fr>        +#+  +:+       +#+        */
+/*   By: gbeaudoi <gbeaudoi@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/21 20:27:20 by fcouserg          #+#    #+#             */
-/*   Updated: 2024/11/05 01:56:36 by codespace        ###   ########.fr       */
+/*   Updated: 2024/11/05 11:21:57 by gbeaudoi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,6 +24,8 @@ void	set_shlvl_inception(t_shell *minishell, t_env *node)
 	if (!byte)
 		exitmsg(minishell, "Malloc error");
 	node->value = ft_strdup(byte);
+	if(!node->value)
+		exitmsg(minishell, "Malloc error");
 	free(byte);
 	byte = NULL;
 	if (!node->value)
