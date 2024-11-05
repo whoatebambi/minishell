@@ -1,40 +1,33 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   main.c                                             :+:      :+:    :+:   */
+/*   set_redirections.c                                 :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: codespace <codespace@student.42.fr>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/21 20:27:20 by fcouserg          #+#    #+#             */
-/*   Updated: 2024/11/05 02:10:41 by codespace        ###   ########.fr       */
+/*   Updated: 2024/11/04 23:54:18 by codespace        ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-int			g_sig = 0;
-
-int	main(int argc, char **argv, char **envp)
+void	set_redirs(t_fds *fd)
 {
-	int		fd;
-	t_shell	minishell;
-	int		flag;
-
-	fd = 0;
-	fd = init_argc(argc, argv, fd);
-	init_minishell(&minishell, envp, argc);
-	set_signals();
-	while (1)
+	if (fd->pipes[1] != -42)
+		fd->redir[1] = fd->pipes[1];
+	if (fd->input != -42)
 	{
-		minishell.line = get_line(minishell.mode, fd);
-		if (minishell.line == NULL)
-			break ;
-		flag = ft_parseur(&minishell);
-		if (ft_check_emptyline(minishell.clean_line) == 0 && flag == 1)
-			launch_exec(&minishell);
-		reset_loop(&minishell);
+		if (fd->redir[0] != -42 && !fd->prevpipe)
+			close(fd->redir[0]);
+		if (fd->prevpipe)
+			fd->savedpipe = fd->redir[0];
+		fd->redir[0] = fd->input;
 	}
-	close(fd);
-	free_minishell(&minishell);
-	exit(minishell.tmpexcode);
+	if (fd->output != -42)
+	{
+		if (fd->pipes[1] != -42)
+			close(fd->pipes[1]);
+		fd->redir[1] = fd->output;
+	}
 }

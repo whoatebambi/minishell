@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   expendeur.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: gbeaudoi <gbeaudoi@student.42.fr>          +#+  +:+       +#+        */
+/*   By: codespace <codespace@student.42.fr>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/31 15:31:03 by gbeaudoi          #+#    #+#             */
-/*   Updated: 2024/11/04 20:18:35 by gbeaudoi         ###   ########.fr       */
+/*   Updated: 2024/11/05 00:25:49 by codespace        ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -77,7 +77,7 @@ void	ft_expand_dollar(t_shell *minishell, int flag_sgl, int flag_dbl)
 		{
 			copy = ft_strndup(minishell->clean_line, i);
 			if (copy == NULL)
-				exitmsg(minishell, MERROR);
+				exitmsg(minishell, "Malloc error");
 			ft_dollar_option(copy, minishell, i, flag_dbl);
 			ft_reset_flag_and_i(&flag_sgl, &flag_dbl, &i);
 			if (copy)

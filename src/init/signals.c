@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   signals.c                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: gbeaudoi <gbeaudoi@student.42.fr>          +#+  +:+       +#+        */
+/*   By: codespace <codespace@student.42.fr>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/21 20:27:20 by fcouserg          #+#    #+#             */
-/*   Updated: 2024/11/04 13:25:35 by gbeaudoi         ###   ########.fr       */
+/*   Updated: 2024/11/05 02:10:16 by codespace        ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -36,10 +36,10 @@ void	ft_sig_heredoc(int s)
 {
 	g_sig = s;
 	close(STDIN_FILENO);
-	write(2,"^C",2);
+	write(2, "^C", 2);
 }
 
-void	ft_sig_heredoc_setting(void)
+void	set_signal_heredoc(void)
 {
 	struct sigaction	sig;
 
@@ -66,7 +66,7 @@ int	ft_catchsignals(t_shell *minishell)
 	return (0);
 }
 
-void	ft_signals(void)
+void	set_signals(void)
 {
 	struct sigaction	sig;
 

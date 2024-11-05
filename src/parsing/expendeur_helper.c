@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   expendeur_helper.c                                 :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: gbeaudoi <gbeaudoi@student.42.fr>          +#+  +:+       +#+        */
+/*   By: codespace <codespace@student.42.fr>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/17 16:02:51 by gbeaudoi          #+#    #+#             */
-/*   Updated: 2024/11/04 20:10:52 by gbeaudoi         ###   ########.fr       */
+/*   Updated: 2024/11/05 00:25:49 by codespace        ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,7 +22,7 @@ void	ft_find_value(t_shell *minishell, char **to_join, int i, int j)
 		j++;
 	key = ft_strndup(minishell->clean_line + i, j);
 	if (!key)
-		exitmsg(minishell, MERROR);
+		exitmsg(minishell, "Malloc error");
 	list = minishell->env;
 	while (list)
 	{
@@ -51,7 +51,7 @@ static void	ft_join_clean_line(t_shell *minishell, char *copy, char *to_join)
 		{
 			free(copy);
 			free(to_join);
-			exitmsg(minishell, MERROR);
+			exitmsg(minishell, "Malloc error");
 		}
 		free(to_join);
 		to_join = NULL;

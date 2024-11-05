@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   export_utils.c                                     :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: fcouserg <fcouserg@student.42.fr>          +#+  +:+       +#+        */
+/*   By: codespace <codespace@student.42.fr>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/21 20:27:20 by fcouserg          #+#    #+#             */
-/*   Updated: 2024/10/31 16:47:24 by fcouserg         ###   ########.fr       */
+/*   Updated: 2024/11/05 00:25:49 by codespace        ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,7 +19,7 @@ void	create_env_list(char *name, char *value, t_shell *minishell)
 
 	env_var = ft_calloc(sizeof(t_env), 1);
 	if (!env_var)
-		exitmsg(minishell, MERROR);
+		exitmsg(minishell, "Malloc error");
 	env_var->key = name;
 	env_var->value = value;
 	env_var->next = NULL;

@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   quote_handling.c                                   :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: gbeaudoi <gbeaudoi@student.42.fr>          +#+  +:+       +#+        */
+/*   By: codespace <codespace@student.42.fr>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/31 15:31:44 by gbeaudoi          #+#    #+#             */
-/*   Updated: 2024/11/04 11:50:49 by gbeaudoi         ###   ########.fr       */
+/*   Updated: 2024/11/05 00:25:49 by codespace        ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -69,7 +69,7 @@ int	ft_parseur_quote(t_shell *minishell)
 
 	copy = ft_strdup(minishell->clean_line);
 	if (copy == NULL)
-		exitmsg(minishell, MERROR);
+		exitmsg(minishell, "Malloc error");
 	ft_bzero(minishell->clean_line, ft_strlen(minishell->clean_line));
 	i = 0;
 	k = 0;
@@ -107,7 +107,7 @@ void	ft_neg_inside_quote(t_shell *minishell)
 	minishell->clean_line = ft_calloc(ft_strlen(minishell->line) + 1,
 			sizeof(char));
 	if (minishell->clean_line == NULL)
-		exitmsg(minishell, MERROR);
+		exitmsg(minishell, "Malloc error");
 	while (minishell->line[i])
 	{
 		if (minishell->line[i] == '\"')

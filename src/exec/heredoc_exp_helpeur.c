@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   heredoc_exp_helpeur.c                              :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: gbeaudoi <gbeaudoi@student.42.fr>          +#+  +:+       +#+        */
+/*   By: codespace <codespace@student.42.fr>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/20 19:13:21 by gbeaudoi          #+#    #+#             */
-/*   Updated: 2024/11/04 20:00:51 by gbeaudoi         ###   ########.fr       */
+/*   Updated: 2024/11/05 00:43:20 by codespace        ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -73,4 +73,35 @@ char	*ft_strdupfree(char *s)
 	}
 	str[i] = '\0';
 	return (free(s), str);
+}
+
+char	*num_true(char *line, int i)
+{
+	char	*copy;
+
+	copy = ft_strndup(line, i - 1);
+	if (!copy)
+		return (NULL);
+	if (line[i] == '0')
+		return (ft_joinfree(copy, ft_jnf("bash", line + i + 1)));
+	return (ft_strjoin(copy, line + i + 1));
+}
+
+char	*all_num_false(t_shell *minishell, char *line, int i)
+{
+	char	*ext;
+	char	*copy;
+
+	ext = ft_itoa(minishell->excode);
+	if (!ext)
+		return (NULL);
+	copy = ft_strndup(line, i - 1);
+	if (!copy)
+		return (free(ext), NULL);
+	if (line[i] == '?')
+		return (ft_joinfree(copy, ft_strjoin(ext, line + i + 1)));
+	else if (line[i] == '\'')
+		return (free(ext), ft_strjoin(copy, line + i));
+	else
+		return (free(ext), ft_strjoin(copy, line + i - 1));
 }

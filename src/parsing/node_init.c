@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   node_init.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: gbeaudoi <gbeaudoi@student.42.fr>          +#+  +:+       +#+        */
+/*   By: codespace <codespace@student.42.fr>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/05 14:56:48 by gbeaudoi          #+#    #+#             */
-/*   Updated: 2024/11/04 13:22:49 by gbeaudoi         ###   ########.fr       */
+/*   Updated: 2024/11/05 00:25:49 by codespace        ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,14 +21,14 @@ static char	*ft_check_token(t_cmd_table *command_table, int *i, char token,
 	{
 		dup = ft_strndup(command_table->group_command + *i, 2);
 		if (dup == NULL)
-			exitmsg(minishell, MERROR);
+			exitmsg(minishell, "Malloc error");
 		*i += 2;
 	}
 	else
 	{
 		dup = ft_strndup(command_table->group_command + *i, 1);
 		if (dup == NULL)
-			exitmsg(minishell, MERROR);
+			exitmsg(minishell, "Malloc error");
 		*i += 1;
 	}
 	return (dup);
@@ -54,7 +54,7 @@ static char	*ft_fill_word(t_cmd_table *command_table, int *i, int n,
 			n++;
 		dup = ft_strndup(command_table->group_command + *i, n);
 		if (dup == NULL)
-			exitmsg(minishell, MERROR);
+			exitmsg(minishell, "Malloc error");
 		*i += n;
 	}
 	while (command_table->group_command[*i] == ' ')
@@ -82,7 +82,7 @@ void	ft_init_node_list(t_node **nodes, t_cmd_table *command_table,
 		if (new_node == NULL)
 		{
 			free(word);
-			exitmsg(minishell, MERROR);
+			exitmsg(minishell, "Malloc error");
 		}
 		ft_stack_add_to_back(nodes, new_node);
 		free(word);

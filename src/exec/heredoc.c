@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   heredoc.c                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: gbeaudoi <gbeaudoi@student.42.fr>          +#+  +:+       +#+        */
+/*   By: codespace <codespace@student.42.fr>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/20 17:31:47 by gbeaudoi          #+#    #+#             */
-/*   Updated: 2024/11/04 20:04:16 by gbeaudoi         ###   ########.fr       */
+/*   Updated: 2024/11/05 01:37:21 by codespace        ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,31 +30,36 @@ char	*ft_find_tmp_heredoc(t_shell *minishell, char *heredoc)
 	while (access(heredoc, F_OK) == 0)
 		heredoc = ft_strjoin(heredoc, "a");
 	if (!heredoc)
-		ft_exit_msg(minishell, MERROR);
+		exitmsg(minishell, "Malloc error");
 	return (heredoc);
 }
 
-int	ft_here_doc(t_shell *minishell, t_redir *copy_in, t_fds *fd)
+void	prep_heredoc(t_shell *minishell, t_fds *fd, char **heredoc, int *tmp)
+{
+	*heredoc = ft_strdup("/tmp/.tmp_heredoc");
+	if (!(*heredoc))
+		exitmsg(minishell, "Malloc error");
+	*heredoc = ft_find_tmp_heredoc(minishell, *heredoc);
+	*tmp = open(*heredoc, O_WRONLY | O_CREAT | O_TRUNC, 0777);
+	fd->input = open(*heredoc, O_RDONLY);
+	fd->in = dup(STDIN_FILENO);
+}
+
+int	exec_here_doc(t_shell *minishell, t_redir *copy_in, t_fds *fd)
 {
 	int		tmp;
-	char	*str;
+	char	*line;
 	char	*heredoc;
 
-	heredoc = ft_strdup("/tmp/.tmp_heredoc");
-	if (!heredoc)
-		ft_exit_msg(minishell, MERROR);
-	heredoc = ft_find_tmp_heredoc(minishell, heredoc);
-	tmp = open(heredoc, O_WRONLY | O_CREAT | O_TRUNC, 0777);
-	fd->input = open(heredoc, O_RDONLY);
-	fd->in = dup(STDIN_FILENO);
-	str = readline("> ");
-	while (str && safe_strcmp(copy_in->redir_name, str) == 1)
+	prep_heredoc(minishell, fd, &heredoc, &tmp);
+	line = readline("> ");
+	while (line && safe_strcmp(copy_in->redir_name, line) == 1)
 	{
-		write(tmp, str, ft_strlen(str));
+		write(tmp, line, ft_strlen(line));
 		write(tmp, "\n", 1);
-		free(str);
-		str = readline("> ");
+		free(line);
+		line = readline("> ");
 	}
 	ft_ctrlc(minishell, fd, heredoc);
-	return (close(tmp), free(str), free(heredoc), close(fd->in), 130);
+	return (close(tmp), free(line), free(heredoc), close(fd->in), 130);
 }

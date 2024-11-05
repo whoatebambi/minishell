@@ -1,40 +1,36 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   main.c                                             :+:      :+:    :+:   */
+/*   prep_path_set.c                                    :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: codespace <codespace@student.42.fr>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/21 20:27:20 by fcouserg          #+#    #+#             */
-/*   Updated: 2024/11/05 02:10:41 by codespace        ###   ########.fr       */
+/*   Updated: 2024/11/05 01:03:18 by codespace        ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-int			g_sig = 0;
-
-int	main(int argc, char **argv, char **envp)
+void	set_cmdtable_path_still(t_shell *minishell, t_cmd_table *c)
 {
-	int		fd;
-	t_shell	minishell;
-	int		flag;
+	if (c->path)
+		(free(c->path), c->path = NULL);
+	minishell->excode = 127;
+	c->path = ft_strdup(c->tab[0]);
+	if (!c->path)
+		exitmsg(minishell, "Malloc error");
+}
 
-	fd = 0;
-	fd = init_argc(argc, argv, fd);
-	init_minishell(&minishell, envp, argc);
-	set_signals();
-	while (1)
-	{
-		minishell.line = get_line(minishell.mode, fd);
-		if (minishell.line == NULL)
-			break ;
-		flag = ft_parseur(&minishell);
-		if (ft_check_emptyline(minishell.clean_line) == 0 && flag == 1)
-			launch_exec(&minishell);
-		reset_loop(&minishell);
-	}
-	close(fd);
-	free_minishell(&minishell);
-	exit(minishell.tmpexcode);
+void	set_cmdtable_path(t_shell *minishell, t_cmd_table *c,
+	char *tmp, int *flag)
+{
+	free(c->tab[0]);
+	c->tab[0] = ft_strdup(tmp);
+	if (!c->tab[0])
+		(free(tmp), c->tab[0] = NULL, exitmsg(minishell, "Malloc error"));
+	c->path = ft_strdup(tmp);
+	if (!c->path)
+		(free(tmp), exitmsg(minishell, "Malloc error"));
+	(*flag) = 1;
 }

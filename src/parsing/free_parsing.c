@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   free_parsing.c                                     :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: gbeaudoi <gbeaudoi@student.42.fr>          +#+  +:+       +#+        */
+/*   By: codespace <codespace@student.42.fr>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/10 15:59:26 by gbeaudoi          #+#    #+#             */
-/*   Updated: 2024/11/04 13:21:57 by gbeaudoi         ###   ########.fr       */
+/*   Updated: 2024/11/05 00:25:49 by codespace        ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,5 +29,5 @@ void	ft_check_strdup(char *str, int i, char **dest, int flag)
 // if (*dest == NULL)
 // {
 // 	free(*dest);
-// 	exitmsg(get_minishell(NULL), MERROR);
+// 	exitmsg(get_minishell(NULL), "Malloc error");
 // }

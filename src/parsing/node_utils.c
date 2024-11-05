@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   node_utils.c                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: gbeaudoi <gbeaudoi@student.42.fr>          +#+  +:+       +#+        */
+/*   By: codespace <codespace@student.42.fr>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/17 15:56:28 by gbeaudoi          #+#    #+#             */
-/*   Updated: 2024/11/04 13:24:34 by gbeaudoi         ###   ########.fr       */
+/*   Updated: 2024/11/05 00:25:49 by codespace        ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -49,7 +49,7 @@ t_node	*ft_new_node(char *word, int flag, t_shell *minishell)
 		return (NULL);
 	node->string = ft_strdup(word);
 	if (node->string == NULL)
-		exitmsg(minishell, MERROR);
+		exitmsg(minishell, "Malloc error");
 	node->token = 0;
 	node->redir = 0;
 	if (flag)

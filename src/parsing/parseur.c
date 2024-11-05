@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   parseur.c                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: gbeaudoi <gbeaudoi@student.42.fr>          +#+  +:+       +#+        */
+/*   By: codespace <codespace@student.42.fr>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/20 15:42:08 by gbeaudoi          #+#    #+#             */
-/*   Updated: 2024/11/04 19:36:52 by gbeaudoi         ###   ########.fr       */
+/*   Updated: 2024/11/05 00:25:49 by codespace        ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -32,10 +32,10 @@ void	ft_init_command_group(t_cmd_table **command_table, char **pipes,
 	{
 		command_table[i] = ft_calloc(1, sizeof(t_cmd_table));
 		if (command_table[i] == NULL)
-			exitmsg(minishell, MERROR);
+			exitmsg(minishell, "Malloc error");
 		command_table[i]->group_command = ft_strdup(pipes[i]);
 		if (command_table[i]->group_command == NULL)
-			exitmsg(minishell, MERROR);
+			exitmsg(minishell, "Malloc error");
 		ft_init_node_list(&((command_table[i])->nodes), command_table[i],
 			minishell);
 		ft_tokenize_list(command_table[i]->nodes, minishell);
@@ -76,7 +76,7 @@ static int	ft_split_pipe(t_shell *minishell)
 
 	pipes = ft_split(minishell->clean_line, '|');
 	if (pipes == NULL)
-		exitmsg(minishell, MERROR);
+		exitmsg(minishell, "Malloc error");
 	minishell->count_pipes = ft_find_pipes(pipes);
 	if (minishell->count_pipes == 0)
 		return (ft_free_double_char(pipes), 0);
@@ -85,13 +85,13 @@ static int	ft_split_pipe(t_shell *minishell)
 	if (minishell->cmd_table == NULL)
 	{
 		ft_free_double_char(pipes);
-		exitmsg(minishell, MERROR);
+		exitmsg(minishell, "Malloc error");
 	}
 	minishell->child_pids = ft_calloc(minishell->count_pipes, sizeof(pid_t));
 	if (minishell->child_pids == NULL)
 	{
 		ft_free_double_char(pipes);
-		exitmsg(minishell, MERROR);
+		exitmsg(minishell, "Malloc error");
 	}
 	ft_init_command_group((minishell->cmd_table), pipes, minishell);
 	ft_free_double_char(pipes);

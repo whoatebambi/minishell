@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   exit.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: gbeaudoi <gbeaudoi@student.42.fr>          +#+  +:+       +#+        */
+/*   By: codespace <codespace@student.42.fr>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/21 20:27:20 by fcouserg          #+#    #+#             */
-/*   Updated: 2024/11/04 15:51:55 by gbeaudoi         ###   ########.fr       */
+/*   Updated: 2024/11/04 23:48:39 by codespace        ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -54,10 +54,7 @@ void	builtin_exit(char **tab, t_shell *minishell, t_fds *fd)
 		return ;
 	}
 	if (minishell->count_pipes > 1)
-	{
-		minishell->excode = 2;
-		return;
-	}
+		return ;
 	ext = minishell->tmpexcode;
 	free_minishell(minishell);
 	close_fds(fd);

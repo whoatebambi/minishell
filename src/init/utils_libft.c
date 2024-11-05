@@ -1,40 +1,38 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   main.c                                             :+:      :+:    :+:   */
+/*   utils_libft.c                                      :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: codespace <codespace@student.42.fr>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/21 20:27:20 by fcouserg          #+#    #+#             */
-/*   Updated: 2024/11/05 02:10:41 by codespace        ###   ########.fr       */
+/*   Updated: 2024/11/05 02:15:31 by codespace        ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-int			g_sig = 0;
-
-int	main(int argc, char **argv, char **envp)
+int	safe_strcmp(char *s1, char *s2)
 {
-	int		fd;
-	t_shell	minishell;
-	int		flag;
-
-	fd = 0;
-	fd = init_argc(argc, argv, fd);
-	init_minishell(&minishell, envp, argc);
-	set_signals();
-	while (1)
+	if (!s1 || !s2)
+		return (1);
+	while (*s1 && *s2)
 	{
-		minishell.line = get_line(minishell.mode, fd);
-		if (minishell.line == NULL)
-			break ;
-		flag = ft_parseur(&minishell);
-		if (ft_check_emptyline(minishell.clean_line) == 0 && flag == 1)
-			launch_exec(&minishell);
-		reset_loop(&minishell);
+		if (*s1 != *s2)
+			return (1);
+		s1++;
+		s2++;
 	}
-	close(fd);
-	free_minishell(&minishell);
-	exit(minishell.tmpexcode);
+	if (*s1 || *s2)
+		return (1);
+	return (0);
+}
+
+void	swap_env(t_list *a, t_list *b)
+{
+	void	*temp_content;
+
+	temp_content = a->content;
+	a->content = b->content;
+	b->content = temp_content;
 }

@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   cd.c                                               :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: fcouserg <fcouserg@student.42.fr>          +#+  +:+       +#+        */
+/*   By: codespace <codespace@student.42.fr>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/21 20:27:20 by fcouserg          #+#    #+#             */
-/*   Updated: 2024/10/31 16:39:20 by fcouserg         ###   ########.fr       */
+/*   Updated: 2024/11/04 20:30:45 by codespace        ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -48,7 +48,6 @@ void	chdir_getenv(char **tab, t_shell *minishell)
 	{
 		minishell->excode = 1;
 		safe_write(2, "cd: ", tab[1], ": No such file or directory\n", NULL);
-		exitmsg(minishell, NULL);
 	}
 }
 
@@ -65,6 +64,8 @@ void	builtin_cd(char **tab, t_env *env, t_shell *minishell)
 		exitmsg(minishell, "getcwd");
 	}
 	chdir_getenv(tab, minishell);
+	if (minishell->excode == 1)
+		return ;
 	if (getcwd(new_pwd, sizeof(new_pwd)) == NULL)
 	{
 		minishell->excode = 1;

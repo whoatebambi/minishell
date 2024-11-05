@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   redistribute_node.c                                :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: gbeaudoi <gbeaudoi@student.42.fr>          +#+  +:+       +#+        */
+/*   By: codespace <codespace@student.42.fr>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/08 13:40:22 by gbeaudoi          #+#    #+#             */
-/*   Updated: 2024/11/04 11:51:53 by gbeaudoi         ###   ########.fr       */
+/*   Updated: 2024/11/05 00:25:49 by codespace        ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -37,7 +37,7 @@ static void	ft_help_redir(t_redir *node, t_node *copy, t_shell *minishell)
 	{
 		node->redir_name = ft_strdup(copy->next->string);
 		if (node->redir_name == NULL)
-			exitmsg(minishell, MERROR);
+			exitmsg(minishell, "Malloc error");
 		if (copy->next->quote)
 			node->quote = 1;
 		else
@@ -83,7 +83,7 @@ void	ft_init_redir_list_in(t_redir **redir, t_node *nodes,
 		{
 			new_node = ft_new_redir(copy, minishell);
 			if (new_node == NULL)
-				exitmsg(minishell, MERROR);
+				exitmsg(minishell, "Malloc error");
 			ft_stack_add_to_back_redir(redir, new_node);
 		}
 		else
@@ -107,7 +107,7 @@ void	ft_init_redir_list_out(t_redir **redir, t_node *nodes,
 		{
 			new_node = ft_new_redir(copy, minishell);
 			if (new_node == NULL)
-				exitmsg(minishell, MERROR);
+				exitmsg(minishell, "Malloc error");
 			ft_stack_add_to_back_redir(redir, new_node);
 		}
 		else
