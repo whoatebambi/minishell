@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   parseur.c                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: codespace <codespace@student.42.fr>        +#+  +:+       +#+        */
+/*   By: gbeaudoi <gbeaudoi@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/20 15:42:08 by gbeaudoi          #+#    #+#             */
-/*   Updated: 2024/11/05 00:25:49 by codespace        ###   ########.fr       */
+/*   Updated: 2024/11/05 12:13:41 by gbeaudoi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,7 +22,7 @@ static int	ft_find_pipes(char **pipes)
 	return (i);
 }
 
-void	ft_init_command_group(t_cmd_table **command_table, char **pipes,
+int	ft_init_command_group(t_cmd_table **command_table, char **pipes,
 		t_shell *minishell)
 {
 	int	i;
@@ -39,13 +39,15 @@ void	ft_init_command_group(t_cmd_table **command_table, char **pipes,
 		ft_init_node_list(&((command_table[i])->nodes), command_table[i],
 			minishell);
 		ft_tokenize_list(command_table[i]->nodes, minishell);
-		ft_check_syntax(command_table[i]->nodes, minishell);
+		if (!ft_check_syntax(command_table[i]->nodes, minishell))
+			return (0);
 		ft_redistribute_node(&command_table[i], command_table[i]->nodes,
 			minishell);
 		command_table[i]->is_infile_tmp = 0;
 		command_table[i]->infile_tmp = NULL;
 		i++;
 	}
+	return (1);
 }
 
 int	ft_check_pipes(t_shell *minishell)
@@ -93,7 +95,8 @@ static int	ft_split_pipe(t_shell *minishell)
 		ft_free_double_char(pipes);
 		exitmsg(minishell, "Malloc error");
 	}
-	ft_init_command_group((minishell->cmd_table), pipes, minishell);
+	if (!ft_init_command_group((minishell->cmd_table), pipes, minishell))
+		return (ft_free_double_char(pipes), 0);
 	ft_free_double_char(pipes);
 	return (1);
 }
@@ -108,8 +111,8 @@ int	ft_parseur(t_shell *minishell)
 	ft_parseur_quote(minishell);
 	if (!ft_check_pipes(minishell))
 	{
-		printf("syntax error near unexpected token `|'\n");
 		minishell->excode = 2;
+		printf("syntax error near unexpected token `|'\n");
 		return (0);
 	}
 	k = ft_split_pipe(minishell);

@@ -3,16 +3,16 @@
 /*                                                        :::      ::::::::   */
 /*   quote_handling.c                                   :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: codespace <codespace@student.42.fr>        +#+  +:+       +#+        */
+/*   By: gbeaudoi <gbeaudoi@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/31 15:31:44 by gbeaudoi          #+#    #+#             */
-/*   Updated: 2024/11/05 00:25:49 by codespace        ###   ########.fr       */
+/*   Updated: 2024/11/05 12:16:01 by gbeaudoi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-void	ft_check_syntax(t_node *nodes, t_shell *minishell)
+int	ft_check_syntax(t_node *nodes, t_shell *minishell)
 {
 	t_node	*copy;
 
@@ -21,16 +21,19 @@ void	ft_check_syntax(t_node *nodes, t_shell *minishell)
 	{
 		if (copy->token == 1 && copy->next && copy->next->token == 1)
 		{
-			minishell->excode = 3;
-			exitmsg(minishell, "Syntax error");
+			minishell->excode = 2;
+			printf("syntax error near unexpected token\n");
+			return (0);
 		}
 		if (copy->token == 1 && !copy->next)
 		{
-			minishell->excode = 3;
-			exitmsg(minishell, "Syntax error");
+			minishell->excode = 2;
+			printf("syntax error near unexpected token\n");
+			return (0);
 		}
 		copy = copy->next;
 	}
+	return (1);
 }
 
 int	ft_parseur_helper(int i, int k, char *copy, t_shell *minishell)
@@ -76,7 +79,10 @@ int	ft_parseur_quote(t_shell *minishell)
 	quote_count = ft_parseur_helper(i, k, copy, minishell);
 	free(copy);
 	if (quote_count == 1)
+	{
+		minishell->excode = 0;
 		exitmsg(minishell, "Unclosed quotes");
+	}
 	return (1);
 }
 

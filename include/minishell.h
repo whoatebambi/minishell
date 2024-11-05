@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   minishell.h                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: codespace <codespace@student.42.fr>        +#+  +:+       +#+        */
+/*   By: gbeaudoi <gbeaudoi@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/21 18:24:48 by gbeaudoi          #+#    #+#             */
-/*   Updated: 2024/11/05 02:29:12 by codespace        ###   ########.fr       */
+/*   Updated: 2024/11/05 12:04:35 by gbeaudoi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -96,7 +96,7 @@ typedef struct s_fds
 	int				redir[2];
 	int				in;
 	int				input;
-	int				output;	
+	int				output;
 	int				savedpipe;
 	bool			prevpipe;
 }					t_fds;
@@ -158,49 +158,60 @@ typedef struct s_shell
 
 /////////////////// EXEC
 // exec_children.c
-void	exec_child_builtin(t_shell *mns, t_cmd_table *cmd, t_fds *fd, int i);
-void	handle_fd_error(t_shell *minishell, t_fds *fd);
-void	handle_path_error(t_shell *minishell, t_cmd_table *cmd, t_fds *fd);
-void	exec_child(t_shell *minishell, t_cmd_table *cmd, t_fds *fd);
+void				exec_child_builtin(t_shell *mns, t_cmd_table *cmd,
+						t_fds *fd, int i);
+void				handle_fd_error(t_shell *minishell, t_fds *fd);
+void				handle_path_error(t_shell *minishell, t_cmd_table *cmd,
+						t_fds *fd);
+void				exec_child(t_shell *minishell, t_cmd_table *cmd, t_fds *fd);
 // exec_redirections.c
-void	init_redirections(t_shell *minishell, t_fds *fd, int i);
-void	exec_redirs_out(t_shell *minishell, t_redir *copy_out, t_fds *fd);
-void	exec_redirs_in(t_shell *minishell, t_redir *copy_in, t_fds *fd);
-void	init_struct_fd(t_fds *fd);
-void	close_fds(t_fds *fd);
+void				init_redirections(t_shell *minishell, t_fds *fd, int i);
+void				exec_redirs_out(t_shell *minishell, t_redir *copy_out,
+						t_fds *fd);
+void				exec_redirs_in(t_shell *minishell, t_redir *copy_in,
+						t_fds *fd);
+void				init_struct_fd(t_fds *fd);
+void				close_fds(t_fds *fd);
 // executing.c
-void	launch_exec(t_shell *minishell);
-void	wait_for_children(t_shell *minishell);
-void	fds_parent_close(t_fds *fd);
-void	execute(t_shell *minishell, t_cmd_table *cmd, int i, t_fds *fd);
+void				launch_exec(t_shell *minishell);
+void				wait_for_children(t_shell *minishell);
+void				fds_parent_close(t_fds *fd);
+void				execute(t_shell *minishell, t_cmd_table *cmd, int i,
+						t_fds *fd);
 // init_exec.c
-void	init_exec(t_shell *minishell, t_fds *fd);
-void	check_builtins(t_cmd_table *cmd);
-void	set_pipes(t_shell *minishell, t_fds *fd, int i);
+void				init_exec(t_shell *minishell, t_fds *fd);
+void				check_builtins(t_cmd_table *cmd);
+void				set_pipes(t_shell *minishell, t_fds *fd, int i);
 // prep_path.c
-void	set_path_true(t_shell *minishell, int flag);
-int		path_true(t_shell *minishell, int *i);
-void	set_cmdtable_path(t_shell *minishell, t_cmd_table *c, char *tmp, int *flag);
-void	set_cmdtable_path_still(t_shell *minishell, t_cmd_table *c);
+void				set_path_true(t_shell *minishell, int flag);
+int					path_true(t_shell *minishell, int *i);
+void				set_cmdtable_path(t_shell *minishell, t_cmd_table *c,
+						char *tmp, int *flag);
+void				set_cmdtable_path_still(t_shell *minishell, t_cmd_table *c);
 // set_redirections.c
-void	set_redirs(t_fds *fd);
+void				set_redirs(t_fds *fd);
 /////////////////// HEREDOC
 // heredoc.c
-void	ft_ctrlc(t_shell *minishell, t_fds *fd, char *heredoc);
-char	*ft_find_tmp_heredoc(t_shell *minishell, char *heredoc);
-void	prep_heredoc(t_shell *minishell, t_fds *fd, char **heredoc, int *tmp);
-int		exec_here_doc(t_shell *minishell, t_redir *copy_in, t_fds *fd);
+void				ft_ctrlc(t_shell *minishell, t_fds *fd, char *heredoc);
+char				*ft_find_tmp_heredoc(t_shell *minishell, char *heredoc);
+void				prep_heredoc(t_shell *minishell, t_fds *fd, char **heredoc,
+						int *tmp);
+int					exec_here_doc(t_shell *minishell, t_redir *copy_in,
+						t_fds *fd);
 // heredoc_exp.c
-char	*ft_dollar_hd(t_shell *minishell, char *line, int *i, t_env *node);
-char	*ft_expand_heredoc(t_shell *mn, char *line, int i);
-void	prep_heredoc_exp(t_shell *minishell, t_fds *fd, char **heredoc, int *tmp);
-int		exec_here_doc_exp(t_shell *minishell, t_redir *copy_in, t_fds *fd);
+char				*ft_dollar_hd(t_shell *minishell, char *line, int *i,
+						t_env *node);
+char				*ft_expand_heredoc(t_shell *mn, char *line, int i);
+void				prep_heredoc_exp(t_shell *minishell, t_fds *fd,
+						char **heredoc, int *tmp);
+int					exec_here_doc_exp(t_shell *minishell, t_redir *copy_in,
+						t_fds *fd);
 // heredoc_exp_helpeur.c
-char	*ft_quote_neg(char *str);
-char	*ft_joinfree(char *s1, char *s2);
-char	*ft_strdupfree(char *s);
-char	*num_true(char *line, int i);
-char	*all_num_false(t_shell *minishell, char *line, int i);
+char				*ft_quote_neg(char *str);
+char				*ft_joinfree(char *s1, char *s2);
+char				*ft_strdupfree(char *s);
+char				*num_true(char *line, int i);
+char				*all_num_false(t_shell *minishell, char *line, int i);
 ///////////////////
 
 /////////////////// BUILTIN
@@ -226,7 +237,8 @@ t_env				*get_env_lst(char *name, t_env *env);
 void				print_export(t_env *env);
 // export_utils.c
 void				set_env_value(char *name, char *value, t_env *env);
-void				create_env_list(char *name, char *value, t_shell *minishell);
+void				create_env_list(char *name, char *value,
+						t_shell *minishell);
 // pwd.c
 void				builtin_pwd(int fd_out, t_shell *minishell);
 // unset.c
@@ -235,49 +247,52 @@ void				builtin_unset(char **tab, t_shell *minishell);
 
 /////////////////// INIT
 // free_memory.c
-void	free_specific_env(t_env	*new, char *str, t_shell *minishell);
-void	free_minishell(t_shell *minishell);
-void	free_path(t_path *path);
-void	free_env(t_env *env);
-void	free_cmd_table(t_shell *minishell);
+void				free_specific_env(t_env *new, char *str,
+						t_shell *minishell);
+void				free_minishell(t_shell *minishell);
+void				free_path(t_path *path);
+void				free_env(t_env *env);
+void				free_cmd_table(t_shell *minishell);
 // free_memory_loop.c
-void	reset_loop_rest(t_shell *minishell);
-void	reset_loop(t_shell *minishell);
+void				reset_loop_rest(t_shell *minishell);
+void				reset_loop(t_shell *minishell);
 // init_arg.c
-char	*get_line(t_mode mode, int fd);
-int	ft_check_emptyline(char *line);
-int	init_argc(int argc, char **argv, int fd);
+char				*get_line(t_mode mode, int fd);
+int					ft_check_emptyline(char *line);
+int					init_argc(int argc, char **argv, int fd);
 // init_env_nodes.c
-void	set_shlvl_inception(t_shell *minishell, t_env *node);
-void	init_env_node(t_shell *minishell, t_env *node, char *str);
-void	init_env_nodes(t_shell *minishell, t_env *node, char **envp, int i);
+void				set_shlvl_inception(t_shell *minishell, t_env *node);
+void				init_env_node(t_shell *minishell, t_env *node, char *str);
+void				init_env_nodes(t_shell *minishell, t_env *node, char **envp,
+						int i);
 // init_no_env.c
-void	set_oldpwd(t_shell *minishell);
-void	set_last_command(t_shell *minishell);
-void	set_shlvl(t_shell *minishell);
-void	init_pwd(t_shell *minishell);
-void	set_no_env(t_shell *minishell);
+void				set_oldpwd(t_shell *minishell);
+void				set_last_command(t_shell *minishell);
+void				set_shlvl(t_shell *minishell);
+void				init_pwd(t_shell *minishell);
+void				set_no_env(t_shell *minishell);
 // init.c
-void	fill_env(t_shell *minishell, char **envp);
-void	fill_envp(t_shell *minishell);
-char	*getpath(t_shell *minishell, char *key);
-void	fill_path(t_shell *minishell);
-void	init_minishell(t_shell	*minishell, char **envp, int argc);
+void				fill_env(t_shell *minishell, char **envp);
+void				fill_envp(t_shell *minishell);
+char				*getpath(t_shell *minishell, char *key);
+void				fill_path(t_shell *minishell);
+void				init_minishell(t_shell *minishell, char **envp, int argc);
 // signals.c
-void	ft_handle_sig(int s);
-void	ft_sig_heredoc(int s);
-void	set_signal_heredoc(void);
-int	ft_catchsignals(t_shell *minishell);
-void	set_signals(void);
+void				ft_handle_sig(int s);
+void				ft_sig_heredoc(int s);
+void				set_signal_heredoc(void);
+int					ft_catchsignals(t_shell *minishell);
+void				set_signals(void);
 // utils.c
-void	safe_write(int fd, const char *str, ...);
-char	*safe_join_envp(char *key, char *symb, char *value);
-void	ft_perror(t_shell *minishell, char *word, char *msg, char *third);
-int	env_size(t_shell *minishell);
-void	exitmsg(t_shell *minishell, char *errmsg);
+void				safe_write(int fd, const char *str, ...);
+char				*safe_join_envp(char *key, char *symb, char *value);
+void				ft_perror(t_shell *minishell, char *word, char *msg,
+						char *third);
+int					env_size(t_shell *minishell);
+void				exitmsg(t_shell *minishell, char *errmsg);
 // utils_libft.c
-int	safe_strcmp(char *s1, char *s2);
-void	swap_env(t_list *a, t_list *b);
+int					safe_strcmp(char *s1, char *s2);
+void				swap_env(t_list *a, t_list *b);
 ///////////////////
 
 /////////////////// Parseur expendeur llexeur
@@ -296,21 +311,21 @@ void				ft_init_node_list(t_node **nodes,
 						t_cmd_table *command_table, t_shell *minishell);
 int					ft_rev_neg_words(char *line);
 void				ft_tokenize_list(t_node *nodes, t_shell *minishell);
-void				ft_check_syntax(t_node *nodes, t_shell *minishell);
+int				ft_check_syntax(t_node *nodes, t_shell *minishell);
 void				ft_redistribute_node(t_cmd_table **command_table,
 						t_node *nodes, t_shell *minishell);
 void				ft_init_redir_list_in(t_redir **redir, t_node *nodes,
 						t_shell *minishell);
 void				ft_init_redir_list_out(t_redir **redir, t_node *nodes,
 						t_shell *minishell);
-void	ft_free_double_char(char **tab);
-void	safe_free(char *string);
-void	ft_free_redir(t_redir *redir_def);
-void	ft_free_node(t_node *node_def);
+void				ft_free_double_char(char **tab);
+void				safe_free(char *string);
+void				ft_free_redir(t_redir *redir_def);
+void				ft_free_node(t_node *node_def);
 // NODE INIT
 t_node				*ft_new_node(char *word, int flag, t_shell *minishell);
 t_redir				*ft_last_stack_redir(t_redir *a);
-void				ft_stack_add_to_back(t_node **a, t_node *new_node);						
+void				ft_stack_add_to_back(t_node **a, t_node *new_node);
 ///////////////////
 
 #endif

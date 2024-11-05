@@ -6,7 +6,7 @@
 /*   By: gbeaudoi <gbeaudoi@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/21 20:27:20 by fcouserg          #+#    #+#             */
-/*   Updated: 2024/11/05 11:07:13 by gbeaudoi         ###   ########.fr       */
+/*   Updated: 2024/11/05 11:41:37 by gbeaudoi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,7 +15,7 @@
 void	path_true_access(t_shell *mns, int *i)
 {
 	struct stat	info;
-	
+
 	if (stat(mns->cmd_table[*i]->tab[0], &info) == 0 && S_ISDIR(info.st_mode))
 	{
 		ft_perror(mns, mns->cmd_table[*i]->tab[0], "Is a directory", NULL);
@@ -66,8 +66,8 @@ void	set_path_str(t_shell *minishell, int *flag, int i, int j)
 
 void	set_path_true(t_shell *minishell, int flag)
 {
-	int		i;
-	int		j;
+	int	i;
+	int	j;
 
 	i = 0;
 	while (i < minishell->count_pipes)

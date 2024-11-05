@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   free_memory_loop.c                                 :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: codespace <codespace@student.42.fr>        +#+  +:+       +#+        */
+/*   By: gbeaudoi <gbeaudoi@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/21 20:27:20 by fcouserg          #+#    #+#             */
-/*   Updated: 2024/11/05 01:50:38 by codespace        ###   ########.fr       */
+/*   Updated: 2024/11/05 12:15:31 by gbeaudoi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -62,4 +62,5 @@ void	reset_loop(t_shell *minishell)
 		ft_free_double_char(minishell->tabpath);
 		minishell->tabpath = NULL;
 	}
+	reset_loop_rest(minishell);
 }
