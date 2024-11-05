@@ -6,7 +6,7 @@
 /*   By: codespace <codespace@student.42.fr>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/21 18:24:48 by gbeaudoi          #+#    #+#             */
-/*   Updated: 2024/11/05 02:19:43 by codespace        ###   ########.fr       */
+/*   Updated: 2024/11/05 02:29:12 by codespace        ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -233,59 +233,54 @@ void				builtin_pwd(int fd_out, t_shell *minishell);
 void				builtin_unset(char **tab, t_shell *minishell);
 ///////////////////
 
-///////////////////
-//init_arg.c
-int		init_argc(int argc, char **argv, int fd);
-int 	ft_check_emptyline(char *line);
-char	*get_line(t_mode mode, int fd);
- 
-// signals.c
-void				ft_handle_sig(int s);
-void				ft_sig_heredoc(int s);
-void				set_signal_heredoc(void);
-void				set_signals(void);
-int					ft_catchsignals(t_shell *minishell);
-// initializing.c
-void				init_minishell(t_shell *minishell, char **envp, int argc);
-void				fill_env(t_shell *minishell, char **envp);
-
-void				fill_envp(t_shell *minishell);
-void				fill_path(t_shell *minishell);
-int					env_size(t_shell *minishell);
-char				*getpath(t_shell *minishell, char *key);
-// init_no_env.c
-void				init_pwd(t_shell *minishell);
-void				set_shlvl(t_shell *minishell);
-void				set_last_command(t_shell *minishell);
-void				set_oldpwd(t_shell *minishell);
-void				set_no_env(t_shell *minishell);
-// init_env_nodes.c
-void				init_env_nodes(t_shell *minishell, t_env *new_node, char **envp, int i);
-void				set_shlvl_inception(t_shell *minishell, t_env *node);
-
-// utils.c
-t_shell				*get_minishell(t_shell *minishell);
-void				safe_write(int fd, const char *str, ...);
-int					safe_strcmp(char *s1, char *s2);
-void				swap_env(t_list *a, t_list *b);
-char				*safe_join_envp(char *key, char *symb, char *value);
-void	ft_perror(t_shell *minishell, char *word, char *msg, char *third);
-
+/////////////////// INIT
 // free_memory.c
-void				free_env(t_env *env);
-void				free_path(t_path *path);
-void				free_cmd_table(t_shell *minishell);
-void				free_minishell(t_shell *minishell);
-void				reset_loop(t_shell *minishell);
-void				exitmsg(t_shell *minishell, char *errmsg);
-void				ft_free_child(pid_t *i);
-void				ft_free_double_char(char **tab);
-void				safe_free(char *string);
-void				ft_free_redir(t_redir *redir_def);
-void				ft_free_node(t_node *node_def);
-void				ft_check_strdup(char *str, int i, char **dest, int flag);
+void	free_specific_env(t_env	*new, char *str, t_shell *minishell);
+void	free_minishell(t_shell *minishell);
+void	free_path(t_path *path);
+void	free_env(t_env *env);
+void	free_cmd_table(t_shell *minishell);
+// free_memory_loop.c
+void	reset_loop_rest(t_shell *minishell);
+void	reset_loop(t_shell *minishell);
+// init_arg.c
+char	*get_line(t_mode mode, int fd);
+int	ft_check_emptyline(char *line);
+int	init_argc(int argc, char **argv, int fd);
+// init_env_nodes.c
+void	set_shlvl_inception(t_shell *minishell, t_env *node);
+void	init_env_node(t_shell *minishell, t_env *node, char *str);
+void	init_env_nodes(t_shell *minishell, t_env *node, char **envp, int i);
+// init_no_env.c
+void	set_oldpwd(t_shell *minishell);
+void	set_last_command(t_shell *minishell);
+void	set_shlvl(t_shell *minishell);
+void	init_pwd(t_shell *minishell);
+void	set_no_env(t_shell *minishell);
+// init.c
+void	fill_env(t_shell *minishell, char **envp);
+void	fill_envp(t_shell *minishell);
+char	*getpath(t_shell *minishell, char *key);
+void	fill_path(t_shell *minishell);
+void	init_minishell(t_shell	*minishell, char **envp, int argc);
+// signals.c
+void	ft_handle_sig(int s);
+void	ft_sig_heredoc(int s);
+void	set_signal_heredoc(void);
+int	ft_catchsignals(t_shell *minishell);
+void	set_signals(void);
+// utils.c
+void	safe_write(int fd, const char *str, ...);
+char	*safe_join_envp(char *key, char *symb, char *value);
+void	ft_perror(t_shell *minishell, char *word, char *msg, char *third);
+int	env_size(t_shell *minishell);
+void	exitmsg(t_shell *minishell, char *errmsg);
+// utils_libft.c
+int	safe_strcmp(char *s1, char *s2);
+void	swap_env(t_list *a, t_list *b);
+///////////////////
 
-// Parseur expendeur llexeur
+/////////////////// Parseur expendeur llexeur
 int					ft_parseur(t_shell *minishell);
 void				ft_dollar_option(char *copy, t_shell *minishell, int i,
 						int flag_dbl);
@@ -308,11 +303,14 @@ void				ft_init_redir_list_in(t_redir **redir, t_node *nodes,
 						t_shell *minishell);
 void				ft_init_redir_list_out(t_redir **redir, t_node *nodes,
 						t_shell *minishell);
-
-
+void	ft_free_double_char(char **tab);
+void	safe_free(char *string);
+void	ft_free_redir(t_redir *redir_def);
+void	ft_free_node(t_node *node_def);
 // NODE INIT
 t_node				*ft_new_node(char *word, int flag, t_shell *minishell);
 t_redir				*ft_last_stack_redir(t_redir *a);
-void				ft_stack_add_to_back(t_node **a, t_node *new_node);
+void				ft_stack_add_to_back(t_node **a, t_node *new_node);						
+///////////////////
 
 #endif
